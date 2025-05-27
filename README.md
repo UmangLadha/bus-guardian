@@ -1,0 +1,2 @@
+# bus-guardian
+ This project focuses on ensuring the safety and security of students commuting via school buses by providing real-time location tracking. It enables schools and parents to monitor the live location of buses, receive important alerts, and ensure timely communication. The system enhances transparency, improves emergency response, and offers peace of mind to both schools and families.
