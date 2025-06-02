@@ -1,19 +1,26 @@
 import express from 'express';
 import cors from 'cors';
-import { connectDB } from './configs/database';
+import { connectDB } from './Database/database';
 import dotenv from 'dotenv';
+import adminRoutes from './routes/admin.routes';
+import { authenticate } from './middlewares/auth.middleware';
 
 const app = express();
-const port = process.env.PORT || 3000;
-dotenv.config(); //importing env file
+dotenv.config();
 app.use(cors());
 app.use(express.json());
+
+//database connection fn
 connectDB();
 
-app.get('/',(req,res)=>{
-    res.send("hello, welcome to the backend of busGuardian");
+app.get('/protected', authenticate , (req,res)=>{
+    res.json({ message:"welcome to the protected data route", user: req.user });
 });
 
+//routes
+app.use("/auth", adminRoutes);
+
+const port = process.env.PORT || 5000;
 app.listen(port,()=>{
-    console.log(`server running on port http://localhost:${port}`);
-});
+    console.log(`Server is running on port http://localhost:${port}`);
+}); 
