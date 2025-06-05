@@ -2,8 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
-  const authHeader = req.headers["authorization"];
-  const authToken = authHeader && authHeader.split(" ")[1];
+  const authToken = req.headers["authorization"];
   if (!authToken) {
     res.status(401).json({ message: "No token provided" });
     return;

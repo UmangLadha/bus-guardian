@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { registerAdmin, getAdmin, adminLogin } from "../controllers/admin.controller";
+import {UserController} from "../controllers/admin.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 
 const adminRoutes = Router();
 
-adminRoutes.post("/register", registerAdmin );
-adminRoutes.post("/login", adminLogin);
-adminRoutes.get("/", getAdmin );
+adminRoutes.post("/register",UserController.registerUser );
+adminRoutes.post("/login", UserController.adminLogin);
+adminRoutes.get("/", UserController.getAdmin );
 
 export default adminRoutes;
