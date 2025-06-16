@@ -5,7 +5,7 @@ import { getLocationCoordinates } from "../utility/locationCordinates";
 import Bus from "../models/bus.model";
 
 export class StudentsController {
-  public static async addStudent(req: Request, res: Response) {
+    static async addStudent(req: Request, res: Response) {
     try {
       const { studentName, parentContact, busNumber, pickupAddress } = req.body;
       if (!studentName || !parentContact || !busNumber || !pickupAddress) {
@@ -43,7 +43,7 @@ export class StudentsController {
     }
   }
 
-  public static async loginStudent(req: Request, res: Response) {
+    static async loginStudent(req: Request, res: Response) {
     try {
       const { studentId } = req.body;
       const existingStudent = await Student.findOne({ studentId });
@@ -58,7 +58,7 @@ export class StudentsController {
     }
   }
 
-  public static async getStudents(req: Request, res: Response) {
+    static async getStudents(req: Request, res: Response) {
     try {
       const students = await Student.find();
       res.status(200).json({ students });
@@ -68,7 +68,7 @@ export class StudentsController {
     }
   }
 
-  public static async updateStudentById(req: Request, res: Response) {
+    static async updateStudentById(req: Request, res: Response) {
     try {
       const { id } = req.params;
       const { studentName, parentContact, busNumber, pickupAddress } = req.body;
@@ -105,7 +105,7 @@ export class StudentsController {
     }
   }
 
-  public static async deleteStudentById(req: Request, res: Response) {
+    static async deleteStudentById(req: Request, res: Response) {
     try {
       const { id } = req.params;
       await Student.findByIdAndDelete(id);

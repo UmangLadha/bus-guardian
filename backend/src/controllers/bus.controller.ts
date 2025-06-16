@@ -4,22 +4,22 @@ import Driver from "../models/driver.model";
 import Student from "../models/student.model";
 
 export class busController {
-  public static async addBus(req: Request, res: Response) {
+    static async addBus(req: Request, res: Response) {
     try {
-      const { busNumber, busCapacity, driverId } = req.body;
+      const { busNumber, busCapacity} = req.body;
       if (!busNumber || !busCapacity) {
         res.status(400).json({ message: "all fields are required" });
         return;
       }
-      const driver = await Driver.findOne({ driverId });
-      if (!driver) {
-        res.status(404).json({ message: "driver not found" });
-        return;
-      }
+      //  const driver = await Driver.findOne({ driverId });
+      // if (!driver) {
+      //   res.status(404).json({ message: "driver not found" });
+      //   return;
+      // }
       const newBus = await Bus.create({
         busNumber,
         busCapacity,
-        busDriver: driver._id,
+        // busDriver: driver._id,
       });
       res.status(201).json({ message: "bus added successfully", newBus });
     } catch (error) {
@@ -28,7 +28,17 @@ export class busController {
     }
   }
 
-  public static async getBusById(req: Request, res: Response) {
+     static async getBuses(req: Request, res: Response) {
+    try {
+      const buses = await Bus.find();
+      res.status(200).json({ buses });
+    } catch (error) {
+      console.log("error in fetching the buses:", error);
+      res.status(500).json({ message: "error in fetching the buses" });
+    }
+   }
+
+    static async getBusById(req: Request, res: Response) {
     try {
       const { id } = req.params;
       if (!id) {
@@ -48,7 +58,7 @@ export class busController {
     }
   }
 
-  public static async updateBusById(req: Request, res: Response) {
+    static async updateBusById(req: Request, res: Response) {
     try {
       const { id } = req.params;
       const { busNumber, driverId, busCapacity } = req.body;
@@ -74,7 +84,7 @@ export class busController {
     }
   }
 
-  public static async deleteBus(req: Request, res: Response) {
+    static async deleteBus(req: Request, res: Response) {
     try {
       const { id } = req.params;
       await Bus.findByIdAndDelete(id);
