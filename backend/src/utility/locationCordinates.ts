@@ -15,7 +15,7 @@ export async function getLocationCoordinates(
       },
     });
 
-    if (response.data && response.data.lenght > 0) {
+    if (response.data && response.data.length > 0) {
       const location = response.data[0];
       return location;
     }

@@ -1,15 +1,5 @@
 import { Request, Response } from "express";
-import { Types } from "mongoose"
-import Admin from "../models/admin.model";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-
-interface AdminUser {
-  _id: Types.ObjectId;
-  username: string;
-  phoneNo: number;
-  password: string;
-}
+import { AdminServices } from "../services/admin.services";
 
 export class UserController {
   static async registerUser(req: Request, res: Response) {
@@ -19,65 +9,69 @@ export class UserController {
         res.status(400).json({ message: "All fields are required" });
         return;
       }
-      const existingUser = await Admin.findOne({ username });
-      if (existingUser) {
-        res.status(400).json({ message: "Username already exists" });
-        return;
-      }
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-      const newUser = await Admin.create({
+      const result = await AdminServices.registerAdmin(
         username,
         phoneNo,
-        password: hashedPassword,
-      });
-      console.log(`User register successfully ${newUser._id}`);
-      res.status(201).json({ message: "user registered successfully" });
+        password
+      );
+      if (!result.success) {
+        res.status(400).json({ message: result.message });
+        return;
+      }
+      res
+        .status(201)
+        .json({
+          message: `user registered successfully`,
+          admin: result.newUser,
+        });
     } catch (error) {
       console.error("error in creating the user:", error);
-      res.status(500).json({ message: "error in adding user in database" });
+      res
+        .status(500)
+        .json({ message: "error in adding user in database", error });
     }
-  }
-
-  private static createJwtToken(user:AdminUser) {
-    const accessToken = jwt.sign(
-      { id: user._id.toString() },
-      process.env.JWT_ACCESS_SECRET!,
-      { expiresIn: "1h" }
-    );
-    return accessToken;
   }
 
   static async adminLogin(req: Request, res: Response) {
     try {
       const { username, password } = req.body;
-      const user = await Admin.findOne({ username });
-      if (!user) {
-        res.status(404).json({ message: "User not found" });
+      const result = await AdminServices.adminLogin(username, password);
+      if (!result.success) {
+        res.status(400).json({ message: result.message });
         return;
       }
-      const checkPassword = await bcrypt.compare(password, user.password);
-      if (!checkPassword) {
-        res.status(404).json({ message: "Incorrect Password!" });
-        return;
-      }
-      const accessToken = UserController.createJwtToken(user);
       res
         .status(201)
-        .json({ message: "Admin authenticate successfully", accessToken });
+        .json({
+          message: "Admin authenticate successfully",
+          token: result.accessToken,
+        });
     } catch (error) {
       console.log("error in authenticating admin", error);
-      res.status(400).json({ message: "error in authenticating user" });
+      res.status(400).json({ message: "error in authenticating user", error });
     }
   }
 
-  static async getAdmin(req: Request, res: Response) {
+  static async getAllAdmin(req: Request, res: Response) {
     try {
-      const users = await Admin.find();
-      res.status(200).json(users);
+      const result = await AdminServices.findAllAdmin();
+      res.status(200).json({ admins: result.admins });
     } catch (error) {
       console.error("Error in fetching data", error);
       res.status(400).json({ message: "Error in fetching data", error });
+    }
+  }
+
+  static async deleteAdminById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const result = await AdminServices.deleteAdminById(id);
+      res.status(200).json({
+        message: "Admin deleted successfully",
+      });
+    } catch (error) {
+      console.log("error in deleting the Admin:", error);
+      res.status(500).json({ message: "error in deleting the Admin" });
     }
   }
 }

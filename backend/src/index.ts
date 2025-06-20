@@ -8,14 +8,8 @@ import driverRoutes from './routes/driver.routes';
 import studentRoutes from './routes/student.routes';
 import busRoutes from './routes/bus.routes';
 
-// refatore the code into smaller chunkes.one function should always do the one task at a time.
-// implement the unit testing in backend
-// complete the week 3 task of seting up the firebase 
-// also work on the week 4 task
-// also implement proper JWT authorization 
-
 dotenv.config();
-const app = express();
+export const app = express();
 app.use(cors());
 app.use(express.json());
 
@@ -23,7 +17,7 @@ app.use(express.json());
 const mongodb_url = process.env.MONGODB_ATLAS_URL!;
 connectDB(mongodb_url);
 
-app.get('/protected', authenticate , (req,res)=>{
+app.get('/protected', authenticate , (req,res)=>{``
     res.json({ message:"welcome to the protected data route", user: req.user });
 });
 

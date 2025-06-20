@@ -5,7 +5,7 @@ const driverRoutes = Router();
 
 driverRoutes.post("/register", DriverController.registerDriver);
 driverRoutes.post("/login", DriverController.loginDriver);
-driverRoutes.get("/", DriverController.getDrivers);
+driverRoutes.get("/", DriverController.getAllDrivers);
 driverRoutes
   .route("/:id")
   .put(DriverController.updateDriverById)

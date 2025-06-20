@@ -1,31 +1,26 @@
-import Driver from "../models/driver.model";
 import { Request, Response } from "express";
-import { generateIDFor } from "../utility/generateID";
-import Bus from "../models/bus.model";
+import { DriverServices } from "../services/driver.services";
 
 export class DriverController {
-    static async registerDriver(req: Request, res: Response) {
+  static async registerDriver(req: Request, res: Response) {
     try {
-      const { driverName, driverPhoneNo } = req.body;
+      const { driverName, driverPhoneNo, busNumber } = req.body;
       if (!driverName || !driverPhoneNo) {
         res.status(400).json({ message: "All fields are required" });
         return;
       }
-      // const bus = await Bus.findOne({busNumber});
-      // if (!bus) {
-      //   res.status(404).json({ message: "bus not found" });
-      //   return;
-      // }
-      const uniqueID = generateIDFor("Driver");
-      const newDriver = await Driver.create({
-        driverId: uniqueID,
+      const result = await DriverServices.registerDriver(
         driverName,
         driverPhoneNo,
-        // busAssigned: bus._id,
-      });
+        busNumber
+      );
+      if (!result.success) {
+        res.status(400).json({ message: result.message });
+        return;
+      }
       res.status(201).json({
         message: `Driver Register Successfully`,
-        newDriver,
+        driver: result.newDriver,
       });
     } catch (error) {
       console.log("error in registering the driver:", error);
@@ -33,16 +28,17 @@ export class DriverController {
     }
   }
 
-    static async loginDriver(req: Request, res: Response) {
+  static async loginDriver(req: Request, res: Response) {
     try {
       const { driverId } = req.body;
-      const driver = await Driver.findOne({ driverId });
-      if (!driver) {
-        res.status(400).json({ message: "Driver not found" });
+      const result = await DriverServices.loginDriver(driverId);
+      if (!result.success) {
+        res.status(400).json({ message: result.message });
         return;
       }
       res.status(200).json({
         message: "driver login successfully",
+        dirver: result.driver,
       });
     } catch (error) {
       console.log("error in login the driver:", error);
@@ -50,51 +46,47 @@ export class DriverController {
     }
   }
 
-    static async getDrivers(req: Request, res: Response) {
+  static async getAllDrivers(req: Request, res: Response) {
     try {
-      const drivers = await Driver.find().populate("busAssigned");
-      res.status(200).json({ drivers });
+      const result = await DriverServices.getAllDrivers();
+      res.status(200).json({ drivers: result.drivers });
     } catch (error) {
       console.log("error in fetching the drivers:", error);
       res.status(500).json({ message: "error in fetching the drivers" });
     }
   }
 
-    static async updateDriverById(req: Request, res: Response) {
+  static async updateDriverById(req: Request, res: Response) {
     try {
       const { id } = req.params;
       const { driverName, driverPhoneNo, busNumber } = req.body;
-      const bus = await Bus.findOne({ busNumber });
-      if (!bus) {
-        res.status(404).json({ message: "bus not found" });
-        return;
-      }
-      const updatedDriver = await Driver.findByIdAndUpdate(
+      const result = await DriverServices.updateDriverById(
         id,
-        { driverName, driverPhoneNo, busAssigned: bus._id },
-        { new: true }
+        driverName,
+        driverPhoneNo,
+        busNumber
       );
-      if (!updatedDriver) {
-        res.status(404).json({ message: "No driver found!" });
+      if (!result.success) {
+        res.status(400).json({ message: result.message });
         return;
       }
-      await Bus.findByIdAndUpdate(bus._id, { busDriver: updatedDriver._id });
       res
         .status(200)
-        .json({ message: "Driver updated Succesfully", updatedDriver });
+        .json({
+          message: "Driver updated Succesfully",
+          drivers: result.updatedDriver,
+        });
     } catch (error) {
       console.log("error in updating the drivers:", error);
       res.status(500).json({ message: "error in updating the drivers" });
     }
   }
 
-    static async deleteDriverById(req: Request, res: Response) {
+  static async deleteDriverById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      await Driver.findByIdAndDelete(id);
-      res.status(200).json({
-        message: "driver deleted successfully",
-      });
+      await DriverServices.deleteDriverById(id);
+      res.status(200).json({ message: "driver deleted successfully" });
     } catch (error) {
       console.log("error in deleting the driver:", error);
       res.status(500).json({ message: "error in deleting the driver" });

@@ -1,114 +1,97 @@
-import Student from "../models/student.model";
 import { Request, Response } from "express";
-import { generateIDFor } from "../utility/generateID";
-import { getLocationCoordinates } from "../utility/locationCordinates";
-import Bus from "../models/bus.model";
+import { StudentServices } from "../services/student.services";
 
 export class StudentsController {
-    static async addStudent(req: Request, res: Response) {
+  static async addStudent(req: Request, res: Response) {
     try {
       const { studentName, parentContact, busNumber, pickupAddress } = req.body;
       if (!studentName || !parentContact || !busNumber || !pickupAddress) {
-        res.status(400).json({ message: "All fileds are required" });
+        res.status(400).json({ message: "All fields are required" });
         return;
       }
-      const busNo = await Bus.findOne({ busNumber });
-      if (!busNo) {
-        res.status(404).json({ message: "bus not found" });
-        return;
-      }
-      const studentId = generateIDFor("Parent");
-      const locationCoordinate = await getLocationCoordinates(pickupAddress);
-      if (!locationCoordinate) {
-        res.status(400).json({ message: "unable to find the location" });
-        return;
-      }
-      const newStudent = await Student.create({
-        studentId,
+      const result = await StudentServices.registerStudent(
         studentName,
         parentContact,
-        busAssigned: busNo._id,
-        pickupAddress,
-        pickupLocation: {
-          type: "Point",
-          coordinates: [locationCoordinate.lon, locationCoordinate.lat],
-        },
-      });
+        busNumber,
+        pickupAddress
+      );
+      if (!result.success) {
+        res.status(400).json({ message: result.message });
+        return;
+      }
       res
         .status(201)
-        .json({ message: "student registerd successfully", newStudent });
+        .json({
+          message: "student registerd successfully",
+          student: result.newStudent,
+        });
     } catch (error) {
       console.log("error in registering user", error);
       res.status(500).json({ message: "student registeration failed" });
     }
   }
 
-    static async loginStudent(req: Request, res: Response) {
+  static async loginStudent(req: Request, res: Response) {
     try {
       const { studentId } = req.body;
-      const existingStudent = await Student.findOne({ studentId });
-      if (!existingStudent) {
-        res.status(404).json({ message: "unable to find Student" });
+      const result = await StudentServices.loginStudent(studentId);
+      if (!result.success) {
+        res.status(400).json({ message: result.message });
         return;
       }
-      res.status(200).json({ message: "Student login successfully" });
+      res
+        .status(200)
+        .json({
+          message: "Student login successfully",
+          student: result.existingStudent,
+        });
     } catch (error) {
       console.log("error in login Student", error);
       res.status(500).json({ message: "login failed" });
     }
   }
 
-    static async getStudents(req: Request, res: Response) {
+  static async getAllStudents(req: Request, res: Response) {
     try {
-      const students = await Student.find();
-      res.status(200).json({ students });
+      const result = await StudentServices.getAllStudents();
+      res.status(200).json({ students: result.students });
     } catch (error) {
       console.log("error in fetching the students:", error);
       res.status(500).json({ message: "error in fetching the students" });
     }
   }
 
-    static async updateStudentById(req: Request, res: Response) {
+  static async updateStudentById(req: Request, res: Response) {
     try {
       const { id } = req.params;
       const { studentName, parentContact, busNumber, pickupAddress } = req.body;
-      const busNo = await Bus.findOne({ busNumber });
-      if (!busNo) {
-        res.status(404).json({ message: "bus not found" });
-        return;
-      }
-      const locationCoordinate = await getLocationCoordinates(pickupAddress);
-      const updatedStudent = await Student.findByIdAndUpdate(
+      const result = await StudentServices.updateStudentById(
         id,
-        {
-          studentName,
-          parentContact,
-          busAssigned: busNo._id,
-          pickupAddress,
-          pickupLocation: {
-            type: "Point",
-            coordinates: [locationCoordinate.lon, locationCoordinate.lat],
-          },
-        },
-        { new: true }
+        studentName,
+        parentContact,
+        busNumber,
+        pickupAddress
       );
-      if (!updatedStudent) {
-        res.status(400).json({ message: "No student found!" });
+      if (!result.success) {
+        res.status(400).json({ message: result.message });
         return;
       }
       res
         .status(200)
-        .json({ message: "student Updated Succesfully", updatedStudent });
+        .json({
+          message: "student Updated Succesfully",
+          student: result.updatedStudent,
+        });
     } catch (error) {
       console.log("error in updating the students:", error);
       res.status(500).json({ message: "error in updating the students" });
     }
   }
 
-    static async deleteStudentById(req: Request, res: Response) {
+  static async deleteStudentById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      await Student.findByIdAndDelete(id);
+      await StudentServices.deleteStudentById(id);
       res.status(200).json({
         message: "Student deleted successfully",
       });
