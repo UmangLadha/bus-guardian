@@ -1,6 +1,5 @@
 import "./App.css";
-import LoginPage from "./pages/login.page";
-import SignUpPage from "./pages/signup.page";
+import AuthPage from "./pages/authPage/auth.page";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard.page";
 import RouteNotFoundPage from "./pages/routeNotFoundPage";
@@ -11,8 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/auth" element={<AuthPage />} />
           <Route path="*" element={<RouteNotFoundPage />} />
         </Routes>
       </BrowserRouter>

@@ -1,0 +1,42 @@
+import SignupForm from "../elements/signUpForm";
+import LoginForm from "../elements/loginForm";
+import AuthToggle from "../elements/authToggle";
+import { useState } from "react";
+
+function AuthFormComponent() {
+  const [isActive, setIsActive] = useState(true);
+  return (
+    <div className="shadow-2xl text-center rounded-xl p-2 bg-white backdrop-blur sm:w-4/5 md:w-3/5 lg:w-2/5 xl:w-2/5">
+      <div className="text-center p-4">
+        <h1 className="text-black font-semibold text-2xl tracking-tight">
+          Admin Portal
+        </h1>
+        <p className="text-slate-400">Sign in or create your admin account</p>
+      </div>
+
+      <AuthToggle isActive={isActive} setIsActive={setIsActive} />
+
+      <div className="flex-col justify-center items-start overflow-hidden">
+        {isActive ? (
+          <div
+            className={`w-full transition-opacity duration-300 ${
+              isActive ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <LoginForm />
+          </div>
+        ) : (
+          <div
+            className={`w-full transition-opacity duration-300 ${
+              !isActive ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <SignupForm />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default AuthFormComponent;

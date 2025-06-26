@@ -10,6 +10,8 @@ interface InputProps {
   required: boolean;
   maxLength?: number;
   value: string;
+  autoComplete?:string;
+  title?:string;
   setInputValid:(value: boolean) => void;
   onChange: (value: string) => void;
 }
@@ -25,6 +27,8 @@ function TextInput(props: InputProps) {
     maxLength,
     pattern,
     value,
+    autoComplete,
+    title,
     setInputValid,
     onChange,
   } = props;
@@ -56,12 +60,12 @@ function TextInput(props: InputProps) {
         onChange={(e) => onChange(e.target.value)}
         onBlur={handleBlur}
         required={required}
-        autoComplete="on"
+        autoComplete={autoComplete}
         minLength={minLength}
         maxLength={maxLength}
         pattern={pattern}
-        title="password must contain one uppercase, one lowercase, one number, and one special character"
-        className="border-[1px] outline-none py-2 px-4 rounded-lg w-full my-2 focus:ring-1 focus:border-0 focus:ring-yellow-200"
+        title={title}
+        className="border-[1px] border-yellow-300 outline-none py-2 px-4 rounded-lg w-full my-2 focus:border-yellow-500"
         />
       {inputError && <span className="text-red-500 text-sm">{inputError}</span>}
     </label>
