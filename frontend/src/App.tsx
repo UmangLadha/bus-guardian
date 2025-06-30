@@ -2,14 +2,17 @@ import "./App.css";
 import AuthPage from "./pages/authPage/auth.page";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard.page";
-import RouteNotFoundPage from "./pages/routeNotFoundPage";
+import RouteNotFoundPage from "./routes/routeNotFoundPage";
+import PrivateRoutes from "./routes/privateRoutes";
 
 function App() {
-  return ( 
+  return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route element={<PrivateRoutes />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
           <Route path="/auth" element={<AuthPage />} />
           <Route path="*" element={<RouteNotFoundPage />} />
         </Routes>

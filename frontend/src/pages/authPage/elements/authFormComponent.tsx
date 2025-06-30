@@ -13,9 +13,7 @@ function AuthFormComponent() {
         </h1>
         <p className="text-slate-400">Sign in or create your admin account</p>
       </div>
-
       <AuthToggle isActive={isActive} setIsActive={setIsActive} />
-
       <div className="flex-col justify-center items-start overflow-hidden">
         {isActive ? (
           <div

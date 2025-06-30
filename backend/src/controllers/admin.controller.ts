@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
 import { AdminServices } from "../services/admin.services";
 
-export class UserController {
-  static async registerUser(req: Request, res: Response) {
+export class AdminController {
+  static async registerAdmin(req: Request, res: Response) {
     try {
-      const { username, phoneNo, password } = req.body;
-      if (!username || !phoneNo || !password) {
+      const { adminId, phoneNo, password } = req.body;
+      if (!adminId || !phoneNo || !password) {
         res.status(400).json({ message: "All fields are required" });
         return;
       }
       const result = await AdminServices.registerAdmin(
-        username,
+        adminId,
         phoneNo,
         password
       );
@@ -21,21 +21,22 @@ export class UserController {
       res
         .status(201)
         .json({
-          message: `user registered successfully`,
-          admin: result.newUser,
+          message: `Admin registered successfully`,
+          newAdmin: result.newAdmin, 
+          token: result.accessToken,
         });
     } catch (error) {
-      console.error("error in creating the user:", error);
+      console.error("error in creating the admin:", error);
       res
         .status(500)
-        .json({ message: "error in adding user in database", error });
+        .json({ message: "error in adding admin in database", error });
     }
   }
 
   static async adminLogin(req: Request, res: Response) {
     try {
-      const { username, password } = req.body;
-      const result = await AdminServices.adminLogin(username, password);
+      const { adminId, password } = req.body;
+      const result = await AdminServices.adminLogin(adminId, password);
       if (!result.success) {
         res.status(400).json({ message: result.message });
         return;
@@ -48,7 +49,7 @@ export class UserController {
         });
     } catch (error) {
       console.log("error in authenticating admin", error);
-      res.status(400).json({ message: "error in authenticating user", error });
+      res.status(400).json({ message: "error in authenticating admin", error });
     }
   }
 

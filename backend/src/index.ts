@@ -22,7 +22,7 @@ app.get('/protected', authenticate , (req,res)=>{``
 });
 
 //routes
-app.use("/api/users", adminRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/driver", driverRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/bus", busRoutes);

@@ -1,11 +1,11 @@
 import { Router } from "express";
-import {UserController} from "../controllers/admin.controller";
+import {AdminController} from "../controllers/admin.controller";
 
 const adminRoutes = Router();
 
-adminRoutes.post("/register",UserController.registerUser );
-adminRoutes.post("/login", UserController.adminLogin);
-adminRoutes.get("/", UserController.getAllAdmin );
-adminRoutes.delete("/:id", UserController.deleteAdminById );
+adminRoutes.post("/register",AdminController.registerAdmin );
+adminRoutes.post("/login", AdminController.adminLogin);
+adminRoutes.get("/", AdminController.getAllAdmin );
+adminRoutes.delete("/:id", AdminController.deleteAdminById );
 
 export default adminRoutes;

@@ -20,10 +20,10 @@ function LoginForm() {
     setInputValid((prev) => ({ ...prev, [field]: valid }));
   };
 
-  const isFormValid = !inputValid.adminId || !inputValid.password;
+  const formNotValid = !inputValid.adminId || !inputValid.password;
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isFormValid) {
+    if (formNotValid) {
       alert("All fields are required");
       return;
     }
@@ -73,7 +73,7 @@ function LoginForm() {
       />
       <button
         type="submit"
-        disabled={isFormValid}
+        disabled={formNotValid}
         className={`bg-secondary mt-5 text-white py-2 px-4 mb-3 w-full rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
       >
         Login
