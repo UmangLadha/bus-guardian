@@ -45,7 +45,7 @@ function SignupForm() {
         adminCred
       );
       toast.success(response.data.message || "Signup successful!");
-      console.log(response.data);
+      localStorage.setItem("token",response.data.accessToken);
       resetForm();
       navigate("/dashboard");
     } catch (error) {

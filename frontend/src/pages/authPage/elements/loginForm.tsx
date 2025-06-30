@@ -1,7 +1,16 @@
 import { useState } from "react";
 import TextInput from "../../../components/common/formInputs/textInput";
+import axios, { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
+interface AdminCred {
+  adminId: string;
+  password: string;
+}
 
 function LoginForm() {
+  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({
     adminId: "",
     password: "",
@@ -11,6 +20,7 @@ function LoginForm() {
     adminId: false,
     password: false,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setInputValue((prev) => ({ ...prev, [field]: value }));
@@ -20,6 +30,33 @@ function LoginForm() {
     setInputValid((prev) => ({ ...prev, [field]: valid }));
   };
 
+  const resetForm = () => {
+    setInputValue({ adminId: "", password: "" });
+    setInputValid({ adminId: false, password: false });
+  };
+
+  const sendingDataToServer = async (adminCred: AdminCred) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/admin/login`,
+        adminCred
+      );
+      toast.success(response.data.message || "Login successful!");
+      localStorage.setItem("token", response.data.accessToken);
+      resetForm();
+      navigate("/dashboard");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log("error in sending adminCred: ", error);
+        toast.error(
+          error.response?.data?.message || "Admin Registration failed"
+        );
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const formNotValid = !inputValid.adminId || !inputValid.password;
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,18 +64,11 @@ function LoginForm() {
       alert("All fields are required");
       return;
     }
-    console.log("Form Submitted:");
-    console.log("Username:", adminId);
-    console.log("Password:", password);
-
-    setInputValue({
-      adminId: "",
-      password: "",
-    });
-    setInputValid({
-      adminId: false,
-      password: false,
-    });
+    const adminCred = {
+      adminId,
+      password,
+    };
+    sendingDataToServer(adminCred);
   };
 
   return (
@@ -76,7 +106,7 @@ function LoginForm() {
         disabled={formNotValid}
         className={`bg-secondary mt-5 text-white py-2 px-4 mb-3 w-full rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
       >
-        Login
+        {isLoading ? "Loging.." : "Login"}
       </button>
     </form>
   );
