@@ -1,12 +1,12 @@
-import express from 'express';
-import cors from 'cors';
-import { connectDB } from './Database/database';
-import dotenv from 'dotenv';
-import adminRoutes from './routes/admin.routes';
-import { authenticate } from './middlewares/auth.middleware';
-import driverRoutes from './routes/driver.routes';
-import studentRoutes from './routes/student.routes';
-import busRoutes from './routes/bus.routes';
+import express from "express";
+import cors from "cors";
+import { connectDB } from "./Database/database";
+import dotenv from "dotenv";
+import adminRoutes from "./routes/admin.routes";
+import { VerifyToken } from "./middlewares/verifyToken";
+import driverRoutes from "./routes/driver.routes";
+import studentRoutes from "./routes/student.routes";
+import busRoutes from "./routes/bus.routes";
 
 dotenv.config();
 export const app = express();
@@ -17,8 +17,8 @@ app.use(express.json());
 const mongodb_url = process.env.MONGODB_ATLAS_URL!;
 connectDB(mongodb_url);
 
-app.get('/protected', authenticate , (req,res)=>{``
-    res.json({ message:"welcome to the protected data route", user: req.user });
+app.get("/protected", VerifyToken, (req, res) => {
+  res.status(200).json({ message: "Protected route accessed", user: req.encodedPayload });
 });
 
 //routes
@@ -28,8 +28,6 @@ app.use("/api/student", studentRoutes);
 app.use("/api/bus", busRoutes);
 
 const port = process.env.PORT || 5000;
-app.listen(port,()=>{
-    console.log(`Server is running on port http://localhost:${port}`);
-}); 
-
-
+app.listen(port, () => {
+  console.log(`Server is running on port http://localhost:${port}`);
+});

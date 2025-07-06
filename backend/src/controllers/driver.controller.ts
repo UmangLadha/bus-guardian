@@ -22,9 +22,11 @@ export class DriverController {
         message: `Driver Register Successfully`,
         driver: result.newDriver,
       });
+      return;
     } catch (error) {
       console.log("error in registering the driver:", error);
       res.status(500).json({ message: "driver registration failed" });
+      return;
     }
   }
 
@@ -40,9 +42,11 @@ export class DriverController {
         message: "driver login successfully",
         dirver: result.driver,
       });
+      return;
     } catch (error) {
       console.log("error in login the driver:", error);
       res.status(500).json({ message: "driver login failed" });
+      return;
     }
   }
 
@@ -50,9 +54,11 @@ export class DriverController {
     try {
       const result = await DriverServices.getAllDrivers();
       res.status(200).json({ drivers: result.drivers });
+      return;
     } catch (error) {
       console.log("error in fetching the drivers:", error);
       res.status(500).json({ message: "error in fetching the drivers" });
+      return;
     }
   }
 
@@ -70,15 +76,15 @@ export class DriverController {
         res.status(400).json({ message: result.message });
         return;
       }
-      res
-        .status(200)
-        .json({
-          message: "Driver updated Succesfully",
-          drivers: result.updatedDriver,
-        });
+      res.status(200).json({
+        message: "Driver updated Succesfully",
+        drivers: result.updatedDriver,
+      });
+      return;
     } catch (error) {
       console.log("error in updating the drivers:", error);
       res.status(500).json({ message: "error in updating the drivers" });
+      return;
     }
   }
 
@@ -87,9 +93,11 @@ export class DriverController {
       const { id } = req.params;
       await DriverServices.deleteDriverById(id);
       res.status(200).json({ message: "driver deleted successfully" });
+      return;
     } catch (error) {
       console.log("error in deleting the driver:", error);
       res.status(500).json({ message: "error in deleting the driver" });
+      return;
     }
   }
 }

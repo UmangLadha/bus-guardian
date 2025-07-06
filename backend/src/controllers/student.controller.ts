@@ -19,15 +19,15 @@ export class StudentsController {
         res.status(400).json({ message: result.message });
         return;
       }
-      res
-        .status(201)
-        .json({
-          message: "student registerd successfully",
-          student: result.newStudent,
-        });
+      res.status(201).json({
+        message: "student registerd successfully",
+        student: result.newStudent,
+      });
+      return;
     } catch (error) {
       console.log("error in registering user", error);
       res.status(500).json({ message: "student registeration failed" });
+      return;
     }
   }
 
@@ -39,15 +39,15 @@ export class StudentsController {
         res.status(400).json({ message: result.message });
         return;
       }
-      res
-        .status(200)
-        .json({
-          message: "Student login successfully",
-          student: result.existingStudent,
-        });
+      res.status(200).json({
+        message: "Student login successfully",
+        student: result.existingStudent,
+      });
+      return;
     } catch (error) {
       console.log("error in login Student", error);
       res.status(500).json({ message: "login failed" });
+      return;
     }
   }
 
@@ -55,9 +55,11 @@ export class StudentsController {
     try {
       const result = await StudentServices.getAllStudents();
       res.status(200).json({ students: result.students });
+      return;
     } catch (error) {
       console.log("error in fetching the students:", error);
       res.status(500).json({ message: "error in fetching the students" });
+      return;
     }
   }
 
@@ -76,15 +78,15 @@ export class StudentsController {
         res.status(400).json({ message: result.message });
         return;
       }
-      res
-        .status(200)
-        .json({
-          message: "student Updated Succesfully",
-          student: result.updatedStudent,
-        });
+      res.status(200).json({
+        message: "student Updated Succesfully",
+        student: result.updatedStudent,
+      });
+      return;
     } catch (error) {
       console.log("error in updating the students:", error);
       res.status(500).json({ message: "error in updating the students" });
+      return;
     }
   }
 
@@ -95,9 +97,11 @@ export class StudentsController {
       res.status(200).json({
         message: "Student deleted successfully",
       });
+      return;
     } catch (error) {
       console.log("error in deleting the student:", error);
       res.status(500).json({ message: "error in deleting the student" });
+      return;
     }
   }
 }

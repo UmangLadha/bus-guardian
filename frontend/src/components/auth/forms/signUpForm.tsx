@@ -1,11 +1,12 @@
 import { useState } from "react";
-import TextInput from "../../../components/common/formInputs/textInput";
+import TextInput from "../../common/formInputs/textInput";
 import toast from "react-hot-toast";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import SubmitButton from "../../common/button/submitButton";
 
 interface AdminCredentials {
-  adminId: string;
+  email: string;
   phoneNo: number;
   password: string;
 }
@@ -13,29 +14,19 @@ interface AdminCredentials {
 function SignupForm() {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({
-    adminId: "",
+    email: "",
     contactNo: "",
     password: "",
   });
-  const { adminId, contactNo, password } = inputValue;
-  const [inputValid, setInputValid] = useState({
-    adminId: false,
-    contactNo: false,
-    password: false,
-  });
   const [isLoading, setIsLoading] = useState(false);
+  const { email, contactNo, password } = inputValue;
 
   const handleInputChange = (field: string, value: string) => {
     setInputValue((prev) => ({ ...prev, [field]: value }));
   };
 
-  const fieldValid = (field: string, valid: boolean) => {
-    setInputValid((prev) => ({ ...prev, [field]: valid }));
-  };
-
   const resetForm = () => {
-    setInputValue({ adminId: "", contactNo: "", password: "" });
-    setInputValid({ adminId: false, contactNo: false, password: false });
+    setInputValue({ email: "", contactNo: "", password: "" });
   };
 
   const sendingDataToServer = async (adminCred: AdminCredentials) => {
@@ -44,38 +35,33 @@ function SignupForm() {
         `${import.meta.env.VITE_BASE_URL}/admin/register`,
         adminCred
       );
-      toast.success(response.data.message || "Signup successful!");
-      localStorage.setItem("token",response.data.accessToken);
+      toast.success(response.data.message || "Registration successful!");
+      console.log(response);
+      localStorage.setItem("token", response.data.token);
       resetForm();
-      navigate("/dashboard");
+      setTimeout(() => navigate("/"), 2000);
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log("error in sending adminCred: ", error);
-        toast.error(
-          error.response?.data?.message || "Admin Registration failed"
-        );
-      }
+      console.log("error in sending adminCred: ", error);
+      toast.error("error in creating account!");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const isFormFilled =
-    !inputValid.adminId || !inputValid.contactNo || !inputValid.password;
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isFormFilled) {
-      toast.error("All fields are required");
-      return;
-    }
+
     setIsLoading(true);
     const adminCred = {
-      adminId,
+      email,
       phoneNo: Number(contactNo),
       password,
     };
-    sendingDataToServer(adminCred);
+
+    console.log(adminCred);
+    toast.promise(sendingDataToServer(adminCred), {
+      loading: "registering the admin...",
+    });
   };
 
   return (
@@ -84,14 +70,13 @@ function SignupForm() {
       className="flex flex-col justify-between mx-auto items-start w-full"
     >
       <TextInput
-        name="adminId"
-        label="Admin ID"
-        type="text"
-        value={adminId}
+        name="email"
+        label="Email"
+        type="email"
+        value={email}
         minLength={8}
-        placeholder="Enter admin Id"
-        onChange={(val) => handleInputChange("adminId", val)}
-        setInputValid={(isvalid) => fieldValid("adminId", isvalid)}
+        placeholder="example@gmail.com"
+        onChange={(val) => handleInputChange("email", val)}
         required
       />
       <TextInput
@@ -102,8 +87,8 @@ function SignupForm() {
         maxLength={10}
         minLength={10}
         placeholder="Enter contact number"
+        title="Must contain a 10 digit contact number"
         onChange={(val) => handleInputChange("contactNo", val)}
-        setInputValid={(isvalid) => fieldValid("contactNo", isvalid)}
         required
       />
       <TextInput
@@ -117,16 +102,9 @@ function SignupForm() {
         placeholder="Enter password"
         title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more character"
         onChange={(val) => handleInputChange("password", val)}
-        setInputValid={(isvalid) => fieldValid("password", isvalid)}
         required
       />
-      <button
-        type="submit"
-        disabled={isFormFilled}
-        className={`bg-secondary mt-5 text-white py-2 px-4 mb-3 w-full rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
-      >
-        {isLoading ? "Creating..." : "Create Account"}
-      </button>
+      <SubmitButton isLoading={isLoading} loadingText = "Creating"/>
     </form>
   );
 }

@@ -2,7 +2,7 @@ import { TbBus } from "react-icons/tb";
 import { LuUserRound } from "react-icons/lu";
 import { LuSchool } from "react-icons/lu";
 
-function AuthHeading() {
+function IntroHeadings() {
   return (
     <div className="flex-1 space-y-6">
       <div className="flex items-center justify-center gap-2 sm:justify-start">
@@ -41,4 +41,4 @@ function AuthHeading() {
   );
 }
 
-export default AuthHeading;
+export default IntroHeadings;

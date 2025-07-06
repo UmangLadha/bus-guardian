@@ -1,9 +1,9 @@
-interface AuthToggleTypes{
+interface ToggleBtnType{
   isActive:boolean;
   setIsActive:React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function AuthToggle({isActive,setIsActive}:AuthToggleTypes) {
+function AuthToggleBtn({isActive,setIsActive}:ToggleBtnType) {
 
   return (
     <div className="w-full p-1 bg-amber-100 flex justify-between gap-1 rounded-md my-3">
@@ -27,4 +27,4 @@ function AuthToggle({isActive,setIsActive}:AuthToggleTypes) {
   );
 }
 
-export default AuthToggle;
+export default AuthToggleBtn;

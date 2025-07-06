@@ -1,31 +1,31 @@
 import Admin from "../models/admin.model";
 import { PasswordUtils } from "../utility/hashPassword";
-import { createJwtToken } from "../utility/createJwtToken";
+import tokenServices from "../utility/jwtTokenServices";
 
-export class AdminServices {
+export class  AdminServices {
   static async registerAdmin(
-    adminId: string,
+    email: string,
     phoneNo: number,
     password: string
   ) {
-    const existingAdmin = await Admin.findOne({ adminId });
+    const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
-      return { success: false, message: "adminId already exists" };
+      return { success: false, message: "Email already exists" };
     }
     const hashedPassword = await PasswordUtils.hashPassword(password);
     const newAdmin = await Admin.create({
-      adminId,
+      email,
       phoneNo,
       password: hashedPassword,
     });
-    const accessToken = createJwtToken(newAdmin);
+    const accessToken = tokenServices.createJwtToken(newAdmin);
     return { success: true, newAdmin, accessToken};
   }
 
-  static async adminLogin(adminId: string, password: string) {
-    const admin = await Admin.findOne({ adminId });
+  static async adminLogin(email: string, password: string, token:string) {
+    const admin = await Admin.findOne({ email });
     if (!admin) {
-      return { success: false, message: "admin not found" };
+      return { success: false, message: "Invalid email" };
     }
     const checkPassword = await PasswordUtils.validatePassword(
       password,
@@ -34,13 +34,13 @@ export class AdminServices {
     if (!checkPassword) {
       return { success: false, message: "Incorrect Password!" };
     }
-    const accessToken = createJwtToken(admin);
-    return { success: true, accessToken };
+    const accessToken = tokenServices.createJwtToken(admin);
+    return { success: true, accessToken};
   }
 
-  static async findAllAdmin() {
-    const admins = await Admin.find();
-    return { success: true, admins };
+  static async findAdmin(id:string) {
+    const admin = await Admin.findById({_id:id});
+    return { success: true, admin };
   }
 
   static async deleteAdminById(id: string) {

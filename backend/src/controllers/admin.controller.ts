@@ -4,13 +4,13 @@ import { AdminServices } from "../services/admin.services";
 export class AdminController {
   static async registerAdmin(req: Request, res: Response) {
     try {
-      const { adminId, phoneNo, password } = req.body;
-      if (!adminId || !phoneNo || !password) {
+      const { email, phoneNo, password } = req.body;
+      if (!email || !phoneNo || !password) {
         res.status(400).json({ message: "All fields are required" });
         return;
       }
       const result = await AdminServices.registerAdmin(
-        adminId,
+        email,
         phoneNo,
         password
       );
@@ -18,61 +18,68 @@ export class AdminController {
         res.status(400).json({ message: result.message });
         return;
       }
-      res
-        .status(201)
-        .json({
-          message: `Admin registered successfully`,
-          newAdmin: result.newAdmin, 
-          token: result.accessToken,
-        });
+      res.status(201).json({
+        message: `Admin registered successfully`,
+        token: result.accessToken,
+      });
+      return;
     } catch (error) {
       console.error("error in creating the admin:", error);
       res
         .status(500)
         .json({ message: "error in adding admin in database", error });
+      return;
     }
   }
 
   static async adminLogin(req: Request, res: Response) {
     try {
-      const { adminId, password } = req.body;
-      const result = await AdminServices.adminLogin(adminId, password);
+      const { email, password, token } = req.body;
+      if (!email || !password) {
+        res.status(400).json({ message: "All fields are required" });
+        return;
+      }
+      const result = await AdminServices.adminLogin(email, password, token);
       if (!result.success) {
         res.status(400).json({ message: result.message });
         return;
       }
-      res
-        .status(201)
-        .json({
-          message: "Admin authenticate successfully",
-          token: result.accessToken,
-        });
+      res.status(201).json({
+        message: "Admin authenticate successfully",
+        token: result.accessToken,
+      });
+      return;
     } catch (error) {
       console.log("error in authenticating admin", error);
       res.status(400).json({ message: "error in authenticating admin", error });
     }
   }
 
-  static async getAllAdmin(req: Request, res: Response) {
+  static async adminProfile(req: Request, res: Response) {
     try {
-      const result = await AdminServices.findAllAdmin();
-      res.status(200).json({ admins: result.admins });
+      const adminData = req.encodedPayload;
+      const result = await AdminServices.findAdmin(adminData.id);
+      res.status(200).json({ admin: result.admin });
+      return;
     } catch (error) {
       console.error("Error in fetching data", error);
       res.status(400).json({ message: "Error in fetching data", error });
+      return;
     }
   }
 
   static async deleteAdminById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const result = await AdminServices.deleteAdminById(id);
+      await AdminServices.deleteAdminById(id);
       res.status(200).json({
         message: "Admin deleted successfully",
       });
+      return;
     } catch (error) {
       console.log("error in deleting the Admin:", error);
       res.status(500).json({ message: "error in deleting the Admin" });
+      return;
     }
   }
 }
