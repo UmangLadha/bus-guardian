@@ -5,19 +5,16 @@ import Dashboard from "./pages/dashboard.page";
 import RouteNotFoundPage from "./routes/routeNotFoundPage";
 import PrivateRoutes from "./routes/privateRoutes";
 import { Toaster } from "react-hot-toast";
-// import Header from "./components/common/headerBar/header";
 import Bus from "./pages/bus.page";
 import Driver from "./pages/driver.page";
 import Student from "./pages/student.page";
 import Home from "./pages/home.page";
-// import ParentContainer from "./components/parentContainer";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Toaster position="top-center" />
-
         <Routes>
           <Route path="/auth" element={<AuthPage />} />
           <Route element={<PrivateRoutes />}>

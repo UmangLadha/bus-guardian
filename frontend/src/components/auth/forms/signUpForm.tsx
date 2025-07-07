@@ -1,9 +1,9 @@
 import { useState } from "react";
 import TextInput from "../../common/formInputs/textInput";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-import SubmitButton from "../../common/button/submitButton";
+import SubmitButton from "../../common/button/Button";
 
 interface AdminCredentials {
   email: string;
@@ -41,8 +41,9 @@ function SignupForm() {
       resetForm();
       setTimeout(() => navigate("/"), 2000);
     } catch (error) {
-      console.log("error in sending adminCred: ", error);
-      toast.error("error in creating account!");
+      if(error instanceof AxiosError){
+        toast.error(error?.response?.data.message || "error in creating account!");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +68,7 @@ function SignupForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col justify-between mx-auto items-start w-full"
+      className="flex flex-col justify-between mx-auto items-center w-full"
     >
       <TextInput
         name="email"
@@ -104,7 +105,7 @@ function SignupForm() {
         onChange={(val) => handleInputChange("password", val)}
         required
       />
-      <SubmitButton isLoading={isLoading} loadingText = "Creating"/>
+      <SubmitButton isLoading={isLoading} loadingText = "Creating" btnText="Create Account"/>
     </form>
   );
 }
