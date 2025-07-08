@@ -1,7 +1,7 @@
 import { MdDeleteOutline } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 
-function DataTable() {
+function Table() {
   const buses = [
     {
       id: "BUS001",
@@ -85,11 +85,11 @@ function DataTable() {
                 <td className="py-3 px-4 flex gap-4 items-center">
                   <FaRegEdit
                     title="Update"
-                    className="text-amber-500 cursor-pointer"
+                    className="text-amber-500 size-5 cursor-pointer"
                   />
                   <MdDeleteOutline
                     title="Delete"
-                    className="text-red-600 w-5 h-6 cursor-pointer"
+                    className="text-red-600 size-5 cursor-pointer"
                   />
                 </td>
               </tr>
@@ -100,4 +100,4 @@ function DataTable() {
     </div>
   );
 }
-export default DataTable;
+export default Table;

@@ -29,7 +29,7 @@ function NavLinks() {
   ];
 
   return (
-    <nav className="flex-1 py-3 px-3">
+    <nav className="flex-1 py-3 px-2">
       <ul className="space-y-2">
         {SideBarItems.map((item) => (
           <li key={item.route}>
@@ -37,8 +37,8 @@ function NavLinks() {
               to={item.route}
               className={({ isActive }) =>
                 isActive
-                  ? "flex items-center gap-3 p-3 text-amber-100 bg-amber-500 rounded-lg font-semibold transition-colors duration-200"
-                  : "flex items-center gap-3 p-3 text-black hover:text-amber-600 hover:bg-amber-100 rounded-lg transition-colors duration-200"
+                  ? "flex items-center gap-3 p-2 text-amber-100 bg-amber-500 rounded-lg font-semibold transition-colors duration-200"
+                  : "flex items-center gap-3 p-2 text-black hover:text-amber-600 hover:bg-amber-100 rounded-lg transition-colors duration-200"
               }
             >
               <item.icon className="w-5 h-5" />

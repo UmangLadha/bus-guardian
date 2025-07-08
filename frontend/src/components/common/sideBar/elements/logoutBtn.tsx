@@ -4,7 +4,7 @@ function LogoutBtn() {
   return (
     <div className="p-2 border-t border-amber-400">
       <button
-        className="w-full flex items-center cursor-pointer gap-3 p-3 text-red-600 hover:bg-amber-100 rounded-lg font-semibold transition-colors duration-200"
+        className="w-full flex items-center cursor-pointer gap-3 p-2 text-red-600 hover:bg-amber-100 rounded-lg font-semibold transition-colors duration-200"
         onClick={() => {
           localStorage.removeItem("token");
           window.location.href = "/auth";

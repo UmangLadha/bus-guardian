@@ -3,7 +3,7 @@ import TextInput from "../../common/formInputs/textInput";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import SubmitButton from "../../common/button/Button";
+import Button from "../../common/button/Button";
 
 interface AdminCred {
   email: string;
@@ -38,8 +38,11 @@ function LoginForm() {
       resetForm();
       setTimeout(() => navigate("/"), 2000);
     } catch (error) {
-      if(error instanceof AxiosError){
-        toast.error(error?.response?.data.message || "Error in login, please try again later!");
+      if (error instanceof AxiosError) {
+        toast.error(
+          error?.response?.data.message ||
+            "Error in login, please try again later!"
+        );
       }
     } finally {
       setIsLoading(false);
@@ -86,8 +89,13 @@ function LoginForm() {
         onChange={(val) => handleInputChange("password", val)}
         required
       />
-            <SubmitButton isLoading={isLoading} loadingText = "Loging" btnText="Login"/>
-
+      <Button
+        btnType="submit"
+        isLoading={isLoading}
+        loadingText="Loging"
+        btnText="Login"
+        className="bg-secondary flex items-center justify-center gap-3 mt-5 text-white py-2 px-4 mb-3 w-full rounded-lg font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+      />
     </form>
   );
 }
