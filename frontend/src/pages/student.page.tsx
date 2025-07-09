@@ -1,14 +1,6 @@
-import PageHeading from "../components/common/pageHeading/pageheading";
+import StudentComponent from "../components/student/studentComponent";
 
-
-function Student(){
-    return(
-        <>
-      <PageHeading
-        heading="Student Management"
-        description="Add, edit, and manage students"
-      />
-    </>
-    )
+function Student() {
+  return <StudentComponent />;
 }
 export default Student;

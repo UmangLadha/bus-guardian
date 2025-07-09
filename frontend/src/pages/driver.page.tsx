@@ -1,13 +1,6 @@
-import PageHeading from "../components/common/pageHeading/pageheading";
+import DriverComponent from "../components/driver/driverComponent";
 
 function Driver() {
-  return (
-    <>
-      <PageHeading
-        heading="Driver Management"
-        description="Add, edit, and manage bus drivers"
-      />
-    </>
-  );
+  return <DriverComponent />;
 }
 export default Driver;

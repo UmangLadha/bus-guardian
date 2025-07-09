@@ -1,4 +1,4 @@
-import PageHeading from "../components/common/pageHeading/pageheading";
+import PageHeading from "../components/common/pageHeader/pageheader";
 import StateBox from "../components/dashboard/stateBox";
 
 function Dashboard() {
