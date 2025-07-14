@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { FiUserCheck } from "react-icons/fi";
 import { LuUsers } from "react-icons/lu";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { FaRoute } from "react-icons/fa6";
 
 function NavLinks() {
   const SideBarItems = [
@@ -25,6 +26,11 @@ function NavLinks() {
       title: "Student Management",
       route: "/student",
       icon: LuUsers,
+    },
+    {
+      title: "Route Management",
+      route: "/route",
+      icon: FaRoute,
     },
   ];
 

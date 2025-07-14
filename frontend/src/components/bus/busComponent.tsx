@@ -17,18 +17,21 @@ function BusComponent() {
       />
 
       {openModal && (
-        <Modal title="Add New Bus" setOpenModal={setOpenModal}>
-          <BusForm />
+        <Modal
+          title="Add New Bus"
+          subTitle="Register a new school bus in the system"
+          setOpenModal={setOpenModal}
+        >
+          <BusForm setOpenModal={setOpenModal} />
         </Modal>
       )}
 
       <Table
         tableHeadings={[
-          "Bus ID",
           "Bus Number",
           "Bus Driver",
           "Route",
-          "Students",
+          "Bus Capacity",
           "Action",
         ]}
       >

@@ -1,10 +1,12 @@
 import { BiBus } from "react-icons/bi";
 import { FiUserCheck } from "react-icons/fi";
 import { LuUsers } from "react-icons/lu";
+import { FaRoute } from "react-icons/fa6";
+
 
 function StateBox() {
   const stats = [
-    { name: "Total Buses", value: "12", icon: BiBus, color: "bg-primary" },
+    { name: "Total Buses", value: "12", icon: BiBus, color: "bg-secondary" },
     {
       name: "Total Drivers",
       value: "15",
@@ -16,6 +18,12 @@ function StateBox() {
       value: "245",
       icon: LuUsers,
       color: "bg-blue-500",
+    },
+    {
+      name: "Active Route",
+      value: "8",
+      icon: FaRoute,
+      color: "bg-purple-500",
     },
   ];
 

@@ -49,7 +49,7 @@ function TextInput(props: InputProps) {
           maxLength={maxLength}
           pattern={pattern}
           title={title}
-          className="border-[1px] border-yellow-300 outline-none py-2 px-4 rounded-lg w-full my-2 focus:border-yellow-500"
+          className="border-[1px] border-yellow-300 outline-none py-2 px-4 rounded-lg w-full my-1 focus:border-yellow-500"
         />
       </label>
     </>

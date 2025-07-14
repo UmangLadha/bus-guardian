@@ -57,7 +57,7 @@ function LoginForm() {
       password,
     };
     toast.promise(sendingDataToServer(adminCred), {
-      loading: "loging the admin...",
+      loading: "Loging the admin...",
     });
   };
 

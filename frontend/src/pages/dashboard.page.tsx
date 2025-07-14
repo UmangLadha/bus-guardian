@@ -1,16 +1,7 @@
-import PageHeading from "../components/common/pageHeader/pageheader";
-import StateBox from "../components/dashboard/stateBox";
+import DashboardComponent from "../components/dashboard/dashboardComponent";
 
 function Dashboard() {
-  return (
-    <>
-      <PageHeading
-        heading="Dashboard"
-        description="Welcome back! Here's what's happening with your school buses today."
-      />
-      <StateBox />
-    </>
-  );
+  return <DashboardComponent />;
 }
 
 export default Dashboard;

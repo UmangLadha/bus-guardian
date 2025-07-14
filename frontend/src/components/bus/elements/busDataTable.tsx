@@ -30,7 +30,7 @@ function BusDataTable({ setOpenModal }: BusDataTableProps) {
       driver: "Mike Wilson",
       route: "Route C",
       status: "Maintenance",
-      students: 0,
+      students: 40,
     },
     {
       id: "BUS004",
@@ -60,7 +60,6 @@ function BusDataTable({ setOpenModal }: BusDataTableProps) {
           <td className="py-3 px-4 text-sm font-medium text-gray-900">
             {data.id}
           </td>
-          <td className="py-3 px-4 text-sm text-gray-700">{data.number}</td>
           <td className="py-3 px-4 text-sm text-gray-700">{data.driver}</td>
           <td className="py-3 px-4 text-sm text-gray-700">{data.route}</td>
           <td className="py-3 px-4 text-sm text-gray-700">{data.students}</td>
