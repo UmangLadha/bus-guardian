@@ -3,9 +3,15 @@ import TextInput from "../../common/formInputs/textInput";
 import Button from "../../common/button/Button";
 import toast from "react-hot-toast";
 import SelectList from "../../common/formInputs/selectList";
+import axios, { AxiosError } from "axios";
 
 interface busFormComponent {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+interface busDataTypes {
+  busNumber: string;
+  busDriver: string;
+  busRoute: string;
 }
 
 function BusForm({ setOpenModal }: busFormComponent) {
@@ -24,29 +30,43 @@ function BusForm({ setOpenModal }: busFormComponent) {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const busData = {
-      busNumber: inputValue.busNumber,
-      busDriver: inputValue.busDriver,
-      busRoute: inputValue.busRoute,
-    };
-    console.log("Bus Form Data:", busData);
-    setTimeout(() => {
-      toast.success("Bus Added Succesfully");
-      setIsLoading(false);
+  const sendBusDataToServer = async (busData: busDataTypes) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/bus/register`,
+        busData
+      );
+      toast.success(response.data.message || "Bus Added Successfull");
       setInputValue({
         busNumber: "",
         busCapacity: "",
         busDriver: "",
         busRoute: "",
       });
-    }, 2000);
+      setIsLoading(false);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message || "Please try again later!");
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const busData = {
+      busNumber: inputValue.busNumber,
+      busCapacity: inputValue.busCapacity,
+      busDriver: inputValue.busDriver,
+      busRoute: inputValue.busRoute,
+    };
+    sendBusDataToServer(busData);
+    console.log("Bus Form Data:", busData);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-wrap w-full gap-4">
       <TextInput
         name="busNumber"
         label="Bus Number"
@@ -61,7 +81,7 @@ function BusForm({ setOpenModal }: busFormComponent) {
         label="Bus Capacity"
         type="number"
         placeholder="Bus Capacity"
-        value={inputValue.busNumber}
+        value={inputValue.busCapacity}
         onChange={(val) => handleInputChange("busCapacity", val)}
         required
       />
@@ -121,11 +141,9 @@ function BusForm({ setOpenModal }: busFormComponent) {
         ]}
         required
       />
-
-
-      <div className="flex items-center justify-end gap-4 mt-6">
+      <div className="flex items-center justify-center mx-auto gap-4 mt-5">
         <Button
-          className="font-semibold bg-gray-400 text-white py-2 px-5 rounded-lg hover:bg-gray-500"
+          className="w-32 font-semibold bg-gray-400 text-white py-2 px-5 rounded-lg hover:bg-gray-500"
           btnText="Cancel"
           btnType="reset"
           onClick={() => setOpenModal(false)}
@@ -135,7 +153,7 @@ function BusForm({ setOpenModal }: busFormComponent) {
           btnText="Submit"
           isLoading={isLoading}
           loadingText="Submitting..."
-          className="w-32 bg-secondary flex items-center justify-center gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer hover:bg-secondary-dark disabled:opacity-50 disabled:cursor-not-allowed" // Added hover
+          className="w-32 bg-secondary flex items-center justify-center gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer hover:bg-secondary-dark disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
     </form>

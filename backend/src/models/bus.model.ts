@@ -6,8 +6,12 @@ const busSchema = new Schema({
     busDriver:{
         type: Schema.Types.ObjectId,
         ref:"Driver"
+    },
+    busRoute:{
+        type: Schema.Types.ObjectId,
+        ref:"BusRoute"
     }
-});
+},{timestamps:true});
 
 const Bus = model("Bus", busSchema);
 

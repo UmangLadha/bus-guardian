@@ -4,7 +4,7 @@ import { BusServices } from "../services/bus.services";
 export class busController {
   static async addBus(req: Request, res: Response) {
     try {
-      const { busNumber, busCapacity, driverId } = req.body;
+      const { busNumber, busCapacity, driverId, busRoute } = req.body;
       if (!busNumber || !busCapacity) {
         res.status(400).json({ message: "all fields are required" });
         return;
@@ -12,7 +12,8 @@ export class busController {
       const result = await BusServices.registerBus(
         busNumber,
         busCapacity,
-        driverId
+        driverId,
+        busRoute
       );
       if (!result.success) {
         res.status(400).json({ message: result.message });

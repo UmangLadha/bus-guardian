@@ -2,7 +2,7 @@ interface InputProps {
   name: string;
   type: string;
   placeholder: string;
-  label: string;
+  label?: string;
   minLength?: number;
   pattern?: string;
   required: boolean;
@@ -33,7 +33,7 @@ function TextInput(props: InputProps) {
     <>
       <label
         htmlFor={name}
-        className="p-1.5 font-medium w-full text-left flex flex-col gap-1"
+        className="p-1.5 font-medium text-left min-w-64 w-full flex flex-col gap-1"
       >
         <span>{label}</span>
         <input

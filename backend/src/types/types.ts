@@ -10,7 +10,8 @@ export interface AdminUser {
 export interface BusData{
   busNumber:string,
   busCapacity:number,
-  busDriver?:string
+  busDriver?:string,
+  busRoute:string
 }
 
 export interface DriverTypes {

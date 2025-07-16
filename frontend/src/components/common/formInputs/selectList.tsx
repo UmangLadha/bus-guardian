@@ -11,7 +11,7 @@ function SelectList({label, name, value, onChange, options, required}:SelectInpu
   return (
     <>
       <label
-        className="p-1.5 font-medium w-full text-left flex flex-col gap-1"
+        className="p-1.5 font-medium text-left min-w-64 flex flex-col gap-1"
         htmlFor={name}
       >
        {label}

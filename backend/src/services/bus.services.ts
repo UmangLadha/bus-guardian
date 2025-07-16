@@ -8,7 +8,8 @@ export class BusServices {
   static async registerBus(
     busNumber: string,
     busCapacity: number,
-    driverId: string
+    driverId: string,
+    busRoute: string,
   ) {
     const busExit = await Bus.findOne({ busNumber });
     if (busExit) {
@@ -20,6 +21,7 @@ export class BusServices {
     const busData: BusData = {
       busNumber,
       busCapacity,
+      busRoute,
     };
     if (driverId) {
       busData.busDriver = driverId;
