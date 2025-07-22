@@ -7,6 +7,7 @@ import { VerifyToken } from "./middlewares/verifyToken";
 import driverRoutes from "./routes/driver.routes";
 import studentRoutes from "./routes/student.routes";
 import busRoutes from "./routes/bus.routes";
+import routes from "./routes/busRoute.route";
 
 dotenv.config();
 export const app = express();
@@ -26,6 +27,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/driver", driverRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/bus", busRoutes);
+app.use("/api/route", routes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import TextInput from "../../common/formInputs/textInput";
 import Button from "../../common/button/Button";
 import { HiOutlineX } from "react-icons/hi";
+import { postData } from "../../../utils/apiHandlers";
+import toast from "react-hot-toast";
 
 interface RouteFormTypes {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,7 +15,7 @@ function RouteForm({ setOpenModal }: RouteFormTypes) {
     routeList: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [routeList, setRouteList] = useState<string[]>([]);
+  const [routeListBox, setRouteListBox] = useState<string[]>([]);
 
   const handleInputChange = (field: string, value: string) => {
     setInputValue((prev) => ({
@@ -22,24 +24,60 @@ function RouteForm({ setOpenModal }: RouteFormTypes) {
     }));
   };
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setIsLoading(true);
-    setIsLoading(false);
-    console.log("form Submitted");
-  }
-
   function AddRoute(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-  if (inputValue.routeList.trim() === "") {
-    return;
+    if (inputValue.routeList.trim() === "") {
+      return;
+    }
+    setRouteListBox((prev) => [...prev, inputValue.routeList]);
+    setInputValue((prev) => ({
+      ...prev,
+      routeList: "",
+    }));
   }
-  setRouteList((prev) => [...prev, inputValue.routeList]);
-  setInputValue((prev) => ({
-    ...prev,
-    routeList: "",
-  }));
+
+  const submitData = async (routeData: {
+    routeName: string;
+    routeList: string[];
+  }) => {
+    const { message, error } = await postData(
+      "/route/register",
+      routeData
+    );
+    // console.log("Route error:", error);
+    // console.log("Route message", message);
+    // console.log("Route Data", data);
+    if (error) {
+      toast.error(error);
+    }
+    if (message) {
+      toast.success(message || "Data Added Successfully");
+      setInputValue({ routeName: "", routeList: "" });
+      setRouteListBox([]);
+      setOpenModal(false);
+    }
+    setIsLoading(false);
+  };
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!inputValue.routeName.trim() || routeListBox.length === 0) {
+      toast.error("Please enter route name and at least one route.");
+      return;
+    }
+    setIsLoading(true);
+    const routeData = {
+      routeName: inputValue.routeName,
+      routeList: routeListBox,
+    };
+    submitData(routeData);
   }
+
+  function removeRoute(index: number) {
+    const removedRoute = routeListBox.filter((_, id) => id !== index);
+    setRouteListBox(removedRoute);
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit} className="w-full gap-4">
@@ -62,27 +100,33 @@ function RouteForm({ setOpenModal }: RouteFormTypes) {
               placeholder="Enter Route"
               value={inputValue.routeList}
               onChange={(val) => handleInputChange("routeList", val)}
-              required
             />
             <Button
               btnText="Add"
               btnType="button"
               onClick={AddRoute}
-              className="bg-green-600 py-2.5 px-6 rounded-lg text-white font-semibold hover:bg-green-700"
+              className="bg-green-600 py-2 px-6 rounded-lg text-white font-semibold hover:bg-green-700"
             />
           </div>
           <div className="w-full h-60 px-3 py-2 border border-amber-200 rounded-lg overflow-y-auto">
-            {routeList.map((list) => (
-              <div className="font-semibold text-lg py-1.5 px-1 flex items-center border-b justify-between">
-                {list}
-                <span>
-                  <HiOutlineX
-                    className="size-5 cursor-pointer"
-                    onClick={() => setOpenModal(false)}
-                  />
-                </span>
-              </div>
-            ))}
+            {routeListBox.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center">No routes added yet</p>
+            ) : (
+              routeListBox.map((list, index) => (
+                <div
+                  key={index}
+                  className="font-semibold text-md py-1 px-1 flex items-center justify-between"
+                >
+                  {list}
+                  <span>
+                    <HiOutlineX
+                      className="size-5 cursor-pointer"
+                      onClick={() => removeRoute(index)}
+                    />
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

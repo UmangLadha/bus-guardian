@@ -2,10 +2,12 @@ import { useState } from "react";
 import PageHeader from "../common/pageHeader/pageheader";
 import Modal from "../common/model/modal";
 import RouteForm from "./elements/routeForm";
+import Table from "../common/table/table";
+import RouteDataTable from "./elements/routeDataTable";
 
 function RouteComponent() {
-    const [openModal, setOpenModal] = useState(false);
-  
+  const [openModal, setOpenModal] = useState(false);
+
   return (
     <>
       <PageHeader
@@ -16,13 +18,17 @@ function RouteComponent() {
 
       {openModal && (
         <Modal
-          title="Add New Bus"
-          subTitle="Register a new school bus in the system"
+          title="Add New Route"
+          subTitle="Register a new school bus route in the system"
           setOpenModal={setOpenModal}
         >
           <RouteForm setOpenModal={setOpenModal} />
         </Modal>
       )}
+
+      <Table tableHeadings={["Route name", "Route List", "Action"]}>
+        <RouteDataTable setOpenModal={setOpenModal} />
+      </Table>
     </>
   );
 }

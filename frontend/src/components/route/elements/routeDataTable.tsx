@@ -1,0 +1,98 @@
+import { useEffect, useState } from "react";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
+import { deleteData, getData } from "../../../utils/apiHandlers";
+import toast from "react-hot-toast";
+
+interface RouteDataTypes {
+  _id: string;
+  routeName: string;
+  routeList: string[];
+}
+
+interface BusDataTableProps {
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+function RouteDataTable({ setOpenModal }: BusDataTableProps) {
+  const [tableContent, setTableContent] = useState([]);
+
+  useEffect(() => {
+    async function fetchBusRoutes() {
+      const { data, error } = await getData("/route");
+      // console.log("Data:", data);
+      // console.log("Error:", error);
+      if (data) setTableContent(data.Routes);
+      if (error) toast.error(error);
+    }
+    fetchBusRoutes();
+  }, []);
+
+  const actionEdit = () => {
+    setTableContent([]);
+    setOpenModal(true);
+  };
+
+  const actionDelete = async (id: string) => {
+    console.log("Deleting route with ID:", id);
+    const { response, error } = await deleteData(`/route/${id}`);
+    console.log("bus route deleted response: ", response);
+    console.log("error on deleting bus route: ", error);
+    if (error) {
+      toast.error(error);
+      return;
+    }
+    toast.success(response.message || "Route deleted successfully");
+    setTableContent((prev) =>
+      prev.filter((route: RouteDataTypes) => route._id !== id)
+    );
+  };
+
+  return (
+    <tbody>
+      {tableContent.length === 0 ? (
+        <tr>
+          <td colSpan={4} className="text-center py-4">
+            Loading routes...
+          </td>
+        </tr>
+      ) : (
+        tableContent?.map((data: RouteDataTypes) => (
+          <tr
+            key={data._id}
+            className="border-b border-gray-200 hover:bg-gray-50"
+          >
+            <td className="py-3 px-4 text-sm font-medium text-gray-900">
+              {data.routeName}
+            </td>
+            <td className="py-3 px-4 text-sm text-gray-900">
+              <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
+                {data.routeList.map((detail, index) => (
+                  <span
+                    key={index}
+                    className="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full whitespace-nowrap"
+                  >
+                    {detail}
+                  </span>
+                ))}
+              </div>
+            </td>
+            <td className="py-3 px-4 flex gap-4 items-center">
+              <FaRegEdit
+                title="Update"
+                onClick={actionEdit}
+                className="text-amber-500 size-5 cursor-pointer"
+              />
+              <MdDeleteOutline
+                title="Delete"
+                onClick={() => actionDelete(data._id)}
+                className="text-red-600 size-5 cursor-pointer"
+              />
+            </td>
+          </tr>
+        ))
+      )}
+    </tbody>
+  );
+}
+
+export default RouteDataTable;

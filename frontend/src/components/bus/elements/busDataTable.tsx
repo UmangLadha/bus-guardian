@@ -1,8 +1,8 @@
-import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
+import { getData } from "../../../utils/apiHandlers";
 
 interface BusDataTypes {
   _id: string;
@@ -17,65 +17,18 @@ interface BusDataTableProps {
 }
 
 function BusDataTable({ setOpenModal }: BusDataTableProps) {
-  const [tableContent, setTableContent] = useState([]);
-  // const tableData = [
-  //   {
-  //     id: "BUS001",
-  //     number: "School Bus 1",
-  //     driver: "John Smith",
-  //     route: "Route A",
-  //     status: "Active",
-  //     students: 25,
-  //   },
-  //   {
-  //     id: "BUS002",
-  //     number: "School Bus 2",
-  //     driver: "Sarah Johnson",
-  //     route: "Route B",
-  //     status: "Active",
-  //     students: 30,
-  //   },
-  //   {
-  //     id: "BUS003",
-  //     number: "School Bus 3",
-  //     driver: "Mike Wilson",
-  //     route: "Route C",
-  //     status: "Maintenance",
-  //     students: 40,
-  //   },
-  //   {
-  //     id: "BUS004",
-  //     number: "School Bus 4",
-  //     driver: "Emily Davis",
-  //     route: "Route D",
-  //     status: "Active",
-  //     students: 28,
-  //   },
-  // ];
-
-  const token = localStorage.getItem("token");
+  const [tableContent, setTableContent] = useState<BusDataTypes[]>([]);
 
   useEffect(() => {
-    const getBusData = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/bus`,
-          {
-            headers: {
-              authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(response.data.buses);
-        setTableContent(response.data.buses);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          console.log("error in fetching data:", error);
-          toast.error(error.response?.data.message || "error in fetching data");
-        }
-      }
-    };
-    getBusData();
+    async function fetchBusData() {
+      const { data, error } = await getData("/bus");
+      // i have to remove this logs
+      // console.log("Data:", data);
+      // console.log("Error:", error);
+      if (data) setTableContent(data.buses);
+      if (error) toast.error(error);
+    }
+    fetchBusData();
   }, []);
 
   const actionEdit = () => {

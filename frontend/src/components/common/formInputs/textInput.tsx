@@ -5,7 +5,7 @@ interface InputProps {
   label?: string;
   minLength?: number;
   pattern?: string;
-  required: boolean;
+  required?: boolean;
   maxLength?: number;
   value: string;
   autoComplete?: string;
