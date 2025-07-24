@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
+import type { ModalStateHandler } from "../../../types/types";
 
-interface DriverDataTableProps {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-function DriverDataTable({ setOpenModal }: DriverDataTableProps) {
+function DriverDataTable({ setOpenModal }: ModalStateHandler) {
   const tableData = [
     {
       id: "DRV001",

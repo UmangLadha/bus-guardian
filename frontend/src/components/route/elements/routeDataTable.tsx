@@ -3,25 +3,23 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { deleteData, getData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
+import type { ModalStateHandler, RouteDataTypes } from "../../../types/types";
+import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
+import { setRoutes } from "../../../redux/features/route/routeSlice";
 
-interface RouteDataTypes {
-  _id: string;
-  routeName: string;
-  routeList: string[];
-}
-
-interface BusDataTableProps {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-function RouteDataTable({ setOpenModal }: BusDataTableProps) {
+function RouteDataTable({ setOpenModal }: ModalStateHandler) {
   const [tableContent, setTableContent] = useState([]);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function fetchBusRoutes() {
       const { data, error } = await getData("/route");
       // console.log("Data:", data);
       // console.log("Error:", error);
-      if (data) setTableContent(data.Routes);
+      if (data) {
+        setTableContent(data.Routes);
+        dispatch(setRoutes(data.Routes));
+      }
       if (error) toast.error(error);
     }
     fetchBusRoutes();

@@ -3,7 +3,6 @@ import { FiUserCheck } from "react-icons/fi";
 import { LuUsers } from "react-icons/lu";
 import { FaRoute } from "react-icons/fa6";
 
-
 function StateBox() {
   const stats = [
     { name: "Total Buses", value: "12", icon: BiBus, color: "bg-secondary" },

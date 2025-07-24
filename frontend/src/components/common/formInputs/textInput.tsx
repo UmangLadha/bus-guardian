@@ -1,19 +1,6 @@
-interface InputProps {
-  name: string;
-  type: string;
-  placeholder: string;
-  label?: string;
-  minLength?: number;
-  pattern?: string;
-  required?: boolean;
-  maxLength?: number;
-  value: string;
-  autoComplete?: string;
-  title?: string;
-  onChange: (value: string) => void;
-}
+import type { InputPropsTypes } from "../../../types/types";
 
-function TextInput(props: InputProps) {
+function TextInput(props: InputPropsTypes) {
   const {
     name,
     type,

@@ -1,9 +1,6 @@
-interface TableProps {
-  tableHeadings?: string[];
-  children: React.ReactNode;
-}
+import type { TablePropsTypes } from "../../../types/types";
 
-function Table({ tableHeadings, children }: TableProps) {
+function Table({ tableHeadings, children }: TablePropsTypes) {
   return (
     <div className="mt-8">
       <div className="overflow-x-auto overflow-y-auto h-[580px] rounded-lg shadow border scroll-smooth border-gray-300">

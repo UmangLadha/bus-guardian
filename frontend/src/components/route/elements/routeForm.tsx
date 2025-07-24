@@ -4,12 +4,9 @@ import Button from "../../common/button/Button";
 import { HiOutlineX } from "react-icons/hi";
 import { postData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
+import type { ModalStateHandler } from "../../../types/types";
 
-interface RouteFormTypes {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-function RouteForm({ setOpenModal }: RouteFormTypes) {
+function RouteForm({ setOpenModal }: ModalStateHandler) {
   const [inputValue, setInputValue] = useState({
     routeName: "",
     routeList: "",
@@ -40,10 +37,7 @@ function RouteForm({ setOpenModal }: RouteFormTypes) {
     routeName: string;
     routeList: string[];
   }) => {
-    const { message, error } = await postData(
-      "/route/register",
-      routeData
-    );
+    const { message, error } = await postData("/route/register", routeData);
     // console.log("Route error:", error);
     // console.log("Route message", message);
     // console.log("Route Data", data);
@@ -110,7 +104,9 @@ function RouteForm({ setOpenModal }: RouteFormTypes) {
           </div>
           <div className="w-full h-60 px-3 py-2 border border-amber-200 rounded-lg overflow-y-auto">
             {routeListBox.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center">No routes added yet</p>
+              <p className="text-sm text-gray-400 text-center">
+                No routes added yet
+              </p>
             ) : (
               routeListBox.map((list, index) => (
                 <div

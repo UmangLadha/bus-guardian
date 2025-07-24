@@ -4,11 +4,7 @@ import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Button from "../../common/button/Button";
-
-interface AdminCred {
-  email: string;
-  password: string;
-}
+import type { AdminCredTypes } from "../../../types/types";
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -27,7 +23,7 @@ function LoginForm() {
     setInputValue({ email: "", password: "" });
   };
 
-  const sendingDataToServer = async (adminCred: AdminCred) => {
+  const sendingDataToServer = async (adminCred: AdminCredTypes) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/admin/login`,

@@ -1,10 +1,6 @@
-interface ToggleBtnType{
-  isActive:boolean;
-  setIsActive:React.Dispatch<React.SetStateAction<boolean>>;
-}
+import type { ToggleBtnType } from "../../../types/types";
 
-function AuthToggleBtn({isActive,setIsActive}:ToggleBtnType) {
-
+function AuthToggleBtn({ isActive, setIsActive }: ToggleBtnType) {
   return (
     <div className="w-full p-1 bg-amber-100 flex justify-between gap-1 rounded-md my-3">
       <div

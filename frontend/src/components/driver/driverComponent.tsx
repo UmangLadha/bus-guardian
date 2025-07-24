@@ -5,11 +5,11 @@ import PageHeader from "../common/pageHeader/pageheader";
 import DriverForm from "./elements/driverForm";
 import DriverDataTable from "./elements/driverDataTable";
 
-function DriverComponent(){
-      const [openModal, setOpenModal] = useState(false);
-    
-    return(
-         <>
+function DriverComponent() {
+  const [openModal, setOpenModal] = useState(false);
+
+  return (
+    <>
       <PageHeader
         heading="Driver Management"
         description="Add, edit, and manage school drivers"
@@ -31,12 +31,10 @@ function DriverComponent(){
           "Action",
         ]}
       >
-        <DriverDataTable 
-        setOpenModal={setOpenModal}
-         />
+        <DriverDataTable setOpenModal={setOpenModal} />
       </Table>
     </>
-    );
+  );
 }
 
 export default DriverComponent;

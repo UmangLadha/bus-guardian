@@ -4,12 +4,7 @@ import toast from "react-hot-toast";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import Button from "../../common/button/Button";
-
-interface AdminCredentials {
-  email: string;
-  phoneNo: number;
-  password: string;
-}
+import type { AdminCredentialsTypes } from "../../../types/types";
 
 function SignupForm() {
   const navigate = useNavigate();
@@ -29,7 +24,7 @@ function SignupForm() {
     setInputValue({ email: "", contactNo: "", password: "" });
   };
 
-  const sendingDataToServer = async (adminCred: AdminCredentials) => {
+  const sendingDataToServer = async (adminCred: AdminCredentialsTypes) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/admin/register`,

@@ -4,17 +4,15 @@ import Button from "../../common/button/Button";
 import toast from "react-hot-toast";
 import SelectList from "../../common/formInputs/selectList";
 import axios, { AxiosError } from "axios";
+import type {
+  ModalStateHandler,
+  BusDataTypes,
+  RouteDataTypes,
+} from "../../../types/types";
+import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
+import type { RootState } from "../../../redux/app/store";
 
-interface busFormComponent {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-interface busDataTypes {
-  busNumber: string;
-  busDriver: string;
-  busRoute: string;
-}
-
-function BusForm({ setOpenModal }: busFormComponent) {
+function BusForm({ setOpenModal }: ModalStateHandler) {
   const [inputValue, setInputValue] = useState({
     busNumber: "",
     busCapacity: "",
@@ -23,6 +21,8 @@ function BusForm({ setOpenModal }: busFormComponent) {
   });
   const [isLoading, setIsLoading] = useState(false);
 
+  const routes = useAppSelector((state: RootState) => state.Route.routes);
+
   const handleInputChange = (field: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
@@ -30,7 +30,7 @@ function BusForm({ setOpenModal }: busFormComponent) {
     }));
   };
 
-  const sendBusDataToServer = async (busData: busDataTypes) => {
+  const sendBusDataToServer = async (busData: BusDataTypes) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/bus/register`,
@@ -91,28 +91,10 @@ function BusForm({ setOpenModal }: busFormComponent) {
         label="Route"
         value={inputValue.busRoute}
         onChange={(val) => handleInputChange("busRoute", val)}
-        options={[
-          {
-            id: "vidhyadharNagar",
-            name: "Vidhyadhar Nagar",
-          },
-          {
-            id: "kalwarRoad",
-            name: "Kalwar Road",
-          },
-          {
-            id: "jhotwara",
-            name: "Jhotwara",
-          },
-          {
-            id: "murlipura",
-            name: "Murlipura",
-          },
-          {
-            id: "vaisahaliNagar",
-            name: "Vaisahali Nagar",
-          },
-        ]}
+        options={routes.map((route: RouteDataTypes) => ({
+          id: route._id,
+          name: route.routeName,
+        }))}
         required
       />
 

@@ -1,7 +1,5 @@
-interface TransitionTypes {
-  show: boolean;
-  children: React.ReactNode;
-}
+import type { TransitionTypes } from "../../../types/types";
+
 function FadeTransition({ show, children }: TransitionTypes) {
   return (
     <div

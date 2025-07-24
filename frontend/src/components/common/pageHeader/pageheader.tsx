@@ -1,11 +1,6 @@
 import { FiPlus } from "react-icons/fi";
 import Button from "../button/Button";
-
-interface PageHeaderTypes {
-  heading: string;
-  description: string;
-  setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import type { PageHeaderTypes } from "../../../types/types";
 
 function PageHeader({ heading, description, setOpenModal }: PageHeaderTypes) {
   return (

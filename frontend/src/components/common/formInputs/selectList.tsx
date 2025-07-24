@@ -1,20 +1,20 @@
-interface SelectInputProps {
-  name: string;
-  label: string;
-  required: boolean;
-  value: string;
-  options: { id: string; name: string }[];
-  onChange: (value: string) => void;
-}
+import type { SelectInputPropsTypes } from "../../../types/types";
 
-function SelectList({label, name, value, onChange, options, required}:SelectInputProps) {
+function SelectList({
+  label,
+  name,
+  value,
+  onChange,
+  options,
+  required,
+}: SelectInputPropsTypes) {
   return (
     <>
       <label
         className="p-1.5 font-medium text-left min-w-64 flex flex-col gap-1"
         htmlFor={name}
       >
-       {label}
+        {label}
         <select
           name={name}
           id={name}
@@ -25,10 +25,10 @@ function SelectList({label, name, value, onChange, options, required}:SelectInpu
         >
           <option value="">Select a option</option>
           {options.map((option) => (
-        <option key={option.id} value={option.id}>
-          {option.name}
-        </option>
-      ))}
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
         </select>
       </label>
     </>

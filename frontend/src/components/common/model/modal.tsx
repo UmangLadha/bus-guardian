@@ -1,14 +1,7 @@
-import type React from "react";
 import { HiOutlineX } from "react-icons/hi";
+import type { ModalPropsTypes } from "../../../types/types";
 
-interface ModalProps {
-  title?: string;
-  subTitle?: string;
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  children: React.ReactNode;
-}
-
-function Modal({ setOpenModal, title, subTitle, children }: ModalProps) {
+function Modal({ setOpenModal, title, subTitle, children }: ModalPropsTypes) {
   return (
     <>
       <div

@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
+import type { ModalStateHandler } from "../../../types/types";
 
-interface StudentDataTableProps {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-function StudentDataTable({ setOpenModal }: StudentDataTableProps) {
+function StudentDataTable({ setOpenModal }: ModalStateHandler) {
   const tableData = [
     {
       id: "STD001",

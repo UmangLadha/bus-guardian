@@ -3,20 +3,9 @@ import toast from "react-hot-toast";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { getData } from "../../../utils/apiHandlers";
+import type { ModalStateHandler, BusDataTypes } from "../../../types/types";
 
-interface BusDataTypes {
-  _id: string;
-  busNumber: string;
-  busDriver: string;
-  busRoute: string;
-  busCapacity: number;
-}
-
-interface BusDataTableProps {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-function BusDataTable({ setOpenModal }: BusDataTableProps) {
+function BusDataTable({ setOpenModal }: ModalStateHandler) {
   const [tableContent, setTableContent] = useState<BusDataTypes[]>([]);
 
   useEffect(() => {

@@ -1,15 +1,5 @@
-import type { MouseEventHandler } from "react";
 import { BiLoaderAlt } from "react-icons/bi";
-
-interface ButtonTypes {
-  isLoading?: boolean;
-  loadingText?: string;
-  btnText?: string;
-  children?: React.ReactNode;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  btnType: "submit" | "reset" | "button";
-  className: string;
-}
+import type { ButtonTypes } from "../../../types/types";
 
 function Button({
   isLoading,
