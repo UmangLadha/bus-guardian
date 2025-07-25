@@ -20,8 +20,8 @@ export interface AdminCredentialsTypes {
 
 export interface CreateBusDto {
   busNumber: string;
-  busDriver: string;
-  busRoute: string;
+  assignedDriver?: { _id: string; driverName: string };
+  assignedRoute?: { _id: string; busRoute: string };
   busCapacity: number;
 }
 
@@ -38,7 +38,7 @@ export interface RouteDataTypes {
 export interface CreateDriverDto {
   driverName: string;
   driverPhoneNo: string;
-  busNumber: string;
+  assignedBus?: { _id: string; busNumber: string };
 }
 
 export interface DriverDataTypes extends CreateDriverDto {

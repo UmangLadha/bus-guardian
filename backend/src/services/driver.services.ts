@@ -11,7 +11,7 @@ export class DriverServices {
   ) {
     const driverExit = await Driver.findOne({ driverPhoneNo });
     if (driverExit) {
-      return { success: false, message: "phoneNo already exits" };
+      return { success: false, message: "Driver Phone number already exits" };
     }
     const driverData: DriverTypes = {
       driverName,
@@ -22,7 +22,7 @@ export class DriverServices {
       if (!bus) {
         return { success: false, message: "bus not found" };
       }
-      driverData.busAssigned = bus._id;
+      driverData.assignedBus = { _id: bus._id, busNumber };
     }
     const newDriver = await Driver.create(driverData);
     return { success: true, newDriver };
@@ -37,7 +37,7 @@ export class DriverServices {
   }
 
   static async getAllDrivers() {
-    const drivers = await Driver.find().populate("busAssigned");
+    const drivers = await Driver.find().populate("assignedBus");
     return { success: true, drivers };
   }
 
@@ -53,7 +53,7 @@ export class DriverServices {
       if (!bus) {
         return { success: false, message: "bus not found" };
       }
-      updatedPayload.busAssigned = bus._id;
+      updatedPayload.assignedBus = { _id: bus._id, busNumber };
       await Bus.findByIdAndUpdate(bus._id, { busDriver: id });
     }
     const updatedDriver = await Driver.findByIdAndUpdate(id, updatedPayload, {

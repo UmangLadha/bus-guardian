@@ -3,7 +3,6 @@ import TextInput from "../../common/formInputs/textInput";
 import Button from "../../common/button/Button";
 import toast from "react-hot-toast";
 import SelectList from "../../common/formInputs/selectList";
-import axios, { AxiosError } from "axios";
 import type {
   ModalStateHandler,
   CreateBusDto,
@@ -11,6 +10,7 @@ import type {
 } from "../../../types/types";
 import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
+import { postData } from "../../../utils/apiHandlers";
 
 function BusForm({ setOpenModal }: ModalStateHandler) {
   const [inputValue, setInputValue] = useState({
@@ -22,6 +22,7 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
   const [isLoading, setIsLoading] = useState(false);
 
   const routes = useAppSelector((state: RootState) => state.Route.routes);
+  const drivers = useAppSelector((state: RootState) => state.Driver.driver);
 
   const handleInputChange = (field: string, value: string) => {
     setInputValue((prev) => ({
@@ -31,12 +32,13 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
   };
 
   const sendBusDataToServer = async (busData: CreateBusDto) => {
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/bus/register`,
-        busData
-      );
-      toast.success(response.data.message || "Bus Added Successfull");
+    const { message, error } = await postData("/bus/register", busData);
+    if (error) {
+      toast.error(error);
+      setIsLoading(false);
+    }
+    if (message) {
+      toast.success(message || "Bus Added Successfull");
       setInputValue({
         busNumber: "",
         busCapacity: 0,
@@ -44,11 +46,7 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
         busRoute: "",
       });
       setIsLoading(false);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message || "Please try again later!");
-        setIsLoading(false);
-      }
+      setOpenModal(false);
     }
   };
 
@@ -58,11 +56,10 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
     const busData = {
       busNumber: inputValue.busNumber,
       busCapacity: inputValue.busCapacity,
-      busDriver: inputValue.busDriver,
-      busRoute: inputValue.busRoute,
+      busDriverId: inputValue.busDriver,
+      busRouteId: inputValue.busRoute,
     };
     sendBusDataToServer(busData);
-    console.log("Bus Form Data:", busData);
   };
 
   return (
@@ -103,24 +100,10 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
         label="Driver"
         value={inputValue.busDriver}
         onChange={(val) => handleInputChange("busDriver", val)}
-        options={[
-          {
-            id: "DonaldTrump",
-            name: "Donald Trump",
-          },
-          {
-            id: "MohammadYunus",
-            name: "Mohammad Yunus",
-          },
-          {
-            id: "ShahbazSarif",
-            name: "Shahbaz Sarif",
-          },
-          {
-            id: "AsimMunir",
-            name: "Asim Munir",
-          },
-        ]}
+        options={drivers.map((driver) => ({
+          id: driver._id,
+          name: driver.driverName,
+        }))}
         required
       />
       <div className="flex items-center justify-center mx-auto gap-4 mt-5">

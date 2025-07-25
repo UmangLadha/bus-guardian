@@ -4,7 +4,13 @@ const driverSchema = new Schema(
   {
     driverName: { type: String, required: true },
     driverPhoneNo: { type: Number, required: true },
-    busAssigned: { type: Schema.Types.ObjectId, ref: "Bus" },
+    assignedBus: {
+      _id: {
+        type: Schema.Types.ObjectId,
+        ref: "Bus",
+      },
+      busNumber: String,
+    },
   },
   { timestamps: true }
 );

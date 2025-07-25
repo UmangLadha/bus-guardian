@@ -1,17 +1,26 @@
-import {Schema, model} from "mongoose";
+import { Schema, model } from "mongoose";
 
-const busSchema = new Schema({
-    busNumber:{ type: String, required: true, unique:true },
-    busCapacity:{type: Number, required:true },
-    busDriver:{
+const busSchema = new Schema(
+  {
+    busNumber: { type: String, required: true, unique: true },
+    busCapacity: { type: Number, required: true },
+    assignedDriver: {
+      _id: {
         type: Schema.Types.ObjectId,
-        ref:"Driver"
+        ref: "Driver",
+      },
+      driverName: String,
     },
-    busRoute:{
+    assignedRoute: {
+      _id: {
         type: Schema.Types.ObjectId,
-        ref:"BusRoute"
-    }
-},{timestamps:true});
+        ref: "BusRoute",
+      },
+      busRoute: String,
+    },
+  },
+  { timestamps: true }
+);
 
 const Bus = model("Bus", busSchema);
 

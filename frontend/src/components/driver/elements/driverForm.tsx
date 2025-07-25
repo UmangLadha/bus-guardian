@@ -52,7 +52,7 @@ function DriverForm({ setOpenModal }: ModalStateHandler) {
       driverPhoneNo: inputValue.phoneNo,
       busNumber: inputValue.busNumber,
     };
-    console.log("driver Data: s",driverData)
+    console.log("driver Data: s", driverData);
     sendDataToServer(driverData);
   };
 

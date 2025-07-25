@@ -4,7 +4,7 @@ import { BusServices } from "../services/bus.services";
 export class busController {
   static async addBus(req: Request, res: Response) {
     try {
-      const { busNumber, busCapacity, driverId, busRoute } = req.body;
+      const { busNumber, busCapacity, busDriverId, busRouteId } = req.body;
       if (!busNumber || !busCapacity) {
         res.status(400).json({ message: "all fields are required" });
         return;
@@ -12,8 +12,8 @@ export class busController {
       const result = await BusServices.registerBus(
         busNumber,
         busCapacity,
-        driverId,
-        busRoute
+        busDriverId,
+        busRouteId
       );
       if (!result.success) {
         res.status(400).json({ message: result.message });
@@ -66,11 +66,12 @@ export class busController {
   static async updateBusById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { busNumber, driverId, busCapacity } = req.body;
+      const { busNumber, busDriverId, busRouteId, busCapacity } = req.body;
       const result = await BusServices.updateBusById(
         id,
         busNumber,
-        driverId,
+        busDriverId,
+        busRouteId,
         busCapacity
       );
       if (!result.success) {
@@ -89,7 +90,10 @@ export class busController {
   static async deleteBusById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      await BusServices.deleteBusById(id);
+      const deleted = await BusServices.deleteBusById(id);
+      if (!deleted.success) {
+        return res.status(404).json({ message: "Bus not found" });
+      }
       res.status(200).json({
         message: "bus deleted successfully",
       });

@@ -7,25 +7,31 @@ export interface AdminUser {
   password: string;
 }
 
-export interface BusData{
-  busNumber:string,
-  busCapacity:number,
-  busDriver?:string,
-  busRoute:string
+export interface BusData {
+  busNumber: string;
+  busCapacity: number;
+  assignedDriver?: {
+    _id: Types.ObjectId | string;
+    driverName: string;
+  };
+  assignedRoute?: {
+    _id: Types.ObjectId | string;
+    busRoute: string;
+  };
 }
 
 export interface DriverTypes {
   driverId?: string;
   driverName: string;
   driverPhoneNo: number;
-  busAssigned?: Types.ObjectId;
+  assignedBus?: { _id: Types.ObjectId; busNumber: String };
 }
 
-export interface StudentTypes{
-  studentName:string, 
-  parentContact:number, 
-  busNumber?:string, 
-  pickupAddress?:string,
-  busAssigned?:Types.ObjectId,
-  pickupLocation?:object
+export interface StudentTypes {
+  studentName: string;
+  parentContact: number;
+  busNumber?: string;
+  pickupAddress?: string;
+  busAssigned?: Types.ObjectId;
+  pickupLocation?: object;
 }

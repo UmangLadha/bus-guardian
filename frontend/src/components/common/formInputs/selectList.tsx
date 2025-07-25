@@ -25,7 +25,7 @@ function SelectList({
         >
           <option value="">Select a option</option>
           {options.map((option) => (
-            <option key={option.id} value={option.name}>
+            <option key={option.id} value={option.id}>
               {option.name}
             </option>
           ))}

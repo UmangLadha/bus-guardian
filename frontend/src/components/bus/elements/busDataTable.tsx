@@ -16,7 +16,7 @@ function BusDataTable({ setOpenModal }: ModalStateHandler) {
     async function fetchBusData() {
       const { data, error } = await getData("/bus");
       // i have to remove this logs
-      // console.log("Data:", data);
+      console.log("Data:", data);
       // console.log("Error:", error);
       if (data) {
         setTableContent(data.buses);
@@ -56,9 +56,9 @@ function BusDataTable({ setOpenModal }: ModalStateHandler) {
               {data.busNumber}
             </td>
             <td className="py-3 px-4 text-sm text-gray-700">
-              {data.busDriver}
+              {data.assignedDriver?.driverName}
             </td>
-            <td className="py-3 px-4 text-sm text-gray-700">{data.busRoute}</td>
+            <td className="py-3 px-4 text-sm text-gray-700">{data.assignedRoute?.busRoute}</td>
             <td className="py-3 px-4 text-sm text-gray-700">
               {data.busCapacity}
             </td>
