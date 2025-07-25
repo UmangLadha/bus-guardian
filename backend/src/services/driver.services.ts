@@ -13,9 +13,7 @@ export class DriverServices {
     if (driverExit) {
       return { success: false, message: "phoneNo already exits" };
     }
-    const uniqueID = generateIDFor("Driver");
     const driverData: DriverTypes = {
-      driverId: uniqueID,
       driverName,
       driverPhoneNo,
     };

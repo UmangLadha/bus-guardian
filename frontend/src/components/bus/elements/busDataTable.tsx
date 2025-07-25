@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-import { getData } from "../../../utils/apiHandlers";
+import { deleteData, getData } from "../../../utils/apiHandlers";
 import type { ModalStateHandler, BusDataTypes } from "../../../types/types";
+import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
+import { setbus } from "../../../redux/features/bus/busSlice";
 
 function BusDataTable({ setOpenModal }: ModalStateHandler) {
   const [tableContent, setTableContent] = useState<BusDataTypes[]>([]);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function fetchBusData() {
@@ -14,7 +18,10 @@ function BusDataTable({ setOpenModal }: ModalStateHandler) {
       // i have to remove this logs
       // console.log("Data:", data);
       // console.log("Error:", error);
-      if (data) setTableContent(data.buses);
+      if (data) {
+        setTableContent(data.buses);
+        dispatch(setbus(data.buses));
+      }
       if (error) toast.error(error);
     }
     fetchBusData();
@@ -24,10 +31,18 @@ function BusDataTable({ setOpenModal }: ModalStateHandler) {
     setOpenModal(true);
   };
 
-  // const actionDelete = (id: string) => {
-  //   // const deletedTable = tableContent.filter((item) => item._id !== id);
-  //   // setTableContent(deletedTable);
-  // };
+  const actionDelete = async (id: string) => {
+    // console.log("Deleting bus with ID:", id);
+    const { response, error } = await deleteData(`/bus/${id}`);
+    // console.log("bus deleted response: ", response);
+    // console.log("error on deleting bus: ", error);
+    if (error) {
+      toast.error(error);
+      return;
+    }
+    toast.success(response.message || "Route deleted successfully");
+    setTableContent((prev) => prev.filter((bus) => bus._id !== id));
+  };
 
   return (
     <tbody>
@@ -55,7 +70,7 @@ function BusDataTable({ setOpenModal }: ModalStateHandler) {
               />
               <MdDeleteOutline
                 title="Delete"
-                // onClick={() => actionDelete(data._id)}
+                onClick={() => actionDelete(data._id)}
                 className="text-red-600 size-5 cursor-pointer"
               />
             </td>

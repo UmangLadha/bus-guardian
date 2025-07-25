@@ -33,7 +33,7 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
     }));
   }
 
-  const submitData = async (routeData: {
+  const sendDataToServer = async (routeData: {
     routeName: string;
     routeList: string[];
   }) => {
@@ -64,7 +64,7 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
       routeName: inputValue.routeName,
       routeList: routeListBox,
     };
-    submitData(routeData);
+    sendDataToServer(routeData);
   }
 
   function removeRoute(index: number) {

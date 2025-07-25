@@ -18,12 +18,15 @@ export interface AdminCredentialsTypes {
   password: string;
 }
 
-export interface BusDataTypes {
-  _id?: string;
+export interface CreateBusDto {
   busNumber: string;
   busDriver: string;
   busRoute: string;
-  busCapacity?: string;
+  busCapacity: number;
+}
+
+export interface BusDataTypes extends CreateBusDto {
+  _id: string;
 }
 
 export interface RouteDataTypes {
@@ -32,10 +35,14 @@ export interface RouteDataTypes {
   routeList: string[];
 }
 
-export interface DriverDataTypes {
-  _id:string;
-  driverName:string;
-  driverNumber:number;
+export interface CreateDriverDto {
+  driverName: string;
+  driverPhoneNo: string;
+  busNumber: string;
+}
+
+export interface DriverDataTypes extends CreateDriverDto {
+  _id: string;
 }
 
 // page header types
@@ -78,7 +85,7 @@ export interface InputPropsTypes {
   pattern?: string;
   required?: boolean;
   maxLength?: number;
-  value: string;
+  value: string | number;
   autoComplete?: string;
   title?: string;
   onChange: (value: string) => void;

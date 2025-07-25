@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import routeReducer from "../features/route/routeSlice";
 import driverReducer from "../features/driver/driverSlice";
+import busReducer from "../features/bus/busSlice";
 
 export const store = configureStore({
   reducer: {
     Route: routeReducer,
-    Driver: driverReducer
+    Driver: driverReducer,
+    Bus: busReducer,
   },
 });
 

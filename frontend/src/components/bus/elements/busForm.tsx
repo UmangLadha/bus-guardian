@@ -6,7 +6,7 @@ import SelectList from "../../common/formInputs/selectList";
 import axios, { AxiosError } from "axios";
 import type {
   ModalStateHandler,
-  BusDataTypes,
+  CreateBusDto,
   RouteDataTypes,
 } from "../../../types/types";
 import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
@@ -15,7 +15,7 @@ import type { RootState } from "../../../redux/app/store";
 function BusForm({ setOpenModal }: ModalStateHandler) {
   const [inputValue, setInputValue] = useState({
     busNumber: "",
-    busCapacity: "",
+    busCapacity: 0,
     busDriver: "",
     busRoute: "",
   });
@@ -30,7 +30,7 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
     }));
   };
 
-  const sendBusDataToServer = async (busData: BusDataTypes) => {
+  const sendBusDataToServer = async (busData: CreateBusDto) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/bus/register`,
@@ -39,7 +39,7 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
       toast.success(response.data.message || "Bus Added Successfull");
       setInputValue({
         busNumber: "",
-        busCapacity: "",
+        busCapacity: 0,
         busDriver: "",
         busRoute: "",
       });

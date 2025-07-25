@@ -44,10 +44,10 @@ function DriverDataTable({ setOpenModal }: ModalStateHandler) {
 
   return (
     <tbody>
-      {tableContent.map((data) => (
+      {tableContent.map((data,index) => (
         <tr key={data.id} className="border-b border-gray-200 hover:bg-gray-50">
           <td className="py-3 px-4 text-sm font-medium text-gray-900">
-            {data.id}
+            {index+1}
           </td>
           <td className="py-3 px-4 text-sm text-gray-700">{data.name}</td>
           <td className="py-3 px-4 text-sm text-gray-700">{data.number}</td>

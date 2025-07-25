@@ -18,16 +18,16 @@ function DriverComponent() {
 
       {openModal && (
         <Modal title="Add New Driver" setOpenModal={setOpenModal}>
-          <DriverForm />
+          <DriverForm setOpenModal={setOpenModal} />
         </Modal>
       )}
 
       <Table
         tableHeadings={[
-          "Driver ID",
+          "Sno.",
           "Driver Name",
-          "Driver Number",
-          "Bus Number",
+          "Phone No.",
+          "Bus Assigned",
           "Action",
         ]}
       >

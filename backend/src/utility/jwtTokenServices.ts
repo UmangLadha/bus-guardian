@@ -6,7 +6,7 @@ export default class tokenServices {
     const accessToken = jwt.sign(
       { id: user._id.toString() },
       process.env.JWT_ACCESS_SECRET!,
-      { expiresIn: "7d" }
+      { expiresIn: '7d' }
     );
     return accessToken;
   }
