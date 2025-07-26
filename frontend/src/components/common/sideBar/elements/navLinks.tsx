@@ -13,6 +13,11 @@ function NavLinks() {
       icon: LuLayoutDashboard,
     },
     {
+      title: "Route Management",
+      route: "/route",
+      icon: FaRoute,
+    },
+    {
       title: "Bus Management",
       route: "/bus",
       icon: BiBus,
@@ -26,11 +31,6 @@ function NavLinks() {
       title: "Student Management",
       route: "/student",
       icon: LuUsers,
-    },
-    {
-      title: "Route Management",
-      route: "/route",
-      icon: FaRoute,
     },
   ];
 

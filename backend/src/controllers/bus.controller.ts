@@ -92,7 +92,8 @@ export class busController {
       const { id } = req.params;
       const deleted = await BusServices.deleteBusById(id);
       if (!deleted.success) {
-        return res.status(404).json({ message: "Bus not found" });
+        res.status(404).json({ message: "Bus not found" });
+        return; 
       }
       res.status(200).json({
         message: "bus deleted successfully",

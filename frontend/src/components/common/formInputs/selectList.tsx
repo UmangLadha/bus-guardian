@@ -11,7 +11,7 @@ function SelectList({
   return (
     <>
       <label
-        className="p-1.5 font-medium text-left min-w-64 flex flex-col gap-1"
+        className="p-1.5 font-medium text-left w-full flex flex-col gap-1"
         htmlFor={name}
       >
         {label}
@@ -21,7 +21,7 @@ function SelectList({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           required={required}
-          className="border-[1px] border-yellow-300 outline-none py-2 px-4 rounded-lg w-full my-2 focus:border-yellow-500"
+          className="border-[1px] border-yellow-300 outline-none py-2 px-4 rounded-lg w-full my- focus:border-yellow-500"
         >
           <option value="">Select a option</option>
           {options.map((option) => (

@@ -68,7 +68,7 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
         name="busNumber"
         label="Bus Number"
         type="text"
-        placeholder="Enter Bus ID"
+        placeholder="Enter Bus Number"
         value={inputValue.busNumber}
         onChange={(val) => handleInputChange("busNumber", val)}
         required
