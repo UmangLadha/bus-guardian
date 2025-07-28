@@ -1,7 +1,7 @@
 import Bus from "../models/bus.model";
 import Driver from "../models/driver.model";
 import { DriverTypes } from "../types/types";
-import { generateIDFor } from "../utility/generateID";
+// import { generateIDFor } from "../utility/generateID";
 
 export class DriverServices {
   static async registerDriver(
@@ -67,7 +67,18 @@ export class DriverServices {
   }
 
   static async deleteDriverById(id: string) {
-    await Bus.findByIdAndDelete(id);
+    const driver = await Driver.findById(id);
+    if (!driver) {
+      return { success: false, message: "driver not found" };
+    }
+
+    if (driver.assignedBus?._id) {
+      await Bus.findByIdAndUpdate(driver.assignedBus?._id, {
+        $unset: { assignedDriver: "" },
+      });
+    }
+
+    await Driver.findByIdAndDelete(id);
     return { success: true };
   }
 }

@@ -32,7 +32,7 @@ export interface BusDataTypes extends CreateBusDto {
 export interface RouteDataTypes {
   _id: string;
   routeName: string;
-  routeList: string[];
+  routeList: { locationName: string }[];
 }
 
 export interface CreateDriverDto {
@@ -96,7 +96,7 @@ export interface SelectInputPropsTypes {
   label: string;
   required: boolean;
   value: string;
-  options: { id: string; name: string }[];
+  options: { id: string | undefined; name: string | undefined }[];
   onChange: (value: string) => void;
 }
 

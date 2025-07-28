@@ -27,13 +27,13 @@ function StateBox() {
   ];
 
   return (
-    <div className="w-full pl-10 my-4 flex justify-start gap-8 items-center">
+    <div className="w-full my-4 flex justify-start gap-8 items-center">
       {stats.map((stat) => (
         <div
           key={stat.name}
-          className="hover:shadow-lg shadow border border-gray-300 rounded-xl transition-shadow duration-200"
+          className="hover:shadow-lg w-full shadow border border-gray-300 rounded-xl transition-shadow duration-200"
         >
-          <div className="p-6">
+          <div className="py-4 px-10">
             <div className="flex items-center">
               <div className={`${stat.color} p-2 rounded-lg`}>
                 <stat.icon className="w-6 h-6 text-white" />

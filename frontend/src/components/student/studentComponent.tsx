@@ -18,7 +18,7 @@ function StudentComponent(){
 
       {openModal && (
         <Modal title="Add New Student" setOpenModal={setOpenModal}>
-          <StudentForm />
+          <StudentForm setOpenModal={setOpenModal} />
         </Modal>
       )}
 

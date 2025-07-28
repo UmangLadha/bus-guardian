@@ -5,7 +5,7 @@ import { HiOutlineX } from "react-icons/hi";
 import { postData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
 import type { ModalStateHandler } from "../../../types/types";
-
+import { useNavigate } from "react-router-dom";
 function RouteForm({ setOpenModal }: ModalStateHandler) {
   const [inputValue, setInputValue] = useState({
     routeName: "",
@@ -13,6 +13,7 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [routeListBox, setRouteListBox] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const handleInputChange = (field: string, value: string) => {
     setInputValue((prev) => ({
@@ -49,6 +50,7 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
       setInputValue({ routeName: "", routeList: "" });
       setRouteListBox([]);
       setOpenModal(false);
+      navigate("/route");
     }
     setIsLoading(false);
   };
@@ -96,10 +98,10 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
               onChange={(val) => handleInputChange("routeList", val)}
             />
             <Button
-              btnText="Add"
+              btnText="Add Stop"
               btnType="button"
               onClick={AddRoute}
-              className="bg-green-600 py-2 px-6 rounded-lg text-white font-semibold hover:bg-green-700"
+              className="bg-green-600 py-2 px-2 w-36 rounded-lg text-white font-semibold hover:bg-green-700"
             />
           </div>
           <div className="w-full h-60 px-3 py-2 border border-amber-200 rounded-lg overflow-y-auto">

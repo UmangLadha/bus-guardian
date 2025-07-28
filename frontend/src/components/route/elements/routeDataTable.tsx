@@ -8,14 +8,14 @@ import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
 import { setRoutes } from "../../../redux/features/route/routeSlice";
 
 function RouteDataTable({ setOpenModal }: ModalStateHandler) {
-  const [tableContent, setTableContent] = useState([]);
+  const [tableContent, setTableContent] = useState<RouteDataTypes[]>([]);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function fetchBusRoutes() {
       const { data, error } = await getData("/route");
-      // console.log("Data:", data);
-      // console.log("Error:", error);
+      console.log("Data:", data);
+      console.log("Error:", error);
       if (data) {
         setTableContent(data.Routes);
         dispatch(setRoutes(data.Routes));
@@ -69,7 +69,7 @@ function RouteDataTable({ setOpenModal }: ModalStateHandler) {
                     key={index}
                     className="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full whitespace-nowrap"
                   >
-                    {detail}
+                    {detail.locationName}
                   </span>
                 ))}
               </div>
