@@ -7,10 +7,14 @@ import type {
 } from "../../../types/types";
 import Button from "../../common/button/Button";
 import SelectList from "../../common/formInputs/selectList";
-import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
 import { postData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
+import { setFormLoading } from "../../../redux/features/submitingForm/formSlice";
 
 function DriverForm({ setOpenModal }: ModalStateHandler) {
   const [inputValue, setInputValue] = useState({
@@ -18,7 +22,8 @@ function DriverForm({ setOpenModal }: ModalStateHandler) {
     phoneNo: "",
     busNumber: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state: RootState) => state.form.isLoading);
   const buses = useAppSelector((state: RootState) => state.Bus.buses);
 
   const handleInputChange = (field: string, value: string) => {
@@ -36,7 +41,7 @@ function DriverForm({ setOpenModal }: ModalStateHandler) {
     if (message) {
       toast.success(message || "Data Added Successfully");
       setInputValue({ driverName: "", phoneNo: "", busNumber: "" });
-      setIsLoading(false);
+      dispatch(setFormLoading(false));
     }
     if (error) {
       toast.error(error);
@@ -46,7 +51,7 @@ function DriverForm({ setOpenModal }: ModalStateHandler) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    dispatch(setFormLoading(true));
     const driverData = {
       driverName: inputValue.driverName,
       driverPhoneNo: inputValue.phoneNo,

@@ -18,11 +18,11 @@ function Modal({ setOpenModal, title, subTitle, children }: ModalPropsTypes) {
               <p className=" text-gray-500">{subTitle}</p>
             </div>
             <div className="hover:bg-gray-200 p-2 rounded-full duration-200">
-            <HiOutlineX
-              className="size-6 cursor-pointer"
-              onClick={() => setOpenModal(false)}
+              <HiOutlineX
+                className="size-6 cursor-pointer"
+                onClick={() => setOpenModal(false)}
               />
-              </div>
+            </div>
           </div>
           {children}
         </div>

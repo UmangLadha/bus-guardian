@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import TextInput from "../../common/formInputs/textInput";
 import SelectList from "../../common/formInputs/selectList";
-import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
 import type { BusDataTypes, ModalStateHandler } from "../../../types/types";
 import Button from "../../common/button/Button";
+import { setFormLoading } from "../../../redux/features/submitingForm/formSlice";
 
 function StudentForm({ setOpenModal }: ModalStateHandler) {
   const [inputValue, setInputValue] = useState({
@@ -14,9 +18,10 @@ function StudentForm({ setOpenModal }: ModalStateHandler) {
     pickupPoint: "",
     busNumber: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state: RootState) => state.form.isLoading);
 
-  const buses = useAppSelector((state: RootState) => state.Bus.buses);  
+  const buses = useAppSelector((state: RootState) => state.Bus.buses);
   // const routes = useAppSelector((state: RootState) => state.Route.routes);
 
   const handleInputChange = (field: string, value: string) => {
@@ -28,7 +33,7 @@ function StudentForm({ setOpenModal }: ModalStateHandler) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    dispatch(setFormLoading(true));
   };
   return (
     <form

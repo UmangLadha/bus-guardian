@@ -8,9 +8,13 @@ import type {
   CreateBusDto,
   RouteDataTypes,
 } from "../../../types/types";
-import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
 import { postData } from "../../../utils/apiHandlers";
+import { setFormLoading } from "../../../redux/features/submitingForm/formSlice";
 
 function BusForm({ setOpenModal }: ModalStateHandler) {
   const [inputValue, setInputValue] = useState({
@@ -19,7 +23,8 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
     busDriver: "",
     busRoute: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state: RootState) => state.form.isLoading);
 
   const routes = useAppSelector((state: RootState) => state.Route.routes);
   const drivers = useAppSelector((state: RootState) => state.Driver.driver);
@@ -35,7 +40,7 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
     const { message, error } = await postData("/bus/register", busData);
     if (error) {
       toast.error(error);
-      setIsLoading(false);
+      dispatch(setFormLoading(false));
     }
     if (message) {
       toast.success(message || "Bus Added Successfull");
@@ -45,14 +50,14 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
         busDriver: "",
         busRoute: "",
       });
-      setIsLoading(false);
+      dispatch(setFormLoading(true));
       setOpenModal(false);
     }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    dispatch(setFormLoading(true));
     const busData = {
       busNumber: inputValue.busNumber,
       busCapacity: inputValue.busCapacity,
@@ -107,20 +112,20 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
         required
       />
       <div className="flex items-center justify-center mx-auto gap-4 mt-5">
-        <Button
-          className="w-32 font-semibold bg-gray-400 text-white py-2 px-5 rounded-lg hover:bg-gray-500"
-          btnText="Cancel"
-          btnType="reset"
-          onClick={() => setOpenModal(false)}
-        />
-        <Button
-          btnType="submit"
-          btnText="Submit"
-          isLoading={isLoading}
-          loadingText="Submitting..."
-          className="w-32 bg-secondary flex items-center justify-center gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer hover:bg-secondary-dark disabled:opacity-50 disabled:cursor-not-allowed"
-        />
-      </div>
+            <Button
+              className="w-32 font-semibold bg-gray-400 text-white py-2 px-5 rounded-lg hover:bg-gray-500"
+              btnText="Cancel"
+              btnType="reset"
+              onClick={() => setOpenModal(false)}
+            />
+            <Button
+              btnType="submit"
+              btnText="Submit"
+              isLoading={isLoading}
+              loadingText="Submitting..."
+              className="w-32 bg-secondary flex items-center justify-center gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer hover:bg-secondary-dark disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+          </div>
     </form>
   );
 }

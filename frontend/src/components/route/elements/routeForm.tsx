@@ -6,12 +6,19 @@ import { postData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
 import type { ModalStateHandler } from "../../../types/types";
 import { useNavigate } from "react-router-dom";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/reduxHooks/reduxHooks";
+import type { RootState } from "../../../redux/app/store";
+import { setFormLoading } from "../../../redux/features/submitingForm/formSlice";
 function RouteForm({ setOpenModal }: ModalStateHandler) {
   const [inputValue, setInputValue] = useState({
     routeName: "",
     routeList: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state: RootState) => state.form.isLoading);
   const [routeListBox, setRouteListBox] = useState<string[]>([]);
   const navigate = useNavigate();
 
@@ -52,7 +59,7 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
       setOpenModal(false);
       navigate("/route");
     }
-    setIsLoading(false);
+    dispatch(setFormLoading(false));
   };
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -61,7 +68,7 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
       toast.error("Please enter route name and at least one route.");
       return;
     }
-    setIsLoading(true);
+    dispatch(setFormLoading(true));
     const routeData = {
       routeName: inputValue.routeName,
       routeList: routeListBox,
