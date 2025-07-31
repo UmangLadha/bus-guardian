@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Bus from "../models/bus.model";
 import Driver from "../models/driver.model";
 import { DriverTypes } from "../types/types";
@@ -7,24 +8,47 @@ export class DriverServices {
   static async registerDriver(
     driverName: string,
     driverPhoneNo: number,
-    busNumber: string
+    busID: string
   ) {
     const driverExit = await Driver.findOne({ driverPhoneNo });
+
     if (driverExit) {
       return { success: false, message: "Driver Phone number already exits" };
     }
+
     const driverData: DriverTypes = {
       driverName,
       driverPhoneNo,
     };
-    if (busNumber) {
-      const bus = await Bus.findOne({ busNumber });
+
+    if (!mongoose.Types.ObjectId.isValid(busID)) {
+      return { success: false, message: "Invalid Bus ID" };
+    }
+
+    if (busID) {
+      const bus = await Bus.findById(busID);
+      console.log("here is the bus Data: ", bus); ////////////////////////
       if (!bus) {
         return { success: false, message: "bus not found" };
       }
-      driverData.assignedBus = { _id: bus._id, busNumber };
+      driverData.assignedBus = {
+        _id: bus._id,
+        busNumber: bus.busNumber,
+      };
     }
+
     const newDriver = await Driver.create(driverData);
+
+    if (busID) {
+      await Bus.findByIdAndUpdate(busID, {
+        assignedDriver: {
+          _id: newDriver._id,
+          driverName: newDriver.driverName,
+        },
+      });
+      console.log("Driver details updated in bus also"); ///////////////////
+    }
+
     return { success: true, newDriver };
   }
 
@@ -45,16 +69,15 @@ export class DriverServices {
     id: string,
     driverName: string,
     driverPhoneNo: number,
-    busNumber: string
+    busID: string
   ) {
     const updatedPayload: DriverTypes = { driverName, driverPhoneNo };
-    if (busNumber) {
-      const bus = await Bus.findOne({ busNumber });
+    if (busID) {
+      const bus = await Bus.findById(busID);
       if (!bus) {
         return { success: false, message: "bus not found" };
       }
-      updatedPayload.assignedBus = { _id: bus._id, busNumber };
-      await Bus.findByIdAndUpdate(bus._id, { busDriver: id });
+      updatedPayload.assignedBus = { _id: bus._id, busNumber: bus.busNumber };
     }
     const updatedDriver = await Driver.findByIdAndUpdate(id, updatedPayload, {
       new: true,
@@ -63,6 +86,15 @@ export class DriverServices {
       return { success: false, message: "No driver found!" };
     }
 
+    if (busID) {
+      await Bus.findByIdAndUpdate(busID, {
+        assignedDriver: {
+          _id: updatedDriver._id,
+          driverName: updatedDriver.driverName,
+        },
+      });
+      console.log("Driver details updated in bus also"); ///////////////////
+    }
     return { success: true, updatedDriver };
   }
 

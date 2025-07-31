@@ -1,21 +1,27 @@
 import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-import type { DriverDataTypes, ModalStateHandler } from "../../../types/types";
+import type {
+  CreateDriverDto,
+  DriverDataTypes,
+  ModalStateHandler,
+} from "../../../types/types";
 import { deleteData, getData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
 import { setDrivers } from "../../../redux/features/driver/driverSlice";
 
-function DriverDataTable({ setOpenModal }: ModalStateHandler) {
+function DriverDataTable({
+  setOpenModal,
+  setSelectedData,
+  setIsEditMode,
+}: ModalStateHandler<CreateDriverDto>) {
   const dispatch = useAppDispatch();
   const [tableContent, setTableContent] = useState<DriverDataTypes[]>([]);
 
   useEffect(() => {
     async function fetchBusRoutes() {
       const { data, error } = await getData("/driver");
-      // console.log("Data:", data);
-      // console.log("Error:", error);
       if (data) {
         setTableContent(data.drivers);
         dispatch(setDrivers(data.drivers));
@@ -25,15 +31,14 @@ function DriverDataTable({ setOpenModal }: ModalStateHandler) {
     fetchBusRoutes();
   }, []);
 
-  const actionEdit = () => {
+  const actionEdit = (data: CreateDriverDto) => {
+    setSelectedData(data);
+    setIsEditMode(true);
     setOpenModal(true);
   };
 
   const actionDelete = async (id: string) => {
-    // console.log("Deleting Driver with ID:", id);
     const { response, error } = await deleteData(`/driver/${id}`);
-    // console.log("Driver deleted response: ", response);
-    // console.log("error on deleting bus Driver: ", error);
     if (error) {
       toast.error(error);
       return;
@@ -62,7 +67,7 @@ function DriverDataTable({ setOpenModal }: ModalStateHandler) {
           <td className="py-3 px-4 flex gap-4 items-center">
             <FaRegEdit
               title="Update"
-              onClick={actionEdit}
+              onClick={() => actionEdit(data)}
               className="text-amber-500 size-5 cursor-pointer"
             />
             <MdDeleteOutline

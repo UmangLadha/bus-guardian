@@ -4,10 +4,15 @@ import Table from "../common/table/table";
 import PageHeader from "../common/pageHeader/pageheader";
 import DriverForm from "./elements/driverForm";
 import DriverDataTable from "./elements/driverDataTable";
+import type { CreateDriverDto } from "../../types/types";
 
 function DriverComponent() {
   const [openModal, setOpenModal] = useState(false);
-
+  const [selectedData, setSelectedData] = useState<CreateDriverDto>({
+    driverName: "",
+    driverPhoneNo: "",
+  });
+  const [isEditMode, setIsEditMode] = useState(false);
   return (
     <>
       <PageHeader
@@ -18,7 +23,11 @@ function DriverComponent() {
 
       {openModal && (
         <Modal title="Add New Driver" setOpenModal={setOpenModal}>
-          <DriverForm setOpenModal={setOpenModal} />
+          <DriverForm
+            isEditMode={isEditMode}
+            selectedData={selectedData}
+            setOpenModal={setOpenModal}
+          />
         </Modal>
       )}
 
@@ -31,7 +40,11 @@ function DriverComponent() {
           "Action",
         ]}
       >
-        <DriverDataTable setOpenModal={setOpenModal} />
+        <DriverDataTable
+          setIsEditMode={setIsEditMode}
+          setSelectedData={setSelectedData}
+          setOpenModal={setOpenModal}
+        />
       </Table>
     </>
   );

@@ -24,7 +24,7 @@ export interface DriverTypes {
   driverId?: string;
   driverName: string;
   driverPhoneNo: number;
-  assignedBus?: { _id: Types.ObjectId; busNumber: String };
+  assignedBus?: { _id: Types.ObjectId | string; busNumber: String };
 }
 
 export interface StudentTypes {
@@ -32,6 +32,6 @@ export interface StudentTypes {
   parentContact: number;
   busNumber?: string;
   pickupAddress?: string;
-  busAssigned?: Types.ObjectId;
+  busAssigned?: Types.ObjectId | string;
   pickupLocation?: object;
 }

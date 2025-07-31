@@ -4,15 +4,16 @@ import { DriverServices } from "../services/driver.services";
 export class DriverController {
   static async registerDriver(req: Request, res: Response) {
     try {
-      const { driverName, driverPhoneNo, busNumber } = req.body;
+      const { driverName, driverPhoneNo, busID } = req.body;
       if (!driverName || !driverPhoneNo) {
         res.status(400).json({ message: "All fields are required" });
         return;
       }
+      
       const result = await DriverServices.registerDriver(
         driverName,
         driverPhoneNo,
-        busNumber
+        busID
       );
       if (!result.success) {
         res.status(400).json({ message: result.message });
@@ -24,7 +25,7 @@ export class DriverController {
       });
       return;
     } catch (error) {
-      console.log("error in registering the driver:", error);
+      console.log("error in registering the driver:", error); ///////////////////////
       res.status(500).json({ message: "driver registration failed" });
       return;
     }
@@ -65,12 +66,12 @@ export class DriverController {
   static async updateDriverById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { driverName, driverPhoneNo, busNumber } = req.body;
+      const { driverName, driverPhoneNo, busID } = req.body;
       const result = await DriverServices.updateDriverById(
         id,
         driverName,
         driverPhoneNo,
-        busNumber
+        busID
       );
       if (!result.success) {
         res.status(400).json({ message: result.message });

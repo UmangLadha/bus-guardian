@@ -7,8 +7,11 @@ function Table({ tableHeadings, children }: TablePropsTypes) {
         <table className="w-full">
           <thead className="bg-amber-100 ">
             <tr className="border-b border-gray-300">
-              {tableHeadings?.map((headings) => (
-                <th className="text-left py-3 px-4 font-medium text-gray-700">
+              {tableHeadings?.map((headings, index) => (
+                <th
+                  key={index}
+                  className="text-left py-3 px-4 font-medium text-gray-700"
+                >
                   {headings}
                 </th>
               ))}

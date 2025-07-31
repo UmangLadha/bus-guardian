@@ -3,27 +3,26 @@ import TextInput from "../../common/formInputs/textInput";
 import type {
   BusDataTypes,
   CreateDriverDto,
-  ModalStateHandler,
+  FormProps,
 } from "../../../types/types";
 import Button from "../../common/button/Button";
 import SelectList from "../../common/formInputs/selectList";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../redux/reduxHooks/reduxHooks";
+import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
-import { postData } from "../../../utils/apiHandlers";
+import { postData, updateData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
-import { setFormLoading } from "../../../redux/features/submitingForm/formSlice";
 
-function DriverForm({ setOpenModal }: ModalStateHandler) {
+function DriverForm({
+  setOpenModal,
+  selectedData,
+  isEditMode,
+}: FormProps<CreateDriverDto>) {
   const [inputValue, setInputValue] = useState({
-    driverName: "",
-    phoneNo: "",
-    busNumber: "",
+    driverName: selectedData?.driverName || "",
+    phoneNo: selectedData?.driverPhoneNo || "",
+    busNumber: selectedData.assignedBus?.busNumber || "",
   });
-  const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((state: RootState) => state.form.isLoading);
+  const [isLoading, setIsLoading] = useState(false);
   const buses = useAppSelector((state: RootState) => state.Bus.buses);
 
   const handleInputChange = (field: string, value: string) => {
@@ -35,13 +34,10 @@ function DriverForm({ setOpenModal }: ModalStateHandler) {
 
   const sendDataToServer = async (driverData: CreateDriverDto) => {
     const { message, error } = await postData("/driver/register", driverData);
-    // console.log("Route error:", error);
-    // console.log("Route message", message);
-    // console.log("Route Data", data);
     if (message) {
       toast.success(message || "Data Added Successfully");
       setInputValue({ driverName: "", phoneNo: "", busNumber: "" });
-      dispatch(setFormLoading(false));
+      setIsLoading(false);
     }
     if (error) {
       toast.error(error);
@@ -49,16 +45,36 @@ function DriverForm({ setOpenModal }: ModalStateHandler) {
     setOpenModal(false);
   };
 
+  const handleUpdataData = async (
+    dataToUpdate: CreateDriverDto,
+    id: string | undefined
+  ) => {
+    const { error, message } = await updateData(`/driver/${id}`, dataToUpdate);
+    if (error) {
+      toast.error(error);
+    }
+    if (message) {
+      toast.success(message || "Data Updated successfully");
+      setInputValue({ driverName: "", phoneNo: "", busNumber: "" });
+      setIsLoading(false);
+    }
+    setOpenModal(false);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(setFormLoading(true));
+    setIsLoading(true);
     const driverData = {
       driverName: inputValue.driverName,
       driverPhoneNo: inputValue.phoneNo,
-      busNumber: inputValue.busNumber,
+      busID: inputValue.busNumber,
     };
-    console.log("driver Data: s", driverData);
-    sendDataToServer(driverData);
+
+    if (isEditMode && selectedData) {
+      handleUpdataData(driverData, selectedData?._id);
+    } else {
+      sendDataToServer(driverData);
+    }
   };
 
   return (
@@ -105,9 +121,9 @@ function DriverForm({ setOpenModal }: ModalStateHandler) {
         />
         <Button
           btnType="submit"
-          btnText="Submit"
+          btnText={isEditMode ? "Update" : "Submit"}
           isLoading={isLoading}
-          loadingText="Submitting..."
+          loadingText={isEditMode ? "Updating.." : "Submitting..."}
           className="w-32 bg-secondary flex items-center justify-center gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer hover:bg-secondary-dark disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>

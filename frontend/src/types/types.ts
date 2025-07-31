@@ -1,9 +1,23 @@
 import type { MouseEventHandler } from "react";
 
 //common type
-export interface ModalStateHandler {
+export interface ModalStateHandler<T> {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedData: React.Dispatch<React.SetStateAction<T>>;
 }
+
+export interface FormProps<T> {
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedData: T;
+  isEditMode: boolean;
+}
+
+// export interface DriverFormProps {
+//   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+//   selectedData: CreateDriverDto;
+//   isEditMode: boolean
+// }
 
 //login page types
 export interface AdminCredTypes {
@@ -18,6 +32,7 @@ export interface AdminCredentialsTypes {
   password: string;
 }
 
+//Bus Component
 export interface CreateBusDto {
   busNumber: string;
   assignedDriver?: { _id: string; driverName: string };
@@ -29,13 +44,16 @@ export interface BusDataTypes extends CreateBusDto {
   _id: string;
 }
 
+// Route Component
 export interface RouteDataTypes {
   _id: string;
   routeName: string;
   routeList: { locationName: string }[];
 }
 
+// Driver Component
 export interface CreateDriverDto {
+  _id?:string;
   driverName: string;
   driverPhoneNo: string;
   assignedBus?: { _id: string; busNumber: string };
@@ -45,18 +63,19 @@ export interface DriverDataTypes extends CreateDriverDto {
   _id: string;
 }
 
+
 // page header types
 export interface PageHeaderTypes {
   heading: string;
   description: string;
-  setOpenModal?: ModalStateHandler["setOpenModal"];
+  setOpenModal?: ModalStateHandler<PageHeaderTypes>["setOpenModal"];
 }
 
 // Modal types
 export interface ModalPropsTypes {
   title?: string;
   subTitle?: string;
-  setOpenModal: ModalStateHandler["setOpenModal"];
+  setOpenModal: ModalStateHandler<ModalPropsTypes>["setOpenModal"];
   children: React.ReactNode;
 }
 
@@ -94,7 +113,7 @@ export interface InputPropsTypes {
 export interface SelectInputPropsTypes {
   name: string;
   label: string;
-  required: boolean;
+  required?: boolean;
   value: string;
   options: { id: string | undefined; name: string | undefined }[];
   onChange: (value: string) => void;
