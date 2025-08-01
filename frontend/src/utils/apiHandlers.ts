@@ -8,8 +8,8 @@ export async function getData(route: string) {
     return { data: response.data };
   } catch (error) {
     const err = error as AxiosError<{ message: string }>;
-    // console.error("API Error:", err.response?.data || err.message);
-    return { error: err.response?.data.message || "Something went wrong" };
+    console.error("API Error:", err.response?.data || err.message);
+    return { error: err.message || "Something went wrong" };
   }
 }
 

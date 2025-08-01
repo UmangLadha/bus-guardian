@@ -1,25 +1,29 @@
 import React, { useState } from "react";
 import TextInput from "../../common/formInputs/textInput";
-import Button from "../../common/button/Button";
 import toast from "react-hot-toast";
 import SelectList from "../../common/formInputs/selectList";
 import type {
-  ModalStateHandler,
   CreateBusDto,
-  RouteDataTypes,
+  FormProps,
+  CreateRouteDto,
 } from "../../../types/types";
 import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
-import { postData } from "../../../utils/apiHandlers";
+import { postData, updateData } from "../../../utils/apiHandlers";
+import FormButton from "../../common/model/elements/formButtons";
 
-function BusForm({ setOpenModal }: ModalStateHandler) {
-  const [inputValue, setInputValue] = useState({
-    busNumber: "",
-    busCapacity: 0,
-    busDriver: "",
-    busRoute: "",
-  });
+function BusForm({
+  setOpenModal,
+  selectedData,
+  isEditMode,
+}: FormProps<CreateBusDto>) {
   const [isLoading, setIsLoading] = useState(false);
+  const [inputValue, setInputValue] = useState({
+    busNumber: selectedData.busNumber || "",
+    busCapacity: selectedData.busCapacity || 0,
+    busDriver: selectedData.assignedDriver?._id || "",
+    busRoute: selectedData.assignedRoute?._id || "",
+  });
 
   const routes = useAppSelector((state: RootState) => state.Route.routes);
   const drivers = useAppSelector((state: RootState) => state.Driver.driver);
@@ -31,23 +35,42 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
     }));
   };
 
+  const resetForm = () => {
+    setInputValue({
+      busNumber: "",
+      busCapacity: 0,
+      busDriver: "",
+      busRoute: "",
+    });
+  };
+
   const sendBusDataToServer = async (busData: CreateBusDto) => {
     const { message, error } = await postData("/bus/register", busData);
-    if (error) {
-      toast.error(error);
-      setIsLoading(false);
-    }
     if (message) {
       toast.success(message || "Bus Added Successfull");
-      setInputValue({
-        busNumber: "",
-        busCapacity: 0,
-        busDriver: "",
-        busRoute: "",
-      });
-      setIsLoading(false);
+      resetForm();
       setOpenModal(false);
     }
+    if (error) {
+      toast.error(error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleUpdateData = async (dataToUpdate: CreateBusDto) => {
+    const { error, message } = await updateData(
+      `/bus/${selectedData._id}`,
+      dataToUpdate
+    );
+    if (message) {
+      toast.success(message || "Bus updated successfully");
+      resetForm();
+      setOpenModal(false);
+    }
+    if (error) {
+      toast.error(error);
+    }
+    setIsLoading(false);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,7 +82,12 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
       busDriverId: inputValue.busDriver,
       busRouteId: inputValue.busRoute,
     };
-    sendBusDataToServer(busData);
+
+    if (isEditMode && selectedData) {
+      handleUpdateData(busData);
+    } else {
+      sendBusDataToServer(busData);
+    }
   };
 
   return (
@@ -73,6 +101,7 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
         onChange={(val) => handleInputChange("busNumber", val)}
         required
       />
+
       <TextInput
         name="busCapacity"
         label="Bus Capacity"
@@ -88,11 +117,10 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
         label="Route"
         value={inputValue.busRoute}
         onChange={(val) => handleInputChange("busRoute", val)}
-        options={routes.map((route: RouteDataTypes) => ({
+        options={routes.map((route: CreateRouteDto) => ({
           id: route._id,
           name: route.routeName,
         }))}
-        required
       />
 
       <SelectList
@@ -105,21 +133,12 @@ function BusForm({ setOpenModal }: ModalStateHandler) {
           name: driver.driverName,
         }))}
       />
-      <div className="flex items-center justify-center mx-auto gap-4 mt-5">
-        <Button
-          className="w-32 font-semibold bg-gray-400 text-white py-2 px-5 rounded-lg hover:bg-gray-500"
-          btnText="Cancel"
-          btnType="reset"
-          onClick={() => setOpenModal(false)}
-        />
-        <Button
-          btnType="submit"
-          btnText="Submit"
-          isLoading={isLoading}
-          loadingText="Submitting..."
-          className="w-32 bg-secondary flex items-center justify-center gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer hover:bg-secondary-dark disabled:opacity-50 disabled:cursor-not-allowed"
-        />
-      </div>
+
+      <FormButton
+        setOpenModal={setOpenModal}
+        isEditMode={isEditMode}
+        isLoading={isLoading}
+      />
     </form>
   );
 }

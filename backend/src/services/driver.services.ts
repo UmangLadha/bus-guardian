@@ -72,6 +72,7 @@ export class DriverServices {
     busID: string
   ) {
     const updatedPayload: DriverTypes = { driverName, driverPhoneNo };
+    
     if (busID) {
       const bus = await Bus.findById(busID);
       if (!bus) {
@@ -79,9 +80,11 @@ export class DriverServices {
       }
       updatedPayload.assignedBus = { _id: bus._id, busNumber: bus.busNumber };
     }
+
     const updatedDriver = await Driver.findByIdAndUpdate(id, updatedPayload, {
       new: true,
     });
+
     if (!updatedDriver) {
       return { success: false, message: "No driver found!" };
     }
@@ -93,6 +96,7 @@ export class DriverServices {
           driverName: updatedDriver.driverName,
         },
       });
+
       console.log("Driver details updated in bus also"); ///////////////////
     }
     return { success: true, updatedDriver };

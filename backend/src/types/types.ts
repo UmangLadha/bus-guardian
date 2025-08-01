@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 
+// admin service type
 export interface AdminUser {
   _id: Types.ObjectId;
   email: string;
@@ -7,6 +8,7 @@ export interface AdminUser {
   password: string;
 }
 
+// bus service types
 export interface BusData {
   busNumber: string;
   busCapacity: number;
@@ -20,6 +22,7 @@ export interface BusData {
   };
 }
 
+// driver service types
 export interface DriverTypes {
   driverId?: string;
   driverName: string;
@@ -27,6 +30,7 @@ export interface DriverTypes {
   assignedBus?: { _id: Types.ObjectId | string; busNumber: String };
 }
 
+// student service types
 export interface StudentTypes {
   studentName: string;
   parentContact: number;

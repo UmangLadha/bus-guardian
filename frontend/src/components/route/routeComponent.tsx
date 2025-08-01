@@ -4,9 +4,15 @@ import Modal from "../common/model/modal";
 import RouteForm from "./elements/routeForm";
 import Table from "../common/table/table";
 import RouteDataTable from "./elements/routeDataTable";
+import type { CreateRouteDto } from "../../types/types";
 
 function RouteComponent() {
   const [openModal, setOpenModal] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedData, setSelectedData] = useState<CreateRouteDto>({
+    routeName: "",
+    routeList: [],
+  });
 
   return (
     <>
@@ -22,12 +28,20 @@ function RouteComponent() {
           subTitle="Register a new school bus route in the system"
           setOpenModal={setOpenModal}
         >
-          <RouteForm setOpenModal={setOpenModal} />
+          <RouteForm
+            selectedData={selectedData}
+            isEditMode={isEditMode}
+            setOpenModal={setOpenModal}
+          />
         </Modal>
       )}
 
       <Table tableHeadings={["Route name", "Route List", "Action"]}>
-        <RouteDataTable setOpenModal={setOpenModal} />
+        <RouteDataTable
+          setIsEditMode={setIsEditMode}
+          setSelectedData={setSelectedData}
+          setOpenModal={setOpenModal}
+        />
       </Table>
     </>
   );

@@ -13,12 +13,6 @@ export interface FormProps<T> {
   isEditMode: boolean;
 }
 
-// export interface DriverFormProps {
-//   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-//   selectedData: CreateDriverDto;
-//   isEditMode: boolean
-// }
-
 //login page types
 export interface AdminCredTypes {
   email: string;
@@ -34,61 +28,76 @@ export interface AdminCredentialsTypes {
 
 //Bus Component
 export interface CreateBusDto {
+  _id?: string;
   busNumber: string;
   assignedDriver?: { _id: string; driverName: string };
   assignedRoute?: { _id: string; busRoute: string };
   busCapacity: number;
 }
 
-export interface BusDataTypes extends CreateBusDto {
-  _id: string;
-}
+// export interface BusDataTypes extends CreateBusDto {
+//   _id: string;
+// }
 
 // Route Component
-export interface RouteDataTypes {
-  _id: string;
+export interface CreateRouteDto {
+  _id?: string;
   routeName: string;
   routeList: { locationName: string }[];
 }
 
+export interface CreateRouteTypes{
+   _id?: string;
+  routeName: string;
+  routeList: [];
+}
+
 // Driver Component
 export interface CreateDriverDto {
-  _id?:string;
+  _id?: string;
   driverName: string;
   driverPhoneNo: string;
   assignedBus?: { _id: string; busNumber: string };
 }
 
-export interface DriverDataTypes extends CreateDriverDto {
-  _id: string;
-}
-
+// export interface DriverDataTypes extends CreateDriverDto {
+//   _id: string;
+// }
 
 // page header types
 export interface PageHeaderTypes {
   heading: string;
   description: string;
-  setOpenModal?: ModalStateHandler<PageHeaderTypes>["setOpenModal"];
+  setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Modal types
 export interface ModalPropsTypes {
   title?: string;
   subTitle?: string;
-  setOpenModal: ModalStateHandler<ModalPropsTypes>["setOpenModal"];
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactNode;
 }
 
+export interface ModalFormButtonPropsTypes {
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isEditMode: boolean;
+  isLoading: boolean;
+}
+
+// table prop types
 export interface TablePropsTypes {
   tableHeadings?: string[];
   children: React.ReactNode;
 }
 
+// login/sigin toggle button prop types
 export interface ToggleBtnType {
   isActive: boolean;
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+// transition prop types
 export interface TransitionTypes {
   show: boolean;
   children: React.ReactNode;

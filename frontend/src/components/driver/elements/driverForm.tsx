@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 import TextInput from "../../common/formInputs/textInput";
 import type {
-  BusDataTypes,
+  CreateBusDto,
+  // BusDataTypes,
   CreateDriverDto,
   FormProps,
 } from "../../../types/types";
-import Button from "../../common/button/Button";
 import SelectList from "../../common/formInputs/selectList";
 import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
 import { postData, updateData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
+import FormButton from "../../common/model/elements/formButtons";
 
 function DriverForm({
   setOpenModal,
   selectedData,
   isEditMode,
 }: FormProps<CreateDriverDto>) {
+  const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState({
     driverName: selectedData?.driverName || "",
     phoneNo: selectedData?.driverPhoneNo || "",
-    busNumber: selectedData.assignedBus?.busNumber || "",
+    busNumber: selectedData.assignedBus?._id || "",
   });
-  const [isLoading, setIsLoading] = useState(false);
   const buses = useAppSelector((state: RootState) => state.Bus.buses);
 
   const handleInputChange = (field: string, value: string) => {
@@ -32,33 +33,37 @@ function DriverForm({
     }));
   };
 
+  const resetFrom = () => {
+    setInputValue({ driverName: "", phoneNo: "", busNumber: "" });
+  };
+
   const sendDataToServer = async (driverData: CreateDriverDto) => {
     const { message, error } = await postData("/driver/register", driverData);
     if (message) {
       toast.success(message || "Data Added Successfully");
-      setInputValue({ driverName: "", phoneNo: "", busNumber: "" });
-      setIsLoading(false);
+      resetFrom();
+      setOpenModal(false);
     }
     if (error) {
       toast.error(error);
     }
-    setOpenModal(false);
+    setIsLoading(false);
   };
 
-  const handleUpdataData = async (
-    dataToUpdate: CreateDriverDto,
-    id: string | undefined
-  ) => {
-    const { error, message } = await updateData(`/driver/${id}`, dataToUpdate);
+  const handleUpdataData = async (dataToUpdate: CreateDriverDto) => {
+    const { error, message } = await updateData(
+      `/driver/${selectedData._id}`,
+      dataToUpdate
+    );
+    if (message) {
+      toast.success(message || "Data Updated successfully");
+      resetFrom();
+      setOpenModal(false);
+    }
     if (error) {
       toast.error(error);
     }
-    if (message) {
-      toast.success(message || "Data Updated successfully");
-      setInputValue({ driverName: "", phoneNo: "", busNumber: "" });
-      setIsLoading(false);
-    }
-    setOpenModal(false);
+    setIsLoading(false);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -71,7 +76,7 @@ function DriverForm({
     };
 
     if (isEditMode && selectedData) {
-      handleUpdataData(driverData, selectedData?._id);
+      handleUpdataData(driverData);
     } else {
       sendDataToServer(driverData);
     }
@@ -106,27 +111,17 @@ function DriverForm({
         label="Assign bus"
         value={inputValue.busNumber}
         onChange={(val) => handleInputChange("busNumber", val)}
-        options={buses.map((bus: BusDataTypes) => ({
+        options={buses.map((bus: CreateBusDto) => ({
           id: bus._id,
           name: bus.busNumber,
         }))}
         required
       />
-      <div className="flex items-center justify-center mx-auto gap-4 mt-5">
-        <Button
-          className="w-32 font-semibold bg-gray-400 text-white py-2 px-5 rounded-lg hover:bg-gray-500"
-          btnText="Cancel"
-          btnType="reset"
-          onClick={() => setOpenModal(false)}
-        />
-        <Button
-          btnType="submit"
-          btnText={isEditMode ? "Update" : "Submit"}
-          isLoading={isLoading}
-          loadingText={isEditMode ? "Updating.." : "Submitting..."}
-          className="w-32 bg-secondary flex items-center justify-center gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer hover:bg-secondary-dark disabled:opacity-50 disabled:cursor-not-allowed"
-        />
-      </div>
+      <FormButton
+        setOpenModal={setOpenModal}
+        isEditMode={isEditMode}
+        isLoading={isLoading}
+      />
     </form>
   );
 }

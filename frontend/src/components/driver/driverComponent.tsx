@@ -8,11 +8,12 @@ import type { CreateDriverDto } from "../../types/types";
 
 function DriverComponent() {
   const [openModal, setOpenModal] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [selectedData, setSelectedData] = useState<CreateDriverDto>({
     driverName: "",
     driverPhoneNo: "",
+    assignedBus: { _id: "", busNumber: "" },
   });
-  const [isEditMode, setIsEditMode] = useState(false);
   return (
     <>
       <PageHeader

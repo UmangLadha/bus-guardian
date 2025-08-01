@@ -6,6 +6,9 @@ const routes = Router();
 
 routes.post("/register", routeController.addRoute);
 routes.get("/", VerifyToken, routeController.getBusRoutes);
-routes.delete("/:id", VerifyToken, routeController.deleteRoute);
+routes
+  .route("/:id")
+  .put(VerifyToken, routeController.updateRouteById)
+  .delete(VerifyToken, routeController.deleteRoute);
 
 export default routes;

@@ -87,30 +87,49 @@ export class BusServices {
     busRouteId: string,
     busCapacity: number
   ) {
-    const driver = await Driver.findById(busDriverId);
-    const route = await BusRoute.findById(busRouteId);
+    const updatePayload: BusData = { busNumber, busCapacity };
 
-    const updatedBus = await Bus.findByIdAndUpdate(
-      id,
-      {
-        busNumber,
-        busCapacity,
-        assignedDriver: driver
-          ? { _id: driver._id, driverName: driver.driverName }
-          : undefined,
-        assignedRoute: route
-          ? { _id: route._id, busRoute: route.routeName }
-          : undefined,
-      },
-      { new: true }
-    );
+    if (busDriverId) {
+      const driver = await Driver.findById(busDriverId);
+      if (!driver) {
+        return { success: false, message: "Driver not found" };
+      }
+      updatePayload.assignedDriver = {
+        _id: driver._id,
+        driverName: driver.driverName,
+      };
+    }
+
+    if (busRouteId) {
+      const route = await BusRoute.findById(busRouteId);
+      if (!route) {
+        return { success: false, message: "Route not found" };
+      }
+      updatePayload.assignedRoute = {
+        _id: route._id,
+        busRoute: route.routeName,
+      };
+    }
+
+    const updatedBus = await Bus.findByIdAndUpdate(id, updatePayload, {
+      new: true,
+    });
 
     if (!updatedBus) {
       return { success: false, message: "No bus found!" };
     }
 
-    if (driver) {
+    if (busDriverId) {
       await Driver.findByIdAndUpdate(busDriverId, {
+        assignedBus: {
+          _id: updatedBus._id,
+          busNumber: updatedBus.busNumber,
+        },
+      });
+    }
+
+    if (busRouteId) {
+      await BusRoute.findByIdAndUpdate(busRouteId, {
         assignedBus: {
           _id: updatedBus._id,
           busNumber: updatedBus.busNumber,

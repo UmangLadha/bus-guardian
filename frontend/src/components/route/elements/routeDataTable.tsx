@@ -3,19 +3,19 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { deleteData, getData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
-import type { ModalStateHandler, RouteDataTypes } from "../../../types/types";
+import type { CreateRouteDto, ModalStateHandler} from "../../../types/types";
 import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
 import { setRoutes } from "../../../redux/features/route/routeSlice";
 
-function RouteDataTable({ setOpenModal }: ModalStateHandler) {
-  const [tableContent, setTableContent] = useState<RouteDataTypes[]>([]);
+function RouteDataTable({ setOpenModal, setSelectedData, setIsEditMode }: ModalStateHandler<CreateRouteDto>) {
+  const [tableContent, setTableContent] = useState<CreateRouteDto[]>([]);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function fetchBusRoutes() {
       const { data, error } = await getData("/route");
-      console.log("Data:", data);
-      console.log("Error:", error);
+      // console.log("Data:", data);
+      // console.log("Error:", error);
       if (data) {
         setTableContent(data.Routes);
         dispatch(setRoutes(data.Routes));
@@ -25,23 +25,21 @@ function RouteDataTable({ setOpenModal }: ModalStateHandler) {
     fetchBusRoutes();
   }, []);
 
-  const actionEdit = () => {
-    setTableContent([]);
+  const actionEdit = (data:CreateRouteDto) => {
+    setSelectedData(data);
+    setIsEditMode(true);
     setOpenModal(true);
   };
 
-  const actionDelete = async (id: string) => {
-    console.log("Deleting route with ID:", id);
+  const actionDelete = async (id: string | undefined) => {
     const { response, error } = await deleteData(`/route/${id}`);
-    console.log("bus route deleted response: ", response);
-    console.log("error on deleting bus route: ", error);
     if (error) {
       toast.error(error);
       return;
     }
     toast.success(response.message || "Route deleted successfully");
     setTableContent((prev) =>
-      prev.filter((route: RouteDataTypes) => route._id !== id)
+      prev.filter((route: CreateRouteDto) => route._id !== id)
     );
   };
 
@@ -54,7 +52,7 @@ function RouteDataTable({ setOpenModal }: ModalStateHandler) {
           </td>
         </tr>
       ) : (
-        tableContent?.map((data: RouteDataTypes) => (
+        tableContent?.map((data: CreateRouteDto) => (
           <tr
             key={data._id}
             className="border-b border-gray-200 hover:bg-gray-50"
@@ -77,7 +75,7 @@ function RouteDataTable({ setOpenModal }: ModalStateHandler) {
             <td className="py-3 px-4 flex gap-4 items-center">
               <FaRegEdit
                 title="Update"
-                onClick={actionEdit}
+                onClick={()=>actionEdit(data)}
                 className="text-amber-500 size-5 cursor-pointer"
               />
               <MdDeleteOutline

@@ -4,9 +4,17 @@ import Table from "../common/table/table";
 import BusForm from "./elements/busForm";
 import PageHeader from "../common/pageHeader/pageheader";
 import BusDataTable from "./elements/busDataTable";
+import type { CreateBusDto } from "../../types/types";
 
 function BusComponent() {
   const [openModal, setOpenModal] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedData, setSelectedData] = useState<CreateBusDto>({
+    busNumber: "",
+    busCapacity: 0,
+    assignedDriver: { _id: "", driverName: "" },
+    assignedRoute: { _id: "", busRoute: "" },
+  });
 
   return (
     <>
@@ -18,11 +26,19 @@ function BusComponent() {
 
       {openModal && (
         <Modal
-          title="Add New Bus"
-          subTitle="Register a new school bus in the system"
+          title={isEditMode ? "Update Bus" : "Add New Bus"}
+          subTitle={
+            isEditMode
+              ? "Update existing bus details"
+              : "Register a new school bus"
+          }
           setOpenModal={setOpenModal}
         >
-          <BusForm setOpenModal={setOpenModal} />
+          <BusForm
+            selectedData={selectedData}
+            isEditMode={isEditMode}
+            setOpenModal={setOpenModal}
+          />
         </Modal>
       )}
 
@@ -35,7 +51,11 @@ function BusComponent() {
           "Action",
         ]}
       >
-        <BusDataTable setOpenModal={setOpenModal} />
+        <BusDataTable
+          setIsEditMode={setIsEditMode}
+          setSelectedData={setSelectedData}
+          setOpenModal={setOpenModal}
+        />
       </Table>
     </>
   );

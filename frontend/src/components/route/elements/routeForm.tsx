@@ -2,25 +2,25 @@ import React, { useState } from "react";
 import TextInput from "../../common/formInputs/textInput";
 import Button from "../../common/button/Button";
 import { HiOutlineX } from "react-icons/hi";
-import { postData } from "../../../utils/apiHandlers";
+import { postData, updateData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
-import type { ModalStateHandler } from "../../../types/types";
-import { useNavigate } from "react-router-dom";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../redux/reduxHooks/reduxHooks";
-import type { RootState } from "../../../redux/app/store";
-import { setFormLoading } from "../../../redux/features/submitingForm/formSlice";
-function RouteForm({ setOpenModal }: ModalStateHandler) {
+import type { CreateRouteDto, FormProps } from "../../../types/types";
+import FormButton from "../../common/model/elements/formButtons";
+function RouteForm({
+  setOpenModal,
+  isEditMode,
+  selectedData,
+}: FormProps<CreateRouteDto>) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [routeListBox, setRouteListBox] = useState<string[]>(
+    selectedData.routeList
+      ? selectedData.routeList.map((item) => item.locationName)
+      : []
+  );
   const [inputValue, setInputValue] = useState({
-    routeName: "",
+    routeName: selectedData.routeName || "",
     routeList: "",
   });
-  const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((state: RootState) => state.form.isLoading);
-  const [routeListBox, setRouteListBox] = useState<string[]>([]);
-  const navigate = useNavigate();
 
   const handleInputChange = (field: string, value: string) => {
     setInputValue((prev) => ({
@@ -29,9 +29,18 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
     }));
   };
 
-  function AddRoute(e: React.MouseEvent<HTMLButtonElement>) {
+  const resetForm = () => {
+    setInputValue({ routeName: "", routeList: "" });
+    setRouteListBox([]);
+  };
+
+  const AddRoute = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (inputValue.routeList.trim() === "") {
+      return;
+    }
+    if (routeListBox.includes(inputValue.routeList.trim())) {
+      toast.error("Route already added");
       return;
     }
     setRouteListBox((prev) => [...prev, inputValue.routeList]);
@@ -39,47 +48,65 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
       ...prev,
       routeList: "",
     }));
-  }
+  };
 
   const sendDataToServer = async (routeData: {
     routeName: string;
     routeList: string[];
   }) => {
     const { message, error } = await postData("/route/register", routeData);
-    // console.log("Route error:", error);
-    // console.log("Route message", message);
-    // console.log("Route Data", data);
+    if (message) {
+      toast.success(message || "Route added successfully");
+      resetForm();
+      setOpenModal(false);
+    }
     if (error) {
       toast.error(error);
     }
-    if (message) {
-      toast.success(message || "Data Added Successfully");
-      setInputValue({ routeName: "", routeList: "" });
-      setRouteListBox([]);
-      setOpenModal(false);
-      navigate("/route");
-    }
-    dispatch(setFormLoading(false));
+    setIsLoading(false);
   };
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleUpdateData = async (dataToUpdate: {
+    routeName: string;
+    routeList: string[];
+  }) => {
+    const { message, error } = await updateData(
+      `/route/${selectedData._id}`,
+      dataToUpdate
+    );
+    if (message) {
+      toast.success(message || "Route updated successfully");
+      resetForm();
+      setOpenModal(false);
+    }
+    if (error) {
+      toast.error(error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputValue.routeName.trim() || routeListBox.length === 0) {
       toast.error("Please enter route name and at least one route.");
       return;
     }
-    dispatch(setFormLoading(true));
+    setIsLoading(true);
     const routeData = {
       routeName: inputValue.routeName,
       routeList: routeListBox,
     };
-    sendDataToServer(routeData);
-  }
+    if (selectedData && isEditMode) {
+      handleUpdateData(routeData);
+    } else {
+      sendDataToServer(routeData);
+    }
+  };
 
-  function removeRoute(index: number) {
+  const removeRoute = (index: number) => {
     const removedRoute = routeListBox.filter((_, id) => id !== index);
     setRouteListBox(removedRoute);
-  }
+  };
 
   return (
     <>
@@ -93,7 +120,6 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
           onChange={(val) => handleInputChange("routeName", val)}
           required
         />
-
         <div>
           <div className="flex items-baseline-last ">
             <TextInput
@@ -134,22 +160,11 @@ function RouteForm({ setOpenModal }: ModalStateHandler) {
             )}
           </div>
         </div>
-
-        <div className="flex items-center justify-center mx-auto gap-4 mt-5">
-          <Button
-            className="w-32 font-semibold bg-gray-400 text-white py-2 px-5 rounded-lg hover:bg-gray-500"
-            btnText="Cancel"
-            btnType="reset"
-            onClick={() => setOpenModal(false)}
-          />
-          <Button
-            btnType="submit"
-            btnText="Submit"
-            isLoading={isLoading}
-            loadingText="Submitting..."
-            className="w-32 bg-secondary flex items-center justify-center gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer hover:bg-secondary-dark disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-        </div>
+        <FormButton
+          setOpenModal={setOpenModal}
+          isEditMode={isEditMode}
+          isLoading={isLoading}
+        />
       </form>
     </>
   );

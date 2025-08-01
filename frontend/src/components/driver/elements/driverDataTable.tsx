@@ -3,7 +3,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import type {
   CreateDriverDto,
-  DriverDataTypes,
+  // DriverDataTypes,
   ModalStateHandler,
 } from "../../../types/types";
 import { deleteData, getData } from "../../../utils/apiHandlers";
@@ -17,7 +17,7 @@ function DriverDataTable({
   setIsEditMode,
 }: ModalStateHandler<CreateDriverDto>) {
   const dispatch = useAppDispatch();
-  const [tableContent, setTableContent] = useState<DriverDataTypes[]>([]);
+  const [tableContent, setTableContent] = useState<CreateDriverDto[]>([]);
 
   useEffect(() => {
     async function fetchBusRoutes() {
@@ -37,7 +37,7 @@ function DriverDataTable({
     setOpenModal(true);
   };
 
-  const actionDelete = async (id: string) => {
+  const actionDelete = async (id: string | undefined) => {
     const { response, error } = await deleteData(`/driver/${id}`);
     if (error) {
       toast.error(error);
@@ -72,7 +72,7 @@ function DriverDataTable({
             />
             <MdDeleteOutline
               title="Delete"
-              onClick={() => actionDelete(data._id)}
+              onClick={() => actionDelete(data?._id)}
               className="text-red-600 size-5 cursor-pointer"
             />
           </td>
