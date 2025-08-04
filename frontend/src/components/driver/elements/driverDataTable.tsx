@@ -1,15 +1,11 @@
-import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-import type {
-  CreateDriverDto,
-  // DriverDataTypes,
-  ModalStateHandler,
-} from "../../../types/types";
+import type { CreateDriverDto, ModalStateHandler } from "../../../types/types";
 import { deleteData, getData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
-import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { setDrivers } from "../../../redux/features/driver/driverSlice";
+import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
 
 function DriverDataTable({
   setOpenModal,
@@ -17,19 +13,37 @@ function DriverDataTable({
   setIsEditMode,
 }: ModalStateHandler<CreateDriverDto>) {
   const dispatch = useAppDispatch();
-  const [tableContent, setTableContent] = useState<CreateDriverDto[]>([]);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    async function fetchBusRoutes() {
-      const { data, error } = await getData("/driver");
-      if (data) {
-        setTableContent(data.drivers);
-        dispatch(setDrivers(data.drivers));
-      }
-      if (error) toast.error(error);
+  async function fetchDrivers() {
+    const { data, error } = await getData("/driver");
+    if (error) toast.error(error);
+    if (data) {
+      dispatch(setDrivers(data.drivers));
+      console.log("fetched Data using react Query", data);
     }
-    fetchBusRoutes();
-  }, []);
+    return data?.drivers || [];
+  }
+
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["drivers"],
+    queryFn: fetchDrivers,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error, response } = await deleteData(`/driver/${id}`);
+      if (error) toast.error(error);
+      return response;
+    },
+    onSuccess: (res) => {
+      toast.success(res?.message || "Driver deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["drivers"] });
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to delete driver");
+    },
+  });
 
   const actionEdit = (data: CreateDriverDto) => {
     setSelectedData(data);
@@ -37,19 +51,32 @@ function DriverDataTable({
     setOpenModal(true);
   };
 
-  const actionDelete = async (id: string | undefined) => {
-    const { response, error } = await deleteData(`/driver/${id}`);
-    if (error) {
-      toast.error(error);
-      return;
-    }
-    toast.success(response.message || "Driver deleted successfully");
-    setTableContent((prev) => prev.filter((driver) => driver._id !== id));
+  const actionDelete = (id: string | undefined) => {
+    if (!id) return;
+    deleteMutation.mutate(id);
   };
+
+  if (isLoading)
+    return (
+      <tbody>
+        <tr>
+          <td colSpan={5}>Loading...</td>
+        </tr>
+      </tbody>
+    );
+
+  if (isError)
+    return (
+      <tbody>
+        <tr>
+          <td colSpan={5}>Error fetching data.</td>
+        </tr>
+      </tbody>
+    );
 
   return (
     <tbody>
-      {tableContent.map((data, index) => (
+      {data.map((data: CreateDriverDto, index: number) => (
         <tr
           key={data._id}
           className="border-b border-gray-200 hover:bg-gray-50"
@@ -62,7 +89,7 @@ function DriverDataTable({
             {data.driverPhoneNo}
           </td>
           <td className="py-3 px-4 text-sm text-gray-700">
-            {data.assignedBus?.busNumber}
+            {data.assignedBus?.busNumber || "—"}
           </td>
           <td className="py-3 px-4 flex gap-4 items-center">
             <FaRegEdit

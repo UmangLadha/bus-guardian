@@ -12,19 +12,20 @@ import type { RootState } from "../../../redux/app/store";
 import { postData, updateData } from "../../../utils/apiHandlers";
 import toast from "react-hot-toast";
 import FormButton from "../../common/model/elements/formButtons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function DriverForm({
   setOpenModal,
   selectedData,
   isEditMode,
 }: FormProps<CreateDriverDto>) {
-  const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState({
     driverName: selectedData?.driverName || "",
     phoneNo: selectedData?.driverPhoneNo || "",
     busNumber: selectedData.assignedBus?._id || "",
   });
   const buses = useAppSelector((state: RootState) => state.Bus.buses);
+  const queryClient = useQueryClient();
 
   const handleInputChange = (field: string, value: string) => {
     setInputValue((prev) => ({
@@ -33,42 +34,40 @@ function DriverForm({
     }));
   };
 
-  const resetFrom = () => {
+  const resetForm = () => {
     setInputValue({ driverName: "", phoneNo: "", busNumber: "" });
   };
 
-  const sendDataToServer = async (driverData: CreateDriverDto) => {
-    const { message, error } = await postData("/driver/register", driverData);
-    if (message) {
-      toast.success(message || "Data Added Successfully");
-      resetFrom();
+  const { mutate: createDriver, isPending: isCreating } = useMutation({
+    mutationFn: async (driverData: CreateDriverDto) =>
+      await postData("/driver/register", driverData),
+    onSuccess: (res) => {
+      toast.success(res.message || "Driver added successfully");
+      queryClient.invalidateQueries({ queryKey: ["drivers"] });
+      resetForm();
       setOpenModal(false);
-    }
-    if (error) {
-      toast.error(error);
-    }
-    setIsLoading(false);
-  };
+    },
+    onError: (err) => {
+      toast.error(err?.message || "Failed to add driver");
+    },
+  });
 
-  const handleUpdataData = async (dataToUpdate: CreateDriverDto) => {
-    const { error, message } = await updateData(
-      `/driver/${selectedData._id}`,
-      dataToUpdate
-    );
-    if (message) {
-      toast.success(message || "Data Updated successfully");
-      resetFrom();
+  const { mutate: updateDriver, isPending: isUpdating } = useMutation({
+    mutationFn: async (driverData: CreateDriverDto) =>
+      await updateData(`/driver/${selectedData?._id}`, driverData),
+    onSuccess: (res) => {
+      toast.success(res.message || "Driver updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["drivers"] });
+      resetForm();
       setOpenModal(false);
-    }
-    if (error) {
-      toast.error(error);
-    }
-    setIsLoading(false);
-  };
+    },
+    onError: (err) => {
+      toast.error(err?.message || "Failed to update driver");
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     const driverData = {
       driverName: inputValue.driverName,
       driverPhoneNo: inputValue.phoneNo,
@@ -76,11 +75,13 @@ function DriverForm({
     };
 
     if (isEditMode && selectedData) {
-      handleUpdataData(driverData);
+      updateDriver(driverData);
     } else {
-      sendDataToServer(driverData);
+      createDriver(driverData);
     }
   };
+
+  //  const isLoading = createDriverMutation.isLoading || updateDriverMutation.isLoading;
 
   return (
     <form
@@ -120,7 +121,7 @@ function DriverForm({
       <FormButton
         setOpenModal={setOpenModal}
         isEditMode={isEditMode}
-        isLoading={isLoading}
+        isLoading={isEditMode ? isUpdating : isCreating}
       />
     </form>
   );
