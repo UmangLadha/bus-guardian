@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import TextInput from "../../common/formInputs/textInput";
 import type {
   CreateBusDto,
-  // BusDataTypes,
   CreateDriverDto,
   FormProps,
 } from "../../../types/types";
@@ -80,8 +79,6 @@ function DriverForm({
       createDriver(driverData);
     }
   };
-
-  //  const isLoading = createDriverMutation.isLoading || updateDriverMutation.isLoading;
 
   return (
     <form

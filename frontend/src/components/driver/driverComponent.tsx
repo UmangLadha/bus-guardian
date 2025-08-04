@@ -20,6 +20,7 @@ function DriverComponent() {
         heading="Driver Management"
         description="Add, edit, and manage school drivers"
         setOpenModal={setOpenModal}
+        btnText= "Add Driver"
       />
 
       {openModal && (

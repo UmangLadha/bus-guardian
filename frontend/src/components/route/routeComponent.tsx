@@ -20,6 +20,7 @@ function RouteComponent() {
         heading="Route"
         description="Welcome back! Here's what's happening with your school buses today."
         setOpenModal={setOpenModal}
+        btnText="Add Route"
       />
 
       {openModal && (

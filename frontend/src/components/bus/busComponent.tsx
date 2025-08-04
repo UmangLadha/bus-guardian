@@ -22,6 +22,7 @@ function BusComponent() {
         heading="Bus Management"
         description="Add, edit, and manage school buses"
         setOpenModal={setOpenModal}
+        btnText="Add Bus"
       />
 
       {openModal && (

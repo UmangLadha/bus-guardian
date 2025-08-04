@@ -14,6 +14,7 @@ function StudentComponent(){
         heading="Student Management"
         description="Add, edit, and manage school students"
         setOpenModal={setOpenModal}
+        btnText="Add Student"
       />
 
       {openModal && (

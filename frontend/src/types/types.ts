@@ -69,6 +69,7 @@ export interface PageHeaderTypes {
   heading: string;
   description: string;
   setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  btnText?:string;
 }
 
 // Modal types

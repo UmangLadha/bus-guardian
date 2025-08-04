@@ -2,7 +2,12 @@ import { FiPlus } from "react-icons/fi";
 import Button from "../button/Button";
 import type { PageHeaderTypes } from "../../../types/types";
 
-function PageHeader({ heading, description, setOpenModal }: PageHeaderTypes) {
+function PageHeader({
+  heading,
+  description,
+  setOpenModal,
+  btnText,
+}: PageHeaderTypes) {
   return (
     <div className="flex justify-between  items-center">
       <div>
@@ -13,8 +18,8 @@ function PageHeader({ heading, description, setOpenModal }: PageHeaderTypes) {
         <Button
           btnType="button"
           onClick={() => setOpenModal(true)}
-          btnText="Add Bus"
-          className="w-32 bg-secondary flex items-center justify-start gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer "
+          btnText={btnText || "Add Button Name"}
+          className="w-40 bg-secondary flex items-center justify-start gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer "
         >
           <FiPlus />
         </Button>
