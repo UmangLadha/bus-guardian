@@ -6,12 +6,17 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { setDrivers } from "../../../redux/features/driver/driverSlice";
 import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
+import Modal from "../../common/model/modal";
+import DeleteModal from "../../common/deleteModal/deleteModal";
+import { useState } from "react";
 
 function DriverDataTable({
   setOpenModal,
   setSelectedData,
   setIsEditMode,
 }: ModalStateHandler<CreateDriverDto>) {
+  const [isDelete, setIsDelete] = useState(false);
+
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
@@ -20,7 +25,6 @@ function DriverDataTable({
     if (error) toast.error(error);
     if (data) {
       dispatch(setDrivers(data.drivers));
-      console.log("fetched Data using react Query", data);
     }
     return data?.drivers || [];
   }
@@ -45,15 +49,15 @@ function DriverDataTable({
     },
   });
 
+  const actionDelete = (id: string | undefined) => {
+    if (!id) return;
+    deleteMutation.mutate(id);
+  };
+
   const actionEdit = (data: CreateDriverDto) => {
     setSelectedData(data);
     setIsEditMode(true);
     setOpenModal(true);
-  };
-
-  const actionDelete = (id: string | undefined) => {
-    if (!id) return;
-    deleteMutation.mutate(id);
   };
 
   if (isLoading)
@@ -99,9 +103,17 @@ function DriverDataTable({
             />
             <MdDeleteOutline
               title="Delete"
-              onClick={() => actionDelete(data?._id)}
+              onClick={() => setIsDelete(true)}
               className="text-red-600 size-5 cursor-pointer"
             />
+            {isDelete && (
+              <Modal>
+                <DeleteModal
+                  setIsDelete={setIsDelete}
+                  handleDelete={() => actionDelete(data._id)}
+                />
+              </Modal>
+            )}
           </td>
         </tr>
       ))}

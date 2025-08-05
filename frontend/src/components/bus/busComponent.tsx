@@ -5,6 +5,7 @@ import BusForm from "./elements/busForm";
 import PageHeader from "../common/pageHeader/pageheader";
 import BusDataTable from "./elements/busDataTable";
 import type { CreateBusDto } from "../../types/types";
+import FormHeading from "../common/model/elements/formHeading";
 
 function BusComponent() {
   const [openModal, setOpenModal] = useState(false);
@@ -26,15 +27,16 @@ function BusComponent() {
       />
 
       {openModal && (
-        <Modal
-          title={isEditMode ? "Update Bus" : "Add New Bus"}
-          subTitle={
-            isEditMode
-              ? "Update existing bus details"
-              : "Register a new school bus"
-          }
-          setOpenModal={setOpenModal}
-        >
+        <Modal>
+          <FormHeading
+            heading={isEditMode ? "Update Bus" : "Add New Bus"}
+            subHeading={
+              isEditMode
+                ? "Update existing bus details"
+                : "Register a new school bus"
+            }
+            setOpenModal={setOpenModal}
+          />
           <BusForm
             selectedData={selectedData}
             isEditMode={isEditMode}

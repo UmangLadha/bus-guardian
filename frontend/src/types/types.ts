@@ -46,8 +46,8 @@ export interface CreateRouteDto {
   routeList: { locationName: string }[];
 }
 
-export interface CreateRouteTypes{
-   _id?: string;
+export interface CreateRouteTypes {
+  _id?: string;
   routeName: string;
   routeList: [];
 }
@@ -69,14 +69,14 @@ export interface PageHeaderTypes {
   heading: string;
   description: string;
   setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>;
-  btnText?:string;
+  btnText?: string;
 }
 
 // Modal types
 export interface ModalPropsTypes {
-  title?: string;
-  subTitle?: string;
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  // title?: string;
+  // subTitle?: string;
+  // setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactNode;
 }
 
@@ -84,6 +84,12 @@ export interface ModalFormButtonPropsTypes {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   isEditMode: boolean;
   isLoading: boolean;
+}
+
+export interface ModalFormHeadingPropTypes {
+  heading: string;
+  subHeading: string;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // table prop types

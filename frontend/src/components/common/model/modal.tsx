@@ -1,29 +1,13 @@
-import { HiOutlineX } from "react-icons/hi";
 import type { ModalPropsTypes } from "../../../types/types";
 
-function Modal({ setOpenModal, title, subTitle, children }: ModalPropsTypes) {
+function Modal({ children }: ModalPropsTypes) {
   return (
     <>
-      <div
-        // onClick={() => setOpenModal(false)}
-        className="fixed inset-0 top-0 bottom-0 left-0 right-0 backdrop-brightness-30 bg-gray-900/20 flex items-center justify-center z-50 p-4 "
-      >
+      <div className="fixed inset-0 top-0 bottom-0 left-0 right-0 backdrop-brightness-30 bg-gray-900/20 flex items-center justify-center z-50 p-4 ">
         <div
           onClick={(e) => e.stopPropagation()}
-          className="bg-white bottom-10 rounded-lg p-6 w-full max-w-xl shadow-xl relative"
+          className="bg-white bottom-10 rounded-lg p-6 min-w-72 max-w-xl shadow-xl relative"
         >
-          <div className="flex justify-between items-start mb-5">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
-              <p className=" text-gray-500">{subTitle}</p>
-            </div>
-            <div className="hover:bg-gray-200 p-2 rounded-full duration-200">
-              <HiOutlineX
-                className="size-6 cursor-pointer"
-                onClick={() => setOpenModal(false)}
-              />
-            </div>
-          </div>
           {children}
         </div>
       </div>

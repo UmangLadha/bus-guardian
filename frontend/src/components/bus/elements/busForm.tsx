@@ -11,13 +11,14 @@ import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
 import { postData, updateData } from "../../../utils/apiHandlers";
 import FormButton from "../../common/model/elements/formButtons";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "../../../libs/queryClient";
 
 function BusForm({
   setOpenModal,
   selectedData,
   isEditMode,
 }: FormProps<CreateBusDto>) {
-  const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState({
     busNumber: selectedData.busNumber || "",
     busCapacity: selectedData.busCapacity || 0,
@@ -44,38 +45,36 @@ function BusForm({
     });
   };
 
-  const sendBusDataToServer = async (busData: CreateBusDto) => {
-    const { message, error } = await postData("/bus/register", busData);
-    if (message) {
-      toast.success(message || "Bus Added Successfull");
+  const { mutate: createBus, isPending: isCreating } = useMutation({
+    mutationFn: async (busData: CreateBusDto) =>
+      await postData("/bus/register", busData),
+    onSuccess: (res) => {
+      toast.success(res.message || "Bus Added Successfull");
+      queryClient.invalidateQueries({ queryKey: ["buses"] });
       resetForm();
       setOpenModal(false);
-    }
-    if (error) {
-      toast.error(error);
-    }
-    setIsLoading(false);
-  };
+    },
+    onError: (err) => {
+      toast.error(err?.message || "Failed to add bus");
+    },
+  });
 
-  const handleUpdateData = async (dataToUpdate: CreateBusDto) => {
-    const { error, message } = await updateData(
-      `/bus/${selectedData._id}`,
-      dataToUpdate
-    );
-    if (message) {
-      toast.success(message || "Bus updated successfully");
+  const { mutate: updateBus, isPending: isUpdating } = useMutation({
+    mutationFn: async (dataToUpdate: CreateBusDto) =>
+      await updateData(`/bus/${selectedData._id}`, dataToUpdate),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["buses"] });
+      toast.success(res.message || "Bus updated successfully");
       resetForm();
       setOpenModal(false);
-    }
-    if (error) {
-      toast.error(error);
-    }
-    setIsLoading(false);
-  };
+    },
+    onError: (err) => {
+      toast.error(err?.message || "Failed to update bus");
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     const busData = {
       busNumber: inputValue.busNumber,
       busCapacity: inputValue.busCapacity,
@@ -84,9 +83,9 @@ function BusForm({
     };
 
     if (isEditMode && selectedData) {
-      handleUpdateData(busData);
+      updateBus(busData);
     } else {
-      sendBusDataToServer(busData);
+      createBus(busData);
     }
   };
 
@@ -137,7 +136,7 @@ function BusForm({
       <FormButton
         setOpenModal={setOpenModal}
         isEditMode={isEditMode}
-        isLoading={isLoading}
+        isLoading={isEditMode ? isUpdating : isCreating}
       />
     </form>
   );

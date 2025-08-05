@@ -19,7 +19,7 @@ function PageHeader({
           btnType="button"
           onClick={() => setOpenModal(true)}
           btnText={btnText || "Add Button Name"}
-          className="w-40 bg-secondary flex items-center justify-start gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer "
+          className="max-w-40 bg-secondary flex items-center justify-evenly gap-3 text-white py-2 px-4 rounded-lg font-semibold cursor-pointer "
         >
           <FiPlus />
         </Button>
