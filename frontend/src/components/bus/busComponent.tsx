@@ -29,11 +29,11 @@ function BusComponent() {
       {openModal && (
         <Modal>
           <FormHeading
-            heading={isEditMode ? "Update Bus" : "Add New Bus"}
+            heading={`Bus ${isEditMode ? "Updation" : "Registration"} Form`}
             subHeading={
               isEditMode
                 ? "Update existing bus details"
-                : "Register a new school bus"
+                : "Fill in the details to register a new bus in the system"
             }
             setOpenModal={setOpenModal}
           />

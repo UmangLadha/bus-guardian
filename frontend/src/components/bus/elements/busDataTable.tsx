@@ -16,7 +16,7 @@ function BusDataTable({
   setSelectedData,
   setIsEditMode,
 }: ModalStateHandler<CreateBusDto>) {
-  const [isDelete, setIsDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
 
@@ -41,17 +41,19 @@ function BusDataTable({
       return response;
     },
     onSuccess: (res) => {
-      toast.success(res?.message || "Bus deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["buses"] });
+      toast.success(res?.message || "Bus deleted successfully");
+      setDeleteId(null);
     },
     onError: (err) => {
       toast.error(err.message || "Failed to delete bus");
     },
   });
 
-  const actionDelete = async (id: string | undefined) => {
-    if (!id) return;
-    deleteMutation.mutate(id);
+  const handleDelete = () => {
+    if (deleteId) {
+      deleteMutation.mutate(deleteId);
+    }
   };
 
   const actionEdit = (data: CreateBusDto) => {
@@ -79,47 +81,49 @@ function BusDataTable({
     );
 
   return (
-    <tbody>
-      {data.map((data: CreateBusDto) => (
-        <tr
-          key={data._id}
-          className="border-b border-gray-200 hover:bg-gray-50"
-        >
-          <td className="py-3 px-4 text-sm font-medium text-gray-900">
-            {data.busNumber}
-          </td>
-          <td className="py-3 px-4 text-sm text-gray-700">
-            {data.assignedDriver?.driverName || " - "}
-          </td>
-          <td className="py-3 px-4 text-sm text-gray-700">
-            {data.assignedRoute?.busRoute || " - "}
-          </td>
-          <td className="py-3 px-4 text-sm text-gray-700">
-            {data.busCapacity}
-          </td>
-          <td className="py-3 px-4 flex gap-4 items-center">
-            <FaRegEdit
-              title="Update"
-              onClick={() => actionEdit(data)}
-              className="text-amber-500 size-5 cursor-pointer"
-            />
-            <MdDeleteOutline
-              title="Delete"
-              onClick={() => setIsDelete(true)}
-              className="text-red-600 size-5 cursor-pointer"
-            />
-            {isDelete && (
-              <Modal>
-                <DeleteModal
-                  setIsDelete={setIsDelete}
-                  handleDelete={() => actionDelete(data._id)}
-                />
-              </Modal>
-            )}
-          </td>
-        </tr>
-      ))}
-    </tbody>
+    <>
+      <tbody>
+        {data.map((data: CreateBusDto) => (
+          <tr
+            key={data._id}
+            className="border-b border-gray-200 hover:bg-gray-50"
+          >
+            <td className="py-3 px-4 text-sm font-medium text-gray-900">
+              {data.busNumber}
+            </td>
+            <td className="py-3 px-4 text-sm text-gray-700">
+              {data.assignedDriver?.driverName || "—"}
+            </td>
+            <td className="py-3 px-4 text-sm text-gray-700">
+              {data.assignedRoute?.busRoute || "—"}
+            </td>
+            <td className="py-3 px-4 text-sm text-gray-700">
+              {data.busCapacity}
+            </td>
+            <td className="py-3 px-4 flex gap-4 items-center">
+              <FaRegEdit
+                title="Update"
+                onClick={() => actionEdit(data)}
+                className="text-amber-500 size-5 cursor-pointer"
+              />
+              <MdDeleteOutline
+                title="Delete"
+                onClick={() => setDeleteId(data._id!)}
+                className="text-red-600 size-5 cursor-pointer"
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+      {deleteId && (
+        <Modal>
+          <DeleteModal
+            setIsDelete={() => setDeleteId(null)}
+            handleDelete={handleDelete}
+          />
+        </Modal>
+      )}
+    </>
   );
 }
 

@@ -5,6 +5,7 @@ import PageHeader from "../common/pageHeader/pageheader";
 import DriverForm from "./elements/driverForm";
 import DriverDataTable from "./elements/driverDataTable";
 import type { CreateDriverDto } from "../../types/types";
+import FormHeading from "../common/model/elements/formHeading";
 
 function DriverComponent() {
   const [openModal, setOpenModal] = useState(false);
@@ -18,13 +19,22 @@ function DriverComponent() {
     <>
       <PageHeader
         heading="Driver Management"
-        description="Add, edit, and manage school drivers"
+        description="Track all students using bus services"
         setOpenModal={setOpenModal}
-        btnText= "Add Driver"
+        btnText="Add Driver"
       />
 
       {openModal && (
-        <Modal title="Add New Driver" setOpenModal={setOpenModal}>
+        <Modal>
+          <FormHeading
+            heading={`Driver ${isEditMode ? "Updation" : "Registration"} Form`}
+            subHeading={
+              isEditMode
+                ? "Update existing bus details"
+                : "Fill in the driver details for bus assignment and management"
+            }
+            setOpenModal={setOpenModal}
+          />
           <DriverForm
             isEditMode={isEditMode}
             selectedData={selectedData}

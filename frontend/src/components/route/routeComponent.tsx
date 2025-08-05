@@ -5,6 +5,7 @@ import RouteForm from "./elements/routeForm";
 import Table from "../common/table/table";
 import RouteDataTable from "./elements/routeDataTable";
 import type { CreateRouteDto } from "../../types/types";
+import FormHeading from "../common/model/elements/formHeading";
 
 function RouteComponent() {
   const [openModal, setOpenModal] = useState(false);
@@ -24,11 +25,12 @@ function RouteComponent() {
       />
 
       {openModal && (
-        <Modal
-          title="Add New Route"
-          subTitle="Register a new school bus route in the system"
-          setOpenModal={setOpenModal}
-        >
+        <Modal>
+          <FormHeading
+            heading="Add New Route"
+            subHeading="Register a new school bus route in the system"
+            setOpenModal={setOpenModal}
+          />
           <RouteForm
             selectedData={selectedData}
             isEditMode={isEditMode}
