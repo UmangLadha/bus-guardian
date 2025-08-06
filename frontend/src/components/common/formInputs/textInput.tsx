@@ -13,6 +13,8 @@ function TextInput(props: InputPropsTypes) {
     value,
     autoComplete,
     title,
+    min,
+    max,
     onChange,
   } = props;
 
@@ -20,15 +22,20 @@ function TextInput(props: InputPropsTypes) {
     <>
       <label
         htmlFor={name}
-        className="p-1.5 font-medium text-left min-w-64 w-full flex flex-col gap-1"
+        className="p-1.5 text-left min-w-64 w-full flex flex-col gap-1"
       >
-        <span>{label}</span>
+        <span className="font-medium">
+          {label}
+          {required && "*"}
+        </span>
         <input
           id={name}
           name={name}
           type={type}
           placeholder={placeholder}
           value={value}
+          min={min}
+          max={max}
           onChange={(e) => onChange(e.target.value)}
           required={required}
           autoComplete={autoComplete}
@@ -36,7 +43,7 @@ function TextInput(props: InputPropsTypes) {
           maxLength={maxLength}
           pattern={pattern}
           title={title}
-          className="border-[1px] border-yellow-300 outline-none py-2 px-4 rounded-lg w-full my-1 focus:border-yellow-500"
+          className="border border-yellow-300 outline-none py-2 px-4 rounded-lg w-full my-1 focus:border-yellow-500"
         />
       </label>
     </>

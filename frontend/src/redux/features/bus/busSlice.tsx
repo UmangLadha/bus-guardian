@@ -1,19 +1,24 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { BusDataTypes } from "../../../types/types";
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { BusApiResponse, CreateBusDto } from '../../../types/types';
 
-interface DriverState {
-  buses: BusDataTypes[];
+interface BusState {
+  buses: CreateBusDto[];
+  isLoading: boolean;
+  error: string | null;
 }
 
-const initialState: DriverState = {
+const initialState: BusState = {
   buses: [],
+  isLoading: false,
+  error: null,
 };
-export const busSlice = createSlice({
-  name: "bus",
+
+const busSlice = createSlice({
+  name: 'bus',
   initialState,
   reducers: {
-    setbus: (state, action: PayloadAction<BusDataTypes[]>) => {
-      state.buses = action.payload;
+    setbus: (state, action: PayloadAction<BusApiResponse>) => {
+      state.buses = action.payload.buses;
     },
   },
 });

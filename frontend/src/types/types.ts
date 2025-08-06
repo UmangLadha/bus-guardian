@@ -1,14 +1,35 @@
 import type { MouseEventHandler } from "react";
 
 //common type
+// export interface ModalStateHandler<T> {
+//   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+//   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+//   setSelectedData: React.Dispatch<React.SetStateAction<T>>;
+// }
+
+export interface ApiResponse {
+  message?: string;
+  success?: boolean;
+  [key: string]: unknown;
+}
+
+export interface ApiError {
+  message?: string;
+}
+
+export interface SelectOption {
+  id: string;
+  name: string;
+}
+
 export interface ModalStateHandler<T> {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedData: React.Dispatch<React.SetStateAction<T>>;
+  setOpenModal: (value: boolean) => void;
+  setSelectedData: (data: T) => void;
+  setIsEditMode: (value: boolean) => void;
 }
 
 export interface FormProps<T> {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenModal: (value: boolean) => void;
   selectedData: T;
   isEditMode: boolean;
 }
@@ -32,12 +53,12 @@ export interface CreateBusDto {
   busNumber: string;
   assignedDriver?: { _id: string; driverName: string };
   assignedRoute?: { _id: string; busRoute: string };
-  busCapacity: number;
+  busCapacity: string;
 }
 
-// export interface BusDataTypes extends CreateBusDto {
-//   _id: string;
-// }
+export interface BusApiResponse {
+  buses: CreateBusDto[];
+}
 
 // Route Component
 export interface CreateRouteDto {
@@ -60,10 +81,6 @@ export interface CreateDriverDto {
   assignedBus?: { _id: string; busNumber: string };
 }
 
-// export interface DriverDataTypes extends CreateDriverDto {
-//   _id: string;
-// }
-
 // page header types
 export interface PageHeaderTypes {
   heading: string;
@@ -74,14 +91,11 @@ export interface PageHeaderTypes {
 
 // Modal types
 export interface ModalPropsTypes {
-  // title?: string;
-  // subTitle?: string;
-  // setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactNode;
 }
 
 export interface ModalFormButtonPropsTypes {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenModal: (value: boolean) => void;
   isEditMode: boolean;
   isLoading: boolean;
 }
@@ -123,6 +137,8 @@ export interface InputPropsTypes {
   value: string | number;
   autoComplete?: string;
   title?: string;
+  min?:number;
+  max?:number;
   onChange: (value: string) => void;
 }
 

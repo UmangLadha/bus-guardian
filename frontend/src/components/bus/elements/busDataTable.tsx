@@ -1,65 +1,39 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
+// import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-import { deleteData, getData } from "../../../utils/apiHandlers";
-import type { ModalStateHandler, CreateBusDto } from "../../../types/types";
-import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
-import { setbus } from "../../../redux/features/bus/busSlice";
+import type { ModalStateHandler, CreateBusDto, BusApiResponse } from "../../../types/types";
+// import { useAppDispatch } from "../../../redux/reduxHooks/reduxHooks";
 import DeleteModal from "../../common/deleteModal/deleteModal";
 import Modal from "../../common/model/modal";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../../libs/queryClient";
+import { useFetchData } from "../../../hooks/useFetchData";
+import { setbus } from "../../../redux/features/bus/busSlice";
 
 function BusDataTable({
   setOpenModal,
   setSelectedData,
   setIsEditMode,
 }: ModalStateHandler<CreateBusDto>) {
-  const [deleteId, setDeleteId] = useState<string | null>(null);
+  // const dispatch = useAppDispatch();
 
-  const dispatch = useAppDispatch();
+  const { data, isLoading, isError, deleteId, setDeleteId, handleDelete } =
+    useFetchData<BusApiResponse>({
+      endpoint: "/bus",
+      queryKey: ["buses"],
+      sliceAction: setbus
+    });
 
-  async function fetchBusData() {
-    const { data, error } = await getData("/bus");
-    if (error) toast.error(error);
-    if (data) {
-      dispatch(setbus(data.buses));
-    }
-    return data.buses || [];
-  }
-
-  const { data, isError, isLoading } = useQuery({
-    queryKey: ["buses"],
-    queryFn: fetchBusData,
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { response, error } = await deleteData(`/bus/${id}`);
-      if (error) toast.error(error);
-      return response;
-    },
-    onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ["buses"] });
-      toast.success(res?.message || "Bus deleted successfully");
-      setDeleteId(null);
-    },
-    onError: (err) => {
-      toast.error(err.message || "Failed to delete bus");
-    },
-  });
-
-  const handleDelete = () => {
-    if (deleteId) {
-      deleteMutation.mutate(deleteId);
-    }
-  };
-
-  const actionEdit = (data: CreateBusDto) => {
-    setSelectedData(data);
+  const actionEdit = (busData: CreateBusDto)=> {
+    setSelectedData(busData);
     setIsEditMode(true);
     setOpenModal(true);
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setDeleteId(id);
+  };
+
+  const handleCancelDelete = (): void => {
+    setDeleteId(null);
   };
 
   if (isLoading)
@@ -83,32 +57,32 @@ function BusDataTable({
   return (
     <>
       <tbody>
-        {data.map((data: CreateBusDto) => (
+        {data?.buses.map((busData: CreateBusDto) => (
           <tr
-            key={data._id}
+            key={busData._id}
             className="border-b border-gray-200 hover:bg-gray-50"
           >
             <td className="py-3 px-4 text-sm font-medium text-gray-900">
-              {data.busNumber}
+              {busData.busNumber}
             </td>
             <td className="py-3 px-4 text-sm text-gray-700">
-              {data.assignedDriver?.driverName || "—"}
+              {busData.assignedDriver?.driverName || "—"}
             </td>
             <td className="py-3 px-4 text-sm text-gray-700">
-              {data.assignedRoute?.busRoute || "—"}
+              {busData.assignedRoute?.busRoute || "—"}
             </td>
             <td className="py-3 px-4 text-sm text-gray-700">
-              {data.busCapacity}
+              {busData.busCapacity}
             </td>
             <td className="py-3 px-4 flex gap-4 items-center">
               <FaRegEdit
                 title="Update"
-                onClick={() => actionEdit(data)}
+                onClick={() => actionEdit(busData)}
                 className="text-amber-500 size-5 cursor-pointer"
               />
               <MdDeleteOutline
                 title="Delete"
-                onClick={() => setDeleteId(data._id!)}
+                onClick={() => handleDeleteClick(busData._id!)}
                 className="text-red-600 size-5 cursor-pointer"
               />
             </td>
@@ -118,7 +92,7 @@ function BusDataTable({
       {deleteId && (
         <Modal>
           <DeleteModal
-            setIsDelete={() => setDeleteId(null)}
+            setIsDelete={handleCancelDelete}
             handleDelete={handleDelete}
           />
         </Modal>

@@ -1,102 +1,56 @@
-import React, { useState } from "react";
 import TextInput from "../../common/formInputs/textInput";
-import toast from "react-hot-toast";
 import SelectList from "../../common/formInputs/selectList";
 import type {
   CreateBusDto,
   FormProps,
-  CreateRouteDto,
+  // CreateRouteDto,
 } from "../../../types/types";
 import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
-import { postData, updateData } from "../../../utils/apiHandlers";
 import FormButton from "../../common/model/elements/formButtons";
-import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "../../../libs/queryClient";
+import { useForm } from "../../../hooks/useForm";
+
+interface BusFormData {
+  _id?: string;
+  busNumber: string;
+  busCapacity: string;
+  busDriverId: string;
+  busRouteId: string;
+}
 
 function BusForm({
   setOpenModal,
   selectedData,
   isEditMode,
 }: FormProps<CreateBusDto>) {
-  const [inputValue, setInputValue] = useState({
-    busNumber: selectedData.busNumber || "",
-    busCapacity: selectedData.busCapacity || 0,
-    busDriver: selectedData.assignedDriver?._id || "",
-    busRoute: selectedData.assignedRoute?._id || "",
-  });
-
   const routes = useAppSelector((state: RootState) => state.Route.routes);
   const drivers = useAppSelector((state: RootState) => state.Driver.driver);
 
-  const handleInputChange = (field: string, value: string) => {
-    setInputValue((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const resetForm = () => {
-    setInputValue({
-      busNumber: "",
-      busCapacity: 0,
-      busDriver: "",
-      busRoute: "",
+  const { formData, handleInputChange, handleSubmit, isLoading } =
+    useForm<BusFormData>({
+      endpoint: "/bus",
+      queryKey: ["buses"],
+      initialData: {
+        _id: selectedData._id,
+        busNumber: selectedData.busNumber || "",
+        busCapacity: selectedData.busCapacity || "",
+        busDriverId: selectedData.assignedDriver?._id || "",
+        busRouteId: selectedData.assignedRoute?._id || "",
+      },
+      onSuccess: () => setOpenModal(false),
     });
-  };
-
-  const { mutate: createBus, isPending: isCreating } = useMutation({
-    mutationFn: async (busData: CreateBusDto) =>
-      await postData("/bus/register", busData),
-    onSuccess: (res) => {
-      toast.success(res.message || "Bus Added Successfull");
-      queryClient.invalidateQueries({ queryKey: ["buses"] });
-      resetForm();
-      setOpenModal(false);
-    },
-    onError: (err) => {
-      toast.error(err?.message || "Failed to add bus");
-    },
-  });
-
-  const { mutate: updateBus, isPending: isUpdating } = useMutation({
-    mutationFn: async (dataToUpdate: CreateBusDto) =>
-      await updateData(`/bus/${selectedData._id}`, dataToUpdate),
-    onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ["buses"] });
-      toast.success(res.message || "Bus updated successfully");
-      resetForm();
-      setOpenModal(false);
-    },
-    onError: (err) => {
-      toast.error(err?.message || "Failed to update bus");
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const busData = {
-      busNumber: inputValue.busNumber,
-      busCapacity: inputValue.busCapacity,
-      busDriverId: inputValue.busDriver,
-      busRouteId: inputValue.busRoute,
-    };
-
-    if (isEditMode && selectedData) {
-      updateBus(busData);
-    } else {
-      createBus(busData);
-    }
-  };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-wrap w-full gap-4">
+    <form
+      onSubmit={(e) => handleSubmit(e, isEditMode)}
+      className="flex flex-wrap w-full gap-4"
+    >
       <TextInput
         name="busNumber"
         label="Bus Number"
         type="text"
         placeholder="Enter Bus Number"
-        value={inputValue.busNumber}
+        value={formData.busNumber}
         onChange={(val) => handleInputChange("busNumber", val)}
         required
       />
@@ -105,8 +59,10 @@ function BusForm({
         name="busCapacity"
         label="Bus Capacity"
         type="number"
+        min={1}
+        max={100}
         placeholder="Bus Capacity"
-        value={inputValue.busCapacity}
+        value={formData.busCapacity}
         onChange={(val) => handleInputChange("busCapacity", val)}
         required
       />
@@ -114,9 +70,9 @@ function BusForm({
       <SelectList
         name="route"
         label="Route"
-        value={inputValue.busRoute}
-        onChange={(val) => handleInputChange("busRoute", val)}
-        options={routes.map((route: CreateRouteDto) => ({
+        value={formData.busRouteId}
+        onChange={(val) => handleInputChange("busRouteId", val)}
+        options={routes.map((route) => ({
           id: route._id,
           name: route.routeName,
         }))}
@@ -125,8 +81,8 @@ function BusForm({
       <SelectList
         name="driver"
         label="Driver"
-        value={inputValue.busDriver}
-        onChange={(val) => handleInputChange("busDriver", val)}
+        value={formData.busDriverId}
+        onChange={(val) => handleInputChange("busDriverId", val)}
         options={drivers.map((driver) => ({
           id: driver._id,
           name: driver.driverName,
@@ -136,7 +92,7 @@ function BusForm({
       <FormButton
         setOpenModal={setOpenModal}
         isEditMode={isEditMode}
-        isLoading={isEditMode ? isUpdating : isCreating}
+        isLoading={isLoading}
       />
     </form>
   );
