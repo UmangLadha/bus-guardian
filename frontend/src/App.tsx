@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 import Bus from "./pages/bus.page";
 import Driver from "./pages/driver.page";
 import Student from "./pages/student.page";
-import Wrapper from "./components/common/wrapper";
+import Wrapper from "./components/common/wrapper/wrapper";
 import RoutePage from "./pages/route.page";
 import { store } from "./redux/app/store";
 import { Provider } from "react-redux";

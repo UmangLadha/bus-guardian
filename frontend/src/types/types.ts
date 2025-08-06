@@ -160,3 +160,13 @@ export interface ButtonTypes {
   btnType: "submit" | "reset" | "button";
   className: string;
 }
+
+export interface TableStateProps {
+  isLoading: boolean;
+  isError: boolean;
+  colSpan: number;
+  loadingMessage?: string;
+  errorMessage?: string;
+  children?: React.ReactNode;
+}
+
