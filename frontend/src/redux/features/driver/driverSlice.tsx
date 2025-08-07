@@ -1,19 +1,23 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { DriverDataTypes } from "../../../types/types";
+import type { CreateDriverDto, DriverApiResponse } from "../../../types/types";
 
 interface DriverState {
-  driver: DriverDataTypes[];
+  driver: CreateDriverDto[];
+  isLoading: boolean;
+  error: string | null;
 }
 
 const initialState: DriverState = {
   driver: [],
+  isLoading: false,
+  error: null,
 };
 export const driverSlice = createSlice({
   name: "driver",
   initialState,
   reducers: {
-    setDrivers: (state, action: PayloadAction<DriverDataTypes[]>) => {
-      state.driver = action.payload;
+    setDrivers: (state, action: PayloadAction<DriverApiResponse>) => {
+      state.driver = action.payload.drivers;
     },
   },
 });

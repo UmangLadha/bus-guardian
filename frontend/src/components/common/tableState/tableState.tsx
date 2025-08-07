@@ -1,15 +1,6 @@
 import { FiLoader } from "react-icons/fi";
 import { MdError } from "react-icons/md";
-
-interface TableStateProps {
-  isLoading: boolean;
-  isError: boolean;
-  colSpan: number;
-  loadingMessage?: string;
-  errorMessage?: string;
-  showSpinner?: boolean;
-  children?: React.ReactNode;
-}
+import type { TableStateProps } from "../../../types/types";
 
 function TableState({
   isLoading,

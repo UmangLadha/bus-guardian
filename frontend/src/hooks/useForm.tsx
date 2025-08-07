@@ -3,13 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { postData, updateData } from "../utils/apiHandlers";
 import { queryClient } from "../libs/queryClient";
-
-interface UseFormProps<T> {
-  endpoint: string;
-  queryKey: string[];
-  initialData: T;
-  onSuccess?: () => void;
-}
+import type { UseFormProps } from "../types/types";
 
 export function useForm<T extends { _id?: string }>({
   endpoint,
@@ -20,7 +14,7 @@ export function useForm<T extends { _id?: string }>({
   const [formData, setFormData] = useState<T>(initialData);
 
   const handleInputChange = useCallback(
-    (field: string, value: string | number ) => {
+    (field: string, value: string | number) => {
       setFormData((prev) => ({
         ...prev,
         [field]: value,

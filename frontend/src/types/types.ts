@@ -1,12 +1,7 @@
+import type { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import type { MouseEventHandler } from "react";
 
-//common type
-// export interface ModalStateHandler<T> {
-//   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-//   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-//   setSelectedData: React.Dispatch<React.SetStateAction<T>>;
-// }
-
+//common components type
 export interface ApiResponse {
   message?: string;
   success?: boolean;
@@ -47,19 +42,6 @@ export interface AdminCredentialsTypes {
   password: string;
 }
 
-//Bus Component
-export interface CreateBusDto {
-  _id?: string;
-  busNumber: string;
-  assignedDriver?: { _id: string; driverName: string };
-  assignedRoute?: { _id: string; busRoute: string };
-  busCapacity: string;
-}
-
-export interface BusApiResponse {
-  buses: CreateBusDto[];
-}
-
 // Route Component
 export interface CreateRouteDto {
   _id?: string;
@@ -73,6 +55,23 @@ export interface CreateRouteTypes {
   routeList: [];
 }
 
+export interface RouteApiResponse {
+  routes: CreateRouteDto[];
+}
+
+//Bus Component
+export interface CreateBusDto {
+  _id?: string;
+  busNumber: string;
+  assignedDriver?: { _id: string; driverName: string };
+  assignedRoute?: { _id: string; busRoute: string };
+  busCapacity: string;
+}
+
+export interface BusApiResponse {
+  buses: CreateBusDto[];
+}
+
 // Driver Component
 export interface CreateDriverDto {
   _id?: string;
@@ -81,7 +80,69 @@ export interface CreateDriverDto {
   assignedBus?: { _id: string; busNumber: string };
 }
 
-// page header types
+export interface DriverFormData {
+  _id?: string;
+  driverName: string;
+  driverPhoneNo: string;
+  busId: string;
+}
+
+export interface DriverApiResponse {
+  drivers: CreateDriverDto[];
+}
+
+// student component types
+export interface StudentApiResponse {
+  students: [];
+}
+
+// entityManager component types
+interface FormComponentProps<T> {
+  selectedData: T;
+  isEditMode: boolean;
+  setOpenModal: (value: boolean) => void;
+}
+
+interface DataTableComponentProps<T> {
+  setIsEditMode: (value: boolean) => void;
+  setSelectedData: (data: T) => void;
+  setOpenModal: (value: boolean) => void;
+}
+
+export interface EntityManagerProps<T> {
+  title: string;
+  description: string;
+  tableHeadings: string[];
+  FormComponent: React.ComponentType<FormComponentProps<T>>;
+  DataTableComponent: React.ComponentType<DataTableComponentProps<T>>;
+  initialData: T;
+  componentName: string;
+}
+
+////// Hooks types ////////
+  
+      // useFetchData hook types //
+export interface UseFetchDataProps<T>{
+  endpoint: string;
+  queryKey: string[];
+  sliceAction?: ActionCreatorWithPayload<T>;
+}
+
+      // useFrom hook types //
+export interface UseFormProps<T> {
+  endpoint: string;
+  queryKey: string[];
+  initialData: T;
+  onSuccess?: () => void;
+}
+      // useTable types //
+export interface UseTableProps {
+  endpoint: string;
+  queryKey: string[];
+}
+
+
+// pageHeader component types
 export interface PageHeaderTypes {
   heading: string;
   description: string;
@@ -89,7 +150,7 @@ export interface PageHeaderTypes {
   btnText?: string;
 }
 
-// Modal types
+// Modal component types
 export interface ModalPropsTypes {
   children: React.ReactNode;
 }
@@ -106,7 +167,7 @@ export interface ModalFormHeadingPropTypes {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// table prop types
+// table component types
 export interface TablePropsTypes {
   tableHeadings?: string[];
   children: React.ReactNode;
@@ -124,7 +185,18 @@ export interface TransitionTypes {
   children: React.ReactNode;
 }
 
-// common button, input and select option Types
+// tableState component type
+export interface TableStateProps {
+  isLoading: boolean;
+  isError: boolean;
+  colSpan: number;
+  loadingMessage?: string;
+  errorMessage?: string;
+  showSpinner?: boolean;
+  children?: React.ReactNode;
+}
+
+// common button, input and select options Types
 export interface InputPropsTypes {
   name: string;
   type: string;
@@ -137,8 +209,8 @@ export interface InputPropsTypes {
   value: string | number;
   autoComplete?: string;
   title?: string;
-  min?:number;
-  max?:number;
+  min?: number;
+  max?: number;
   onChange: (value: string) => void;
 }
 
@@ -160,13 +232,3 @@ export interface ButtonTypes {
   btnType: "submit" | "reset" | "button";
   className: string;
 }
-
-export interface TableStateProps {
-  isLoading: boolean;
-  isError: boolean;
-  colSpan: number;
-  loadingMessage?: string;
-  errorMessage?: string;
-  children?: React.ReactNode;
-}
-

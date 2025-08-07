@@ -3,11 +3,7 @@ import { deleteData, getData } from "../utils/apiHandlers";
 import toast from "react-hot-toast";
 import { queryClient } from "../libs/queryClient";
 import { useState } from "react";
-
-interface UseTableProps {
-  endpoint: string;
-  queryKey: string[];
-}
+import type { UseTableProps } from "../types/types";
 
 export function useTable({ queryKey, endpoint }: UseTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);

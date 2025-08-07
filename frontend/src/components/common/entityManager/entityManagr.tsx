@@ -3,28 +3,7 @@ import PageHeader from "../pageHeader/pageheader";
 import Modal from "../model/modal";
 import FormHeading from "../model/elements/formHeading";
 import Table from "../table/table";
-
-interface FormComponentProps<T> {
-  selectedData: T;
-  isEditMode: boolean;
-  setOpenModal: (value: boolean) => void;
-}
-
-interface DataTableComponentProps<T> {
-  setIsEditMode: (value: boolean) => void;
-  setSelectedData: (data: T) => void;
-  setOpenModal: (value: boolean) => void;
-}
-
-interface EntityManagerProps<T> {
-  title: string;
-  description: string;
-  tableHeadings: string[];
-  FormComponent: React.ComponentType<FormComponentProps<T>>;
-  DataTableComponent: React.ComponentType<DataTableComponentProps<T>>;
-  initialData: T;
-  componentName: string;
-}
+import type { EntityManagerProps } from "../../../types/types";
 
 function EntityManager<T>({
   title,

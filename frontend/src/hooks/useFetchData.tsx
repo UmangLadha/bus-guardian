@@ -3,40 +3,14 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { getData, deleteData } from "../utils/apiHandlers";
 import { queryClient } from "../libs/queryClient";
-// import { setbus } from "../redux/features/bus/busSlice";
 import { useAppDispatch } from "../redux/reduxHooks/reduxHooks";
-import type { ActionCreatorWithPayload } from "@reduxjs/toolkit";
-
-// interface ApiResponse {
-//   message?: string;
-//   [key: string]: unknown;
-// }
-
-// interface ApiError {
-//   message?: string;
-// }
-
-// interface GetDataResponse<T> {
-//   data?: T[];
-//   error?: string;
-// }
-
-// interface DeleteDataResponse {
-//   response?: ApiResponse;
-//   error?: string;
-// }
-
-interface UseEntityTableProps<T>{
-  endpoint: string;
-  queryKey: string[];
-  sliceAction?: ActionCreatorWithPayload<T>;
-}
+import type { UseFetchDataProps } from "../types/types";
 
 export function useFetchData<T>({
   endpoint,
   queryKey,
   sliceAction,
-}: UseEntityTableProps<T>) {
+}: UseFetchDataProps<T>) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 

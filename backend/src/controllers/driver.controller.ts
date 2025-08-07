@@ -4,7 +4,7 @@ import { DriverServices } from "../services/driver.services";
 export class DriverController {
   static async registerDriver(req: Request, res: Response) {
     try {
-      const { driverName, driverPhoneNo, busID } = req.body;
+      const { driverName, driverPhoneNo, busId } = req.body;
       if (!driverName || !driverPhoneNo) {
         res.status(400).json({ message: "All fields are required" });
         return;
@@ -13,7 +13,7 @@ export class DriverController {
       const result = await DriverServices.registerDriver(
         driverName,
         driverPhoneNo,
-        busID
+        busId
       );
       if (!result.success) {
         res.status(400).json({ message: result.message });
@@ -66,12 +66,12 @@ export class DriverController {
   static async updateDriverById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { driverName, driverPhoneNo, busID } = req.body;
+      const { driverName, driverPhoneNo, busId } = req.body;
       const result = await DriverServices.updateDriverById(
         id,
         driverName,
         driverPhoneNo,
-        busID
+        busId
       );
       if (!result.success) {
         res.status(400).json({ message: result.message });

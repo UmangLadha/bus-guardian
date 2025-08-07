@@ -8,7 +8,7 @@ export class DriverServices {
   static async registerDriver(
     driverName: string,
     driverPhoneNo: number,
-    busID: string
+    busId: string
   ) {
     const driverExit = await Driver.findOne({ driverPhoneNo });
 
@@ -21,12 +21,12 @@ export class DriverServices {
       driverPhoneNo,
     };
 
-    if (!mongoose.Types.ObjectId.isValid(busID)) {
+    if (!mongoose.Types.ObjectId.isValid(busId)) {
       return { success: false, message: "Invalid Bus ID" };
     }
 
-    if (busID) {
-      const bus = await Bus.findById(busID);
+    if (busId) {
+      const bus = await Bus.findById(busId);
       console.log("here is the bus Data: ", bus); ////////////////////////
       if (!bus) {
         return { success: false, message: "bus not found" };
@@ -39,8 +39,8 @@ export class DriverServices {
 
     const newDriver = await Driver.create(driverData);
 
-    if (busID) {
-      await Bus.findByIdAndUpdate(busID, {
+    if (busId) {
+      await Bus.findByIdAndUpdate(busId, {
         assignedDriver: {
           _id: newDriver._id,
           driverName: newDriver.driverName,
@@ -69,12 +69,12 @@ export class DriverServices {
     id: string,
     driverName: string,
     driverPhoneNo: number,
-    busID: string
+    busId: string
   ) {
     const updatedPayload: DriverTypes = { driverName, driverPhoneNo };
     
-    if (busID) {
-      const bus = await Bus.findById(busID);
+    if (busId) {
+      const bus = await Bus.findById(busId);
       if (!bus) {
         return { success: false, message: "bus not found" };
       }
@@ -89,8 +89,8 @@ export class DriverServices {
       return { success: false, message: "No driver found!" };
     }
 
-    if (busID) {
-      await Bus.findByIdAndUpdate(busID, {
+    if (busId) {
+      await Bus.findByIdAndUpdate(busId, {
         assignedDriver: {
           _id: updatedDriver._id,
           driverName: updatedDriver.driverName,

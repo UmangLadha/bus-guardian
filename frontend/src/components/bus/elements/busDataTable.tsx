@@ -39,13 +39,7 @@ function BusDataTable({
 
   return (
     <>
-      <TableState
-        isError={isError}
-        isLoading={isLoading}
-        colSpan={5}
-        loadingMessage="Loading buses..."
-        errorMessage="Failed to load bus data."
-      >
+      <TableState isError={isError} isLoading={isLoading} colSpan={5}>
         <tbody>
           {data?.buses.map((busData: CreateBusDto) => (
             <tr
