@@ -32,8 +32,9 @@ export interface DriverTypes {
 
 // student service types
 export interface StudentTypes {
+  studentId:string;
   studentName: string;
-  parentContact: number;
+  parentPhoneNo: number;
   busNumber?: string;
   pickupAddress?: string;
   busAssigned?: Types.ObjectId | string;

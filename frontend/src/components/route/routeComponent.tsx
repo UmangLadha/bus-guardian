@@ -6,9 +6,9 @@ function RouteComponent() {
   return (
     <EntityManager
       componentName="Route"
-      initialData={{ routeName: "", routeList: [] }}
+      initialData={{ routeName: "", locationsList: [] }}
       title="Route Management"
-      tableHeadings={["Route Name", "Locations", "Actions"]}
+      tableHeadings={["Route Name", "Checkpoints", "Actions"]}
       description="Manage your school bus routes and stops."
       FormComponent={RouteForm}
       DataTableComponent={RouteDataTable}

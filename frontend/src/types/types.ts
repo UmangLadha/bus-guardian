@@ -52,7 +52,7 @@ export interface CreateRouteDto {
 export interface RouteFormData {
   _id?: string;
   routeName: string;
-  locationsList: string;
+  locationName: string;
 }
 
 export interface CreateRouteTypes {
@@ -70,7 +70,7 @@ export interface CreateBusDto {
   _id?: string;
   busNumber: string;
   assignedDriver?: { _id: string; driverName: string };
-  assignedRoute?: { _id: string; busRoute: string };
+  assignedRoute?: { _id: string; routeName: string };
   busCapacity: string;
 }
 
@@ -106,9 +106,60 @@ export interface DriverApiResponse {
 }
 
 // student component types
+export interface CreateStudentDto {
+  pickupLocation: string;
+  _id?: string;
+  studentId: string;
+  studentName: string;
+  parentPhoneNo: string;
+  pickupPoint:string
+  assignedBus?: { _id: string; busNumber: string };
+  assignedRoute: { _id: string; busRoute: string };
+}
+
+// export interface StudentFormData{
+//   _id?: string;
+//   studentId: string;
+//   studentName: string;
+//   parentPhoneNo:string;
+//   busId: string;
+//   pickupPoint: string;
+//   routeId :string;
+// }
+
 export interface StudentApiResponse {
   students: [];
 }
+
+// types/types.ts mein add karna
+export interface StudentFormData {
+  _id?: string;
+  studentId: string;
+  studentName: string;
+  parentPhoneNo: string;
+  busId: string;
+  routeId: string;
+  pickupLocation: string; // Change from pickupPoint to pickupLocation
+}
+
+export interface Location {
+  _id: string;
+  locationName: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface RouteDetails {
+  _id: string;
+  routeName: string;
+  locationsList: Location[];
+  assignedBus: {
+    _id: string;
+    busNumber: string;
+  };
+}
+
+
 
 // entityManager component types
 interface FormComponentProps<T> {

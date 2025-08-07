@@ -35,7 +35,7 @@ function BusForm({
   return (
     <form
       onSubmit={(e) => handleSubmit(e, isEditMode)}
-      className="flex flex-wrap w-full gap-4"
+      className="flex flex-col justify-between mx-auto items-center w-full"
     >
       <TextInput
         name="busNumber"

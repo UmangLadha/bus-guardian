@@ -9,6 +9,7 @@ routes.get("/", VerifyToken, routeController.getBusRoutes);
 routes
   .route("/:id")
   .put(VerifyToken, routeController.updateRouteById)
+  .get(VerifyToken, routeController.getRouteById)
   .delete(VerifyToken, routeController.deleteRoute);
 
 export default routes;

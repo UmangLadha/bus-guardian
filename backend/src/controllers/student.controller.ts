@@ -4,16 +4,17 @@ import { StudentServices } from "../services/student.services";
 export class StudentsController {
   static async addStudent(req: Request, res: Response) {
     try {
-      const { studentName, parentContact, busNumber, pickupAddress } = req.body;
-      if (!studentName || !parentContact || !busNumber || !pickupAddress) {
+      const {studentId, studentName, parentPhoneNo, busId, checkpoint } = req.body;
+      if (!studentId || !studentName || !parentPhoneNo ) {
         res.status(400).json({ message: "All fields are required" });
         return;
       }
       const result = await StudentServices.registerStudent(
+        studentId,
         studentName,
-        parentContact,
-        busNumber,
-        pickupAddress
+        parentPhoneNo,
+        busId,
+        checkpoint
       );
       if (!result.success) {
         res.status(400).json({ message: result.message });
@@ -66,13 +67,14 @@ export class StudentsController {
   static async updateStudentById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { studentName, parentContact, busNumber, pickupAddress } = req.body;
+      const { studentId, studentName, parentPhoneNo, busId, checkpoint } = req.body;
       const result = await StudentServices.updateStudentById(
         id,
+        studentId,
         studentName,
-        parentContact,
-        busNumber,
-        pickupAddress
+        parentPhoneNo,
+        busId,
+        checkpoint
       );
       if (!result.success) {
         res.status(400).json({ message: result.message });

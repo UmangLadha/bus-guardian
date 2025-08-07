@@ -1,44 +1,35 @@
-import { useState } from "react";
-import Modal from "../common/model/modal";
-import Table from "../common/table/table";
-import PageHeader from "../common/pageHeader/pageheader";
 import StudentForm from "./elements/studentForm";
 import StudentDataTable from "./elements/studentDataTable";
+import EntityManager from "../common/entityManager/entityManagr";
 
-function StudentComponent(){
-      const [openModal, setOpenModal] = useState(false);
-    
-    return(
-         <>
-      <PageHeader
-        heading="Student Management"
-        description="Add, edit, and manage school students"
-        setOpenModal={setOpenModal}
-        btnText="Add Student"
-      />
+function StudentComponent() {
 
-      {openModal && (
-        <Modal title="Add New Student" setOpenModal={setOpenModal}>
-          <StudentForm setOpenModal={setOpenModal} />
-        </Modal>
-      )}
-
-      <Table
-        tableHeadings={[
-          "Student ID",
-          "Student Name",
-          "Parent Number",
-          "Pickup Point",
-          "Bus Number",
-          "Actions"
-        ]}
-      >
-        <StudentDataTable 
-        setOpenModal={setOpenModal}
-         />
-      </Table>
-    </>
-    );
+  return (
+    <EntityManager
+      componentName="Student"
+      title="Student Management"
+      description="Manage your school students."
+      FormComponent={StudentForm}
+      DataTableComponent={StudentDataTable}
+      initialData={{
+        studentId: "",
+        studentName: "",
+        parentPhoneNo: "",
+        assignedBus: { _id: "", busNumber: "" },
+       assignedRoute: { _id: "", busRoute: "" },
+       pickupPoint:"",
+       pickupLocation:""
+      }}
+      tableHeadings={[
+        "Student ID",
+        "Student Name",
+        "Parent Number",
+        "Pickup Point",
+        "Bus Number",
+        "Actions",
+      ]}
+    />
+  );
 }
 
 export default StudentComponent;

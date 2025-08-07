@@ -50,6 +50,33 @@ export class routeController {
     }
   }
 
+  static async getRouteById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      if(!id){
+        console.log(id);
+        res.status(404).json({message:"route id not found"});
+        return;
+      }
+
+      const route = await BusRoute.findById(id)
+        .populate("assignedBus", "busNumber");
+
+        console.log("sending the route data",route);
+
+      if (!route) {
+        res.status(404).json({ message: "Route not found" });
+        return;
+      }
+
+      res.status(200).json({ message: "Route data fetched ", route });
+      return;
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+      return;
+    }
+  }
+
   static async updateRouteById(req: Request, res: Response) {
     try {
       const { id } = req.params;
