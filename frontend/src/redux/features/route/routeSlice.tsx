@@ -1,20 +1,24 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { RouteDataTypes } from "../../../types/types";
+import type { CreateRouteDto, RouteApiResponse } from "../../../types/types";
 
 interface RouteState {
-  routes: RouteDataTypes[];
+  routes: CreateRouteDto[];
+  isLoading: boolean;
+  error: string | null;
 }
 
 const initialState: RouteState = {
   routes: [],
+  isLoading: false,
+  error: null,
 };
 
 const routeSlice = createSlice({
   name: "routes",
   initialState,
   reducers: {
-    setRoutes: (state, action: PayloadAction<RouteDataTypes[]>) => {
-      state.routes = action.payload;
+    setRoutes: (state, action: PayloadAction<RouteApiResponse>) => {
+      state.routes = action.payload.Routes;
     },
   },
 });

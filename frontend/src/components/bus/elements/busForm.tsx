@@ -1,22 +1,14 @@
 import TextInput from "../../common/formInputs/textInput";
 import SelectList from "../../common/formInputs/selectList";
 import type {
+  BusFormData,
   CreateBusDto,
   FormProps,
-  // CreateRouteDto,
 } from "../../../types/types";
 import { useAppSelector } from "../../../redux/reduxHooks/reduxHooks";
 import type { RootState } from "../../../redux/app/store";
 import FormButton from "../../common/model/elements/formButtons";
 import { useForm } from "../../../hooks/useForm";
-
-interface BusFormData {
-  _id?: string;
-  busNumber: string;
-  busCapacity: string;
-  busDriverId: string;
-  busRouteId: string;
-}
 
 function BusForm({
   setOpenModal,

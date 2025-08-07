@@ -3,7 +3,7 @@ import { model, Schema } from "mongoose";
 const busRouteSchema = new Schema(
   {
     routeName: { type: String, unique: true, required: true },
-    routeList: [
+    locationsList: [
       {
         locationName: { type: String, required: true },
         latitude: { type: Number, required: true },

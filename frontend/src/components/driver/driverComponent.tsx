@@ -7,12 +7,12 @@ function DriverComponent() {
     <EntityManager
       componentName="Driver"
       title="Driver Management"
-      description="Track all students using bus services"
+      description="Manage your school buses drivers."
       tableHeadings={[
         "Driver Name",
         "Phone No.",
         "Bus Assigned",
-        "Action",
+        "Actions",
       ]}
       FormComponent={DriverForm}
       DataTableComponent={DriverDataTable}

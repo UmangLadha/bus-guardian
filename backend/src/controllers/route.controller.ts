@@ -6,14 +6,14 @@ import Bus from "../models/bus.model";
 export class routeController {
   static async addRoute(req: Request, res: Response) {
     try {
-      const { routeName, routeList } = req.body;
-      if (!routeName || !routeList) {
+      const { routeName, locationsList } = req.body;
+      if (!routeName || !locationsList) {
         res.status(400).json({ message: "all fields are required" });
         return;
       }
 
       const enhancedRouteList = await Promise.all(
-        routeList.map(async (locationName: string) => {
+        locationsList.map(async (locationName: string) => {
           const location = await getLocationCoordinates(locationName);
           if (!location) throw new Error(`Invalid address: ${locationName}`);
           return {
@@ -25,7 +25,7 @@ export class routeController {
       );
       const routeData = {
         routeName,
-        routeList: enhancedRouteList,
+        locationsList: enhancedRouteList,
       };
       const newRoute = await BusRoute.create(routeData);
       console.log("bus Route added successfully", newRoute);
@@ -53,9 +53,9 @@ export class routeController {
   static async updateRouteById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { routeName, routeList } = req.body;
+      const { routeName, locationsList } = req.body;
 
-      if (!routeName || !routeList?.length) {
+      if (!routeName || !locationsList?.length) {
         res
           .status(400)
           .json({ message: "Invalid input: routeName or routeList missing" });
@@ -63,7 +63,7 @@ export class routeController {
       }
 
       const enhancedRouteList = await Promise.all(
-        routeList.map(async (locationName: string) => {
+        locationsList.map(async (locationName: string) => {
           const location = await getLocationCoordinates(locationName);
           if (!location) throw new Error(`Invalid address: ${locationName}`);
           return {
@@ -76,7 +76,7 @@ export class routeController {
 
       const updateRoute = await BusRoute.findByIdAndUpdate(
         id,
-        { routeName, routeList: enhancedRouteList },
+        { routeName, locationsList: enhancedRouteList },
         { new: true }
       );
 

@@ -30,7 +30,7 @@ function StudentComponent(){
           "Parent Number",
           "Pickup Point",
           "Bus Number",
-          "Action"
+          "Actions"
         ]}
       >
         <StudentDataTable 

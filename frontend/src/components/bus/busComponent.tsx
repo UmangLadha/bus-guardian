@@ -7,13 +7,13 @@ function BusComponent() {
     <EntityManager
       componentName="Bus"
       title="Bus Management"
-      description="Add, edit, and manage school buses"
+      description="Manage your school buses."
       tableHeadings={[
         "Bus Number",
         "Bus Driver",
         "Route",
         "Bus Capacity",
-        "Action",
+        "Actions",
       ]}
       FormComponent={BusForm}
       DataTableComponent={BusDataTable}

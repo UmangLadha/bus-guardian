@@ -46,17 +46,23 @@ export interface AdminCredentialsTypes {
 export interface CreateRouteDto {
   _id?: string;
   routeName: string;
-  routeList: { locationName: string }[];
+  locationsList: { locationName: string }[];
+}
+
+export interface RouteFormData {
+  _id?: string;
+  routeName: string;
+  locationsList: string;
 }
 
 export interface CreateRouteTypes {
   _id?: string;
   routeName: string;
-  routeList: [];
+  locationsList: [];
 }
 
 export interface RouteApiResponse {
-  routes: CreateRouteDto[];
+  Routes: CreateRouteDto[];
 }
 
 //Bus Component
@@ -66,6 +72,14 @@ export interface CreateBusDto {
   assignedDriver?: { _id: string; driverName: string };
   assignedRoute?: { _id: string; busRoute: string };
   busCapacity: string;
+}
+
+export interface BusFormData {
+  _id?: string;
+  busNumber: string;
+  busCapacity: string;
+  busDriverId: string;
+  busRouteId: string;
 }
 
 export interface BusApiResponse {
@@ -120,27 +134,26 @@ export interface EntityManagerProps<T> {
 }
 
 ////// Hooks types ////////
-  
-      // useFetchData hook types //
-export interface UseFetchDataProps<T>{
+
+// useFetchData hook types //
+export interface UseFetchDataProps<T> {
   endpoint: string;
   queryKey: string[];
   sliceAction?: ActionCreatorWithPayload<T>;
 }
 
-      // useFrom hook types //
+// useFrom hook types //
 export interface UseFormProps<T> {
   endpoint: string;
   queryKey: string[];
   initialData: T;
   onSuccess?: () => void;
 }
-      // useTable types //
+// useTable types //
 export interface UseTableProps {
   endpoint: string;
   queryKey: string[];
 }
-
 
 // pageHeader component types
 export interface PageHeaderTypes {

@@ -13,13 +13,13 @@ function RouteForm({
 }: FormProps<CreateRouteDto>) {
   const [isLoading, setIsLoading] = useState(false);
   const [routeListBox, setRouteListBox] = useState<string[]>(
-    selectedData.routeList
-      ? selectedData.routeList.map((item) => item.locationName)
+    selectedData.locationsList
+      ? selectedData.locationsList.map((item) => item.locationName)
       : []
   );
   const [inputValue, setInputValue] = useState({
     routeName: selectedData.routeName || "",
-    routeList: "",
+    locationName: "",
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -30,29 +30,29 @@ function RouteForm({
   };
 
   const resetForm = () => {
-    setInputValue({ routeName: "", routeList: "" });
+    setInputValue({ routeName: "", locationName: "" });
     setRouteListBox([]);
   };
 
   const AddRoute = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (inputValue.routeList.trim() === "") {
+    if (inputValue.locationName.trim() === "") {
       return;
     }
-    if (routeListBox.includes(inputValue.routeList.trim())) {
+    if (routeListBox.includes(inputValue.locationName.trim())) {
       toast.error("Route already added");
       return;
     }
-    setRouteListBox((prev) => [...prev, inputValue.routeList]);
+    setRouteListBox((prev) => [...prev, inputValue.locationName]);
     setInputValue((prev) => ({
       ...prev,
-      routeList: "",
+      locationName: "",
     }));
   };
 
   const sendDataToServer = async (routeData: {
     routeName: string;
-    routeList: string[];
+    locationsList: string[];
   }) => {
     const { message, error } = await postData("/route/register", routeData);
     if (message) {
@@ -68,7 +68,7 @@ function RouteForm({
 
   const handleUpdateData = async (dataToUpdate: {
     routeName: string;
-    routeList: string[];
+    locationsList: string[];
   }) => {
     const { message, error } = await updateData(
       `/route/${selectedData._id}`,
@@ -94,7 +94,7 @@ function RouteForm({
     setIsLoading(true);
     const routeData = {
       routeName: inputValue.routeName,
-      routeList: routeListBox,
+      locationsList: routeListBox,
     };
     if (selectedData && isEditMode) {
       handleUpdateData(routeData);
@@ -123,12 +123,12 @@ function RouteForm({
         <div>
           <div className="flex items-baseline-last ">
             <TextInput
-              name="routeList"
+              name="locationName"
               type="text"
-              label="Route List"
+              label="Location name"
               placeholder="Enter Route"
-              value={inputValue.routeList}
-              onChange={(val) => handleInputChange("routeList", val)}
+              value={inputValue.locationName}
+              onChange={(val) => handleInputChange("locationName", val)}
             />
             <Button
               btnText="Add Stop"
