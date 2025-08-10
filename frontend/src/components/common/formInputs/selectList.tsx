@@ -7,6 +7,7 @@ function SelectList({
   onChange,
   options,
   required,
+  disabled,
 }: SelectInputPropsTypes) {
   return (
     <>
@@ -21,11 +22,12 @@ function SelectList({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           required={required}
+          disabled={disabled}
           className="border border-yellow-300 outline-none py-2 px-4 rounded-lg w-full focus:border-yellow-500"
         >
           <option value="">Select a option</option>
           {options.map((option) => (
-            <option key={option.id} value={option.id}>
+            <option key={option.id} value={option.id || option.name}>
               {option.name}
             </option>
           ))}

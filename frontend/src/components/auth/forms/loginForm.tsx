@@ -30,9 +30,9 @@ function LoginForm() {
         adminCred
       );
       toast.success("Login successful!");
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token);  
       resetForm();
-      setTimeout(() => navigate("/"), 2000);
+      setTimeout(() => navigate("/"), 1000);
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(

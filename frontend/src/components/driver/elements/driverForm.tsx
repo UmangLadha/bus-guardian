@@ -33,7 +33,7 @@ function DriverForm({
   return (
     <form
       onSubmit={(e) => handleSubmit(e, isEditMode)}
-      className="flex flex-col justify-between mx-auto items-center w-full"
+      className="w-full gap-4"
     >
       <TextInput
         name="driverName"

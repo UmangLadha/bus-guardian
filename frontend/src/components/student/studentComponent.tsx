@@ -16,15 +16,13 @@ function StudentComponent() {
         studentName: "",
         parentPhoneNo: "",
         assignedBus: { _id: "", busNumber: "" },
-       assignedRoute: { _id: "", busRoute: "" },
-       pickupPoint:"",
-       pickupLocation:""
+       checkpoint:""
       }}
       tableHeadings={[
         "Student ID",
         "Student Name",
         "Parent Number",
-        "Pickup Point",
+        "Pickup Location",
         "Bus Number",
         "Actions",
       ]}

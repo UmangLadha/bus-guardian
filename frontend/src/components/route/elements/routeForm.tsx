@@ -20,7 +20,7 @@ function RouteForm({
   );
   const [inputValue, setInputValue] = useState({
     routeName: selectedData.routeName || "",
-    locationName: "",
+    checkpoint: "",
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -31,20 +31,20 @@ function RouteForm({
   };
 
   const resetForm = () => {
-    setInputValue({ routeName: "", locationName: "" });
+    setInputValue({ routeName: "", checkpoint: "" });
     setRouteListBox([]);
   };
 
   const AddRoute = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (inputValue.locationName.trim() === "") {
+    if (inputValue.checkpoint.trim() === "") {
       return;
     }
-    if (routeListBox.includes(inputValue.locationName.trim())) {
+    if (routeListBox.includes(inputValue.checkpoint.trim())) {
       toast.error("Route already added");
       return;
     }
-    setRouteListBox((prev) => [...prev, inputValue.locationName]);
+    setRouteListBox((prev) => [...prev, inputValue.checkpoint]);
     setInputValue((prev) => ({
       ...prev,
       locationName: "",
@@ -124,12 +124,12 @@ function RouteForm({
         <div>
           <div className="flex items-baseline-last ">
             <TextInput
-              name="locationName"
+              name="checkpoint"
               type="text"
-              label="Location name"
-              placeholder="Enter Route"
-              value={inputValue.locationName}
-              onChange={(val) => handleInputChange("locationName", val)}
+              label="Checkpoint"
+              placeholder="Enter Checkpoint"
+              value={inputValue.checkpoint}
+              onChange={(val) => handleInputChange("checkpoint", val)}
             />
             <Button
               btnText="Add Stop"

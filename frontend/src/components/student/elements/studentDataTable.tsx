@@ -1,77 +1,89 @@
-import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-import type { ModalStateHandler } from "../../../types/types";
+import type {
+  CreateStudentDto,
+  ModalStateHandler,
+  StudentApiResponse,
+} from "../../../types/types";
+import TableState from "../../common/tableState/tableState";
+import { useFetchData } from "../../../hooks/useFetchData";
+import Modal from "../../common/model/modal";
+import DeleteModal from "../../common/deleteModal/deleteModal";
 
-function StudentDataTable({ setOpenModal }: ModalStateHandler) {
-  const tableData = [
-    {
-      id: "STD001",
-      name: "John Smith",
-      number: "8834237428",
-      pickup: "VDN point",
-      bus: "BUS001",
-    },
-    {
-      id: "STD002",
-      name: "John Smith",
-      number: "8834237428",
-      pickup: "VDN point",
-      bus: "BUS001",
-    },
-    {
-      id: "STD003",
-      name: "John Smith",
-      number: "8834237428",
-      pickup: "VDN point",
-      bus: "BUS001",
-    },
-    {
-      id: "STD004",
-      name: "John Smith",
-      number: "8834237428",
-      pickup: "VDN point",
-      bus: "BUS001",
-    },
-  ];
+function StudentDataTable({
+  setOpenModal,
+  setSelectedData,
+  setIsEditMode,
+}: ModalStateHandler<CreateStudentDto>) {
+  const { isError, isLoading, data, deleteId, setDeleteId, handleDelete } =
+    useFetchData<StudentApiResponse>({
+      endpoint: "/student",
+      queryKey: ["students"],
+    });
 
-  const [tableContent, setTableContent] = useState(tableData);
-
-  const actionEdit = () => {
+  const actionEdit = (studentData: CreateStudentDto) => {
+    setSelectedData(studentData);
+    setIsEditMode(true);
     setOpenModal(true);
   };
 
-  const actionDelete = (id: string) => {
-    const deletedTable = tableContent.filter((item) => item.id !== id);
-    setTableContent(deletedTable);
+  const handleDeleteClick = (id: string) => {
+    setDeleteId(id);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteId(null);
   };
 
   return (
-    <tbody>
-      {tableContent.map((data) => (
-        <tr key={data.id} className="border-b border-gray-200 hover:bg-gray-50">
-          <td className="py-3 px-4 text-sm font-medium text-gray-900">
-            {data.id}
-          </td>
-          <td className="py-3 px-4 text-sm text-gray-700">{data.name}</td>
-          <td className="py-3 px-4 text-sm text-gray-700">{data.number}</td>
-          <td className="py-3 px-4 text-sm text-gray-700">{data.pickup}</td>
-          <td className="py-3 px-4 text-sm text-gray-700">{data.bus}</td>
-          <td className="py-3 px-4 flex gap-4 items-center">
-            <FaRegEdit
-              title="Update"
-              onClick={actionEdit}
-              className="text-amber-500 size-5 cursor-pointer"
-            />
-            <MdDeleteOutline
-              title="Delete"
-              onClick={() => actionDelete(data.id)}
-              className="text-red-600 size-5 cursor-pointer"
-            />
-          </td>
-        </tr>
-      ))}
-    </tbody>
+    <>
+      <TableState colSpan={5} isError={isError} isLoading={isLoading}>
+        <tbody>
+          {data?.students.map((data) => (
+            <tr
+              key={data._id}
+              className="border-b border-gray-200 hover:bg-gray-50"
+            >
+              <td className="py-3 px-4 text-sm font-medium text-gray-900">
+                {data.studentId}
+              </td>
+              <td className="py-3 px-4 text-sm text-gray-700">
+                {data.studentName}
+              </td>
+              <td className="py-3 px-4 text-sm text-gray-700">
+                {data.parentPhoneNo}
+              </td>
+              <td className="py-3 px-4 text-sm text-gray-700">
+                {data.checkpoint}
+              </td>
+              <td className="py-3 px-4 text-sm text-gray-700">
+                {data.assignedBus?.busNumber}
+              </td>
+              <td className="py-3 px-4 flex gap-4 items-center">
+                <FaRegEdit
+                  title="Update"
+                  onClick={() => actionEdit(data)}
+                  className="text-amber-500 size-5 cursor-pointer"
+                />
+                <MdDeleteOutline
+                  title="Delete"
+                  onClick={() => handleDeleteClick(data._id!)}
+                  className="text-red-600 size-5 cursor-pointer"
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </TableState>
+      {deleteId && (
+        <Modal>
+          <DeleteModal
+            setIsDelete={handleCancelDelete}
+            handleDelete={handleDelete}
+          />
+        </Modal>
+      )}
+    </>
   );
 }
 

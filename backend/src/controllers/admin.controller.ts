@@ -58,7 +58,7 @@ export class AdminController {
   static async adminProfile(req: Request, res: Response) {
     try {
       const adminData = req.encodedPayload;
-      const result = await AdminServices.findAdmin(adminData.id);
+      const result = await AdminServices.findAdmin(adminData?.id);
       res.status(200).json({ admin: result.admin });
       return;
     } catch (error) {

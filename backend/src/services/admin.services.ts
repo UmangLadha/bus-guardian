@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import Admin from "../models/admin.model";
 import { PasswordUtils } from "../utility/hashPassword";
 import tokenServices from "../utility/jwtTokenServices";
@@ -38,7 +39,7 @@ export class  AdminServices {
     return { success: true, accessToken};
   }
 
-  static async findAdmin(id:string) {
+  static async findAdmin(id:string | JwtPayload) {
     const admin = await Admin.findById({_id:id});
     return { success: true, admin };
   }
