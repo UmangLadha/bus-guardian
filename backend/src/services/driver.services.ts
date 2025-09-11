@@ -52,17 +52,25 @@ export class DriverServices {
     return { success: true, newDriver };
   }
 
-  static async loginDriver(driverId: string) {
-    const driver = await Driver.findOne({ driverId });
+  static async loginDriver(driverPhoneNo: string) {
+    const driver = await Driver.findOne({ driverPhoneNo });
     if (!driver) {
-      return { success: false, message: "Driver not found" };
+      return { success: false, message: "No, driver was registerd with this number." };
     }
-    return { success: true, driver };
+    return { success: true, message: "Driver registerd with this number" };
   }
 
   static async getAllDrivers() {
     const drivers = await Driver.find().populate("assignedBus");
     return { success: true, drivers };
+  }
+
+  static async getDriverById(id: string) {
+    const driver = await Driver.findById(id).populate("assignedBus");
+    if (!driver) {
+      return { success: false, message: "driver not found" };
+    }
+    return { success: true, driver };
   }
 
   static async updateDriverById(

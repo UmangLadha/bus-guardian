@@ -10,6 +10,6 @@ busRoutes
   .route("/:id")
   .delete(VerifyToken, busController.deleteBusById)
   .put(VerifyToken, busController.updateBusById)
-  .get(VerifyToken, busController.getBusById);
+  .get(busController.getBusById);
 
 export default busRoutes;

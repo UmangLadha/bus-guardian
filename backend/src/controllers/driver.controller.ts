@@ -9,7 +9,7 @@ export class DriverController {
         res.status(400).json({ message: "All fields are required" });
         return;
       }
-      
+
       const result = await DriverServices.registerDriver(
         driverName,
         driverPhoneNo,
@@ -33,20 +33,19 @@ export class DriverController {
 
   static async loginDriver(req: Request, res: Response) {
     try {
-      const { driverId } = req.body;
-      const result = await DriverServices.loginDriver(driverId);
+      const { driverPhoneNo } = req.body;
+      const result = await DriverServices.loginDriver(driverPhoneNo);
       if (!result.success) {
-        res.status(400).json({ message: result.message });
+        res.status(400).json({ result });
         return;
       }
       res.status(200).json({
-        message: "driver login successfully",
-        dirver: result.driver,
+        result,
       });
       return;
     } catch (error) {
       console.log("error in login the driver:", error);
-      res.status(500).json({ message: "driver login failed" });
+      res.status(500).json({ message: "driver verification failed" });
       return;
     }
   }
@@ -59,6 +58,23 @@ export class DriverController {
     } catch (error) {
       console.log("error in fetching the drivers:", error);
       res.status(500).json({ message: "error in fetching the drivers" });
+      return;
+    }
+  }
+
+  static async getDriverById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const result = await DriverServices.getDriverById(id);
+      if (!result.success) {
+        res.status(404).json({ message: result.message });
+        return;
+      }
+      res.status(200).json({ driver: result.driver });
+      return;
+    } catch (error) {
+      console.log("error in fetching the driver:", error);
+      res.status(500).json({ message: "error in fetching the driver" });
       return;
     }
   }

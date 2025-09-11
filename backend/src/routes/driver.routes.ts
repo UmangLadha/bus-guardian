@@ -9,6 +9,7 @@ driverRoutes.post("/login", DriverController.loginDriver);
 driverRoutes.get("/", VerifyToken, DriverController.getAllDrivers);
 driverRoutes
   .route("/:id")
+  .get(DriverController.getDriverById)
   .put(VerifyToken, DriverController.updateDriverById)
   .delete(VerifyToken, DriverController.deleteDriverById);
 export default driverRoutes;
