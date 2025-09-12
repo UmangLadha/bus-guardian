@@ -34,12 +34,12 @@ export class AdminController {
 
   static async adminLogin(req: Request, res: Response) {
     try {
-      const { email, password, token } = req.body;
+      const { email, password } = req.body;
       if (!email || !password) {
         res.status(400).json({ message: "All fields are required" });
         return;
       }
-      const result = await AdminServices.adminLogin(email, password, token);
+      const result = await AdminServices.adminLogin(email, password);
       if (!result.success) {
         res.status(400).json({ message: result.message });
         return;
@@ -52,34 +52,6 @@ export class AdminController {
     } catch (error) {
       console.log("error in authenticating admin", error);
       res.status(400).json({ message: "error in authenticating admin", error });
-    }
-  }
-
-  static async adminProfile(req: Request, res: Response) {
-    try {
-      const adminData = req.encodedPayload;
-      const result = await AdminServices.findAdmin(adminData?.id);
-      res.status(200).json({ admin: result.admin });
-      return;
-    } catch (error) {
-      console.error("Error in fetching data", error);
-      res.status(400).json({ message: "Error in fetching data", error });
-      return;
-    }
-  }
-
-  static async deleteAdminById(req: Request, res: Response) {
-    try {
-      const { id } = req.params;
-      await AdminServices.deleteAdminById(id);
-      res.status(200).json({
-        message: "Admin deleted successfully",
-      });
-      return;
-    } catch (error) {
-      console.log("error in deleting the Admin:", error);
-      res.status(500).json({ message: "error in deleting the Admin" });
-      return;
     }
   }
 }

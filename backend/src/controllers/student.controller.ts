@@ -1,3 +1,4 @@
+
 import { Request, Response } from "express";
 import { StudentServices } from "../services/student.services";
 
@@ -26,7 +27,6 @@ export class StudentsController {
       });
       return;
     } catch (error) {
-      console.log("error in registering user", error);
       res.status(500).json({ message: "student registeration failed" });
       return;
     }
@@ -46,7 +46,6 @@ export class StudentsController {
       });
       return;
     } catch (error) {
-      console.log("error in login Student", error);
       res.status(500).json({ message: "login failed" });
       return;
     }
@@ -58,7 +57,6 @@ export class StudentsController {
       res.status(200).json({ students: result.students });
       return;
     } catch (error) {
-      console.log("error in fetching the students:", error);
       res.status(500).json({ message: "error in fetching the students" });
       return;
     }
@@ -86,7 +84,6 @@ export class StudentsController {
       });
       return;
     } catch (error) {
-      console.log("error in updating the students:", error);
       res.status(500).json({ message: "error in updating the students" });
       return;
     }
@@ -101,7 +98,6 @@ export class StudentsController {
       });
       return;
     } catch (error) {
-      console.log("error in deleting the student:", error);
       res.status(500).json({ message: "error in deleting the student" });
       return;
     }

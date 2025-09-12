@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
-import { AdminUser } from "../types/types";
+import { Types } from "mongoose";
 
 export default class tokenServices {
-  static createJwtToken(user: AdminUser) {
+  static createJwtToken(id: Types.ObjectId ) {
+    console.log("hers is the id", id);
     const accessToken = jwt.sign(
-      { id: user._id.toString() },
+      { id: id.toString() },
       process.env.JWT_ACCESS_SECRET!,
       { expiresIn: '7d' }
     );

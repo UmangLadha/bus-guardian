@@ -1,3 +1,4 @@
+
 import { Request, Response } from "express";
 import { DriverServices } from "../services/driver.services";
 
@@ -25,7 +26,6 @@ export class DriverController {
       });
       return;
     } catch (error) {
-      console.log("error in registering the driver:", error); ///////////////////////
       res.status(500).json({ message: "driver registration failed" });
       return;
     }
@@ -33,18 +33,17 @@ export class DriverController {
 
   static async loginDriver(req: Request, res: Response) {
     try {
-      const { driverPhoneNo } = req.body;
-      const result = await DriverServices.loginDriver(driverPhoneNo);
+      const { phoneNo } = req.body;
+      const result = await DriverServices.loginDriver(phoneNo);
       if (!result.success) {
         res.status(400).json({ result });
         return;
       }
       res.status(200).json({
-        result,
+        result
       });
       return;
     } catch (error) {
-      console.log("error in login the driver:", error);
       res.status(500).json({ message: "driver verification failed" });
       return;
     }
@@ -56,7 +55,6 @@ export class DriverController {
       res.status(200).json({ drivers: result.drivers });
       return;
     } catch (error) {
-      console.log("error in fetching the drivers:", error);
       res.status(500).json({ message: "error in fetching the drivers" });
       return;
     }
@@ -73,7 +71,6 @@ export class DriverController {
       res.status(200).json({ driver: result.driver });
       return;
     } catch (error) {
-      console.log("error in fetching the driver:", error);
       res.status(500).json({ message: "error in fetching the driver" });
       return;
     }
@@ -99,7 +96,6 @@ export class DriverController {
       });
       return;
     } catch (error) {
-      console.log("error in updating the drivers:", error);
       res.status(500).json({ message: "error in updating the drivers" });
       return;
     }
@@ -112,7 +108,6 @@ export class DriverController {
       res.status(200).json({ message: "driver deleted successfully" });
       return;
     } catch (error) {
-      console.log("error in deleting the driver:", error);
       res.status(500).json({ message: "error in deleting the driver" });
       return;
     }

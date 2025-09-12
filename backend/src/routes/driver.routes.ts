@@ -12,4 +12,5 @@ driverRoutes
   .get(DriverController.getDriverById)
   .put(VerifyToken, DriverController.updateDriverById)
   .delete(VerifyToken, DriverController.deleteDriverById);
+  
 export default driverRoutes;

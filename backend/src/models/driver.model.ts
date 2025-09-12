@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const driverSchema = new Schema(
   {
     driverName: { type: String, required: true },
-    driverPhoneNo: { type: Number, required: true },
+    driverPhoneNo: { type: String, required: true },
     assignedBus: {
       _id: {
         type: Schema.Types.ObjectId,

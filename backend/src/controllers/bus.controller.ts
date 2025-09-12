@@ -24,7 +24,6 @@ export class busController {
         .json({ message: "bus added successfully", bus: result.newBus });
       return;
     } catch (error) {
-      console.log("error in adding bus", error);
       res.status(500).json({ message: "bus cannot be added" });
       return;
     }
@@ -36,7 +35,6 @@ export class busController {
       res.status(200).json({ buses: result.buses });
       return;
     } catch (error) {
-      console.log("error in fetching the buses:", error);
       res.status(500).json({ message: "error in fetching the buses" });
       return;
     }
@@ -57,7 +55,6 @@ export class busController {
       res.status(200).json({ bus: result.busData, student: result.students });
       return;
     } catch (error) {
-      console.log("error fetching the bus details:", error);
       res.status(500).json({ message: "error fetching the bus details" });
       return;
     }
@@ -81,7 +78,6 @@ export class busController {
       res.status(200).json({ message: "bus updated", bus: result.updatedBus });
       return;
     } catch (error) {
-      console.log("error updating bus details:", error);
       res.status(500).json({ message: "error updating bus details" });
       return;
     }
@@ -100,7 +96,6 @@ export class busController {
       });
       return;
     } catch (error) {
-      console.log("error in deleting the bus:", error);
       res.status(500).json({ message: "error in deleting the bus" });
       return;
     }

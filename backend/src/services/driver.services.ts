@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Bus from "../models/bus.model";
 import Driver from "../models/driver.model";
 import { DriverTypes } from "../types/types";
-// import { generateIDFor } from "../utility/generateID";
+import tokenServices from "../utility/jwtTokenServices";
 
 export class DriverServices {
   static async registerDriver(
@@ -27,7 +27,7 @@ export class DriverServices {
 
     if (busId) {
       const bus = await Bus.findById(busId);
-      console.log("here is the bus Data: ", bus); ////////////////////////
+      
       if (!bus) {
         return { success: false, message: "bus not found" };
       }
@@ -46,18 +46,19 @@ export class DriverServices {
           driverName: newDriver.driverName,
         },
       });
-      console.log("Driver details updated in bus also"); ///////////////////
+      
     }
 
     return { success: true, newDriver };
   }
 
-  static async loginDriver(driverPhoneNo: string) {
-    const driver = await Driver.findOne({ driverPhoneNo });
+  static async loginDriver(phoneNo: string) {
+    const driver = await Driver.findOne({ driverPhoneNo: phoneNo });
     if (!driver) {
       return { success: false, message: "No, driver was registerd with this number." };
     }
-    return { success: true, message: "Driver registerd with this number" };
+    const accessToken = tokenServices.createJwtToken(driver._id);
+    return { success: true, message: "Driver registerd with this number", accessToken };
   }
 
   static async getAllDrivers() {
@@ -66,7 +67,7 @@ export class DriverServices {
   }
 
   static async getDriverById(id: string) {
-    const driver = await Driver.findById(id).populate("assignedBus");
+    const driver = await Driver.findById(id).populate({path: 'assignedBus._id', select: 'assignedRoute' });
     if (!driver) {
       return { success: false, message: "driver not found" };
     }
@@ -105,7 +106,7 @@ export class DriverServices {
         },
       });
 
-      console.log("Driver details updated in bus also"); ///////////////////
+      
     }
     return { success: true, updatedDriver };
   }

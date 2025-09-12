@@ -5,7 +5,7 @@ import { VerifyToken } from "../middlewares/verifyToken";
 const studentRoutes = Router();
 
 studentRoutes.post("/register", StudentsController.addStudent);
-studentRoutes.post("/login", VerifyToken, StudentsController.loginStudent);
+studentRoutes.post("/login", StudentsController.loginStudent);
 studentRoutes.get("/", VerifyToken, StudentsController.getAllStudents);
 studentRoutes
   .route("/:id")

@@ -1,3 +1,4 @@
+
 import { Request, Response, Router } from "express";
 import BusRoute from "../models/route.model";
 import { getLocationCoordinates } from "../utility/locationCordinates";
@@ -28,13 +29,11 @@ export class routeController {
         locationsList: enhancedRouteList,
       };
       const newRoute = await BusRoute.create(routeData);
-      console.log("bus Route added successfully", newRoute);
       res
         .status(201)
         .json({ message: "Bus route added successfully", busRoute: newRoute });
       return;
     } catch (error) {
-      console.log("error in creating busRoute", error);
       res.status(500).json({ message: "unable to add busRoute" });
     }
   }
@@ -54,15 +53,12 @@ export class routeController {
     try {
       const { id } = req.params;
       if(!id){
-        console.log(id);
         res.status(404).json({message:"route id not found"});
         return;
       }
 
       const route = await BusRoute.findById(id)
-        .populate("assignedBus", "busNumber");
-
-        console.log("sending the route data",route);
+        .populate("assignedBus");
 
       if (!route) {
         res.status(404).json({ message: "Route not found" });
@@ -121,7 +117,6 @@ export class routeController {
         .status(200)
         .json({ message: "Route updated successfully", data: updateRoute });
     } catch (error) {
-      console.log("error in creating busRoute", error);
       res.status(500).json({ message: "Error in updating route" });
       return;
     }
@@ -145,7 +140,6 @@ export class routeController {
       res.status(200).json({ message: "Route deleted Successfully" });
       return;
     } catch (error) {
-      console.log("error in deleting the bus route:", error);
       res.status(500).json({ message: "error in deleting the bus route" });
       return;
     }
