@@ -58,7 +58,7 @@ export class DriverServices {
       return { success: false, message: "No, driver was registerd with this number." };
     }
     const accessToken = tokenServices.createJwtToken(driver._id);
-    return { success: true, message: "Driver registerd with this number", accessToken };
+    return { success: true, message: "Driver registerd with this number", accessToken, driverId: driver._id };
   }
 
   static async getAllDrivers() {
