@@ -5,22 +5,22 @@ import { FaRoute } from "react-icons/fa6";
 
 function StateBox() {
   const stats = [
-    { name: "Total Buses", value: "12", icon: BiBus, color: "bg-secondary" },
+    { name: "Total Buses", value: "3", icon: BiBus, color: "bg-secondary" },
     {
       name: "Total Drivers",
-      value: "15",
+      value: "3",
       icon: FiUserCheck,
       color: "bg-green-500",
     },
     {
       name: "Total Students",
-      value: "245",
+      value: "5",
       icon: LuUsers,
       color: "bg-blue-500",
     },
     {
       name: "Active Route",
-      value: "8",
+      value: "2",
       icon: FaRoute,
       color: "bg-purple-500",
     },

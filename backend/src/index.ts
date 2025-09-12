@@ -18,9 +18,9 @@ app.use(express.json());
 const mongodb_url = process.env.MONGODB_ATLAS_URL!;
 connectDB(mongodb_url);
 
-// app.get("/protected", VerifyToken, (req, res) => {
-//   res.status(200).json({ message: "Protected route accessed", user: req.encodedPayload });
-// });
+app.get("/protected", VerifyToken, (req, res) => {
+  res.status(200).json({ message: "Protected route accessed", user: req.encodedPayload });
+});
 
 //routes
 app.use("/api/admin", adminRoutes);
