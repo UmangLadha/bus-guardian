@@ -26,18 +26,18 @@ function LoginForm() {
   const sendingDataToServer = async (adminCred: AdminCredTypes) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/admin/login`,
+        `http://localhost:3000/api/admin/login`,
         adminCred
       );
       toast.success("Login successful!");
-      localStorage.setItem("token", response.data.token);  
+      localStorage.setItem("token", response.data.token);
       resetForm();
       setTimeout(() => navigate("/"), 1000);
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(
           error?.response?.data.message ||
-            "Error in login, please try again later!"
+          "Error in login, please try again later!"
         );
       }
     } finally {

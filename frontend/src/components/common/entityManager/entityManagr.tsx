@@ -32,9 +32,8 @@ function EntityManager<T>({
       {openModal && (
         <Modal>
           <FormHeading
-            heading={`${componentName} ${
-              isEditMode ? "Update" : "Registration"
-            } Form`}
+            heading={`${componentName} ${isEditMode ? "Update" : "Registration"
+              } Form`}
             subHeading={
               isEditMode
                 ? `Update existing ${componentName.toLocaleLowerCase()} details`
