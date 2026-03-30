@@ -21,7 +21,7 @@ function BusComponent() {
         busNumber: "",
         busCapacity: "",
         assignedDriver: { _id: "", driverName: "" },
-        assignedRoute: { _id: "", busRoute: "" },
+        assignedRoute: { _id: "", routeName: "" },
       }}
     />
   );

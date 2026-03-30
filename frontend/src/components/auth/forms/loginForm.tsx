@@ -26,7 +26,7 @@ function LoginForm() {
   const sendingDataToServer = async (adminCred: AdminCredTypes) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/admin/login`,
+        `${import.meta.env.VITE_BASE_URL}/admin/login`,
         adminCred
       );
       toast.success("Login successful!");

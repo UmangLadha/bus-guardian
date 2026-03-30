@@ -53,7 +53,7 @@ function BusDataTable({
                 {busData.assignedDriver?.driverName || "—"}
               </td>
               <td className="py-3 px-4 text-sm text-gray-700">
-                {busData.assignedRoute?.busRoute || "—"}
+                {busData.assignedRoute?.routeName || "—"}
               </td>
               <td className="py-3 px-4 text-sm text-gray-700">
                 {busData.busCapacity}
