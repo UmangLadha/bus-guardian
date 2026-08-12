@@ -4,7 +4,7 @@ const studentSchema = new Schema(
   {
     studentId: { type: String, required: true, unique: true },
     studentName: { type: String, required: true },
-    parentPhoneNo: { type: Number, required: true },
+    parentPhoneNo: { type: Number, required: true, unique: true },
     assignedBus: {
       _id: { type: Schema.Types.ObjectId, ref: "Bus" },
       busNumber: String,

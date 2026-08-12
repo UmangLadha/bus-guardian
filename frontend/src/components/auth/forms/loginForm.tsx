@@ -27,9 +27,9 @@ function LoginForm() {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/admin/login`,
-        adminCred
+        adminCred,
       );
-      toast.success("Login successful!");
+      toast.success(response.data.message || "Login successful");
       localStorage.setItem("token", response.data.token);
       resetForm();
       setTimeout(() => navigate("/"), 1000);
@@ -37,7 +37,7 @@ function LoginForm() {
       if (error instanceof AxiosError) {
         toast.error(
           error?.response?.data.message ||
-          "Error in login, please try again later!"
+            "Error in login, please try again later!",
         );
       }
     } finally {
@@ -52,9 +52,7 @@ function LoginForm() {
       email,
       password,
     };
-    toast.promise(sendingDataToServer(adminCred), {
-      loading: "Loging the admin...",
-    });
+    toast.promise(sendingDataToServer(adminCred), { loading: "Loging you in" });
   };
 
   return (
@@ -88,7 +86,7 @@ function LoginForm() {
       <Button
         btnType="submit"
         isLoading={isLoading}
-        loadingText="Loging"
+        loadingText="Logging"
         btnText="Login"
         className="bg-secondary flex items-center justify-center gap-3 mt-5 text-white py-2 px-4 mb-3 w-full rounded-lg font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       />

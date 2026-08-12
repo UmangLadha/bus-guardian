@@ -7,6 +7,7 @@ const driverRoutes = Router();
 driverRoutes.post("/register", DriverController.registerDriver);
 driverRoutes.post("/login", DriverController.loginDriver);
 driverRoutes.get("/", VerifyToken, DriverController.getAllDrivers);
+driverRoutes.get("/:id/dashboard", VerifyToken, DriverController.getDriverDashboard);
 driverRoutes
   .route("/:id")
   .get(DriverController.getDriverById)
@@ -14,3 +15,4 @@ driverRoutes
   .delete(VerifyToken, DriverController.deleteDriverById);
   
 export default driverRoutes;
+

@@ -102,4 +102,21 @@ export class StudentsController {
       return;
     }
   }
+
+  static async getParentDashboard(req: Request, res: Response) {
+    try {
+      const { phoneNo } = req.params;
+      const result = await StudentServices.getParentDashboard(phoneNo);
+      if (!result.success) {
+        res.status(404).json({ message: result.message });
+        return;
+      }
+      res.status(200).json(result);
+      return;
+    } catch (error) {
+      console.error("Error fetching parent dashboard:", error);
+      res.status(500).json({ message: "error fetching parent dashboard" });
+      return;
+    }
+  }
 }

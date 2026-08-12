@@ -7,9 +7,11 @@ const studentRoutes = Router();
 studentRoutes.post("/register", StudentsController.addStudent);
 studentRoutes.post("/login", StudentsController.loginStudent);
 studentRoutes.get("/", VerifyToken, StudentsController.getAllStudents);
+studentRoutes.get("/parent/:phoneNo/dashboard", VerifyToken, StudentsController.getParentDashboard);
 studentRoutes
   .route("/:id")
   .delete(VerifyToken, StudentsController.deleteStudentById)
   .put(VerifyToken, StudentsController.updateStudentById);
 
 export default studentRoutes;
+

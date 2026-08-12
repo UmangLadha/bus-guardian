@@ -112,4 +112,21 @@ export class DriverController {
       return;
     }
   }
+
+  static async getDriverDashboard(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const result = await DriverServices.getDriverDashboard(id);
+      if (!result.success) {
+        res.status(404).json({ message: result.message });
+        return;
+      }
+      res.status(200).json(result);
+      return;
+    } catch (error) {
+      console.error("Error fetching driver dashboard:", error);
+      res.status(500).json({ message: "error fetching driver dashboard" });
+      return;
+    }
+  }
 }

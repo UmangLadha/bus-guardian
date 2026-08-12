@@ -1,0 +1,89 @@
+@layer components {
+  /* Glassmorphism Card */
+  .glass-card {
+    @apply bg-[rgba(26,26,46,0.8)] backdrop-blur-[20px] border border-[var(--border)] rounded-2xl p-6 transition-all duration-300;
+  }
+  
+  .glass-card:hover {
+    @apply border-[var(--primary-light)] shadow-[0_0_30px_var(--glow)];
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-br from-[var(--primary-light)] to-[var(--accent)] bg-clip-text text-transparent;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)] text-white border-none py-3.5 px-7 rounded-xl font-semibold text-base cursor-pointer transition-all duration-300 inline-flex items-center justify-center gap-2 w-full;
+  }
+  .btn-primary:hover {
+    @apply -translate-y-0.5 shadow-[0_8px_25px_var(--glow)];
+  }
+  .btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed transform-none shadow-none;
+  }
+
+  .btn-danger {
+    @apply bg-gradient-to-br from-[var(--danger)] to-[#DC2626] text-white border-none py-3.5 px-7 rounded-xl font-semibold text-base cursor-pointer transition-all duration-300 inline-flex items-center justify-center gap-2 w-full;
+  }
+  .btn-danger:hover {
+    @apply -translate-y-0.5 shadow-[0_8px_25px_rgba(239,68,68,0.3)];
+  }
+
+  .btn-success {
+    @apply bg-gradient-to-br from-[var(--success)] to-[#059669] text-white border-none py-3.5 px-7 rounded-xl font-semibold text-base cursor-pointer transition-all duration-300 inline-flex items-center justify-center gap-2 w-full;
+  }
+  .btn-success:hover {
+    @apply -translate-y-0.5 shadow-[0_8px_25px_rgba(16,185,129,0.3)];
+  }
+
+  /* Input Field */
+  .input-field {
+    @apply bg-[rgba(15,15,26,0.6)] border border-[var(--border)] rounded-xl py-3.5 px-4.5 text-[var(--text-primary)] text-base w-full transition-all duration-300 outline-none;
+  }
+  .input-field:focus {
+    @apply border-[var(--primary-light)] shadow-[0_0_15px_var(--glow)];
+  }
+  .input-field::placeholder {
+    @apply text-[var(--text-secondary)];
+  }
+
+  /* OTP Input */
+  .otp-container {
+    @apply flex gap-3 justify-center;
+  }
+  .otp-input {
+    @apply w-[52px] h-[60px] text-center text-2xl font-bold bg-[rgba(15,15,26,0.6)] border-2 border-[var(--border)] rounded-xl text-[var(--text-primary)] transition-all duration-300 outline-none;
+  }
+  .otp-input:focus {
+    @apply border-[var(--primary-light)] shadow-[0_0_15px_var(--glow)];
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center justify-center py-1 px-3 rounded-full text-xs font-semibold tracking-wide;
+  }
+  .badge-primary {
+    @apply bg-[rgba(108,60,225,0.2)] text-[var(--primary-light)] border border-[rgba(108,60,225,0.3)];
+  }
+  .badge-success {
+    @apply bg-[rgba(16,185,129,0.2)] text-[var(--success)] border border-[rgba(16,185,129,0.3)];
+  }
+  .badge-accent {
+    @apply bg-[rgba(245,158,11,0.2)] text-[var(--accent)] border border-[rgba(245,158,11,0.3)];
+  }
+
+  /* Stop Card */
+  .stop-card {
+    @apply bg-[rgba(15,15,26,0.4)] border border-[var(--border)] rounded-xl p-4 flex items-center justify-between transition-all duration-300;
+  }
+  .stop-card:hover {
+    @apply border-[var(--primary-light)] bg-[rgba(26,26,46,0.6)];
+  }
+
+  /* Map Container */
+  .map-container {
+    @apply rounded-2xl overflow-hidden border border-[var(--border)] h-[400px];
+  }
+}

@@ -4,7 +4,7 @@ import NavLinks from "./elements/navLinks";
 
 function SideBar() {
   return (
-    <div className="w-60 bg-white shadow-xl flex flex-col rounded-tr-xl rounded-br-xl">
+    <div className="w-70 bg-white shadow-xl flex flex-col">
       <NavHeading />
       <NavLinks />
       <LogoutBtn />

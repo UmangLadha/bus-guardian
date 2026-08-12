@@ -42,7 +42,7 @@ export const VerifyToken = (
   try {
     if (!process.env.JWT_ACCESS_SECRET) {
       console.error("JWT_SECRET is not defined in environment variables.");
-      res.status(500).json({ error: "Server configuration error." });
+      res.status(500).json({ error: "Server configuration error" });
       return;
     }
 

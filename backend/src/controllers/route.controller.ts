@@ -1,8 +1,5 @@
-
-import { Request, Response, Router } from "express";
-import BusRoute from "../models/route.model";
-import { getLocationCoordinates } from "../utility/locationCordinates";
-import Bus from "../models/bus.model";
+import { Request, Response } from "express";
+import { RouteServices } from "../services/route.services";
 
 export class routeController {
   static async addRoute(req: Request, res: Response) {
@@ -13,35 +10,23 @@ export class routeController {
         return;
       }
 
-      const enhancedRouteList = await Promise.all(
-        locationsList.map(async (locationName: string) => {
-          const location = await getLocationCoordinates(locationName);
-          if (!location) throw new Error(`Invalid address: ${locationName}`);
-          return {
-            locationName,
-            latitude: parseFloat(location.lat),
-            longitude: parseFloat(location.lon),
-          };
-        })
-      );
-      const routeData = {
-        routeName,
-        locationsList: enhancedRouteList,
-      };
-      const newRoute = await BusRoute.create(routeData);
-      res
-        .status(201)
-        .json({ message: "Bus route added successfully", busRoute: newRoute });
+      const result = await RouteServices.addRoute(routeName, locationsList);
+      if (!result.success) {
+        res.status(400).json({ message: "unable to add busRoute" });
+        return;
+      }
+      res.status(201).json({ message: "Bus route added successfully", busRoute: result.newRoute });
       return;
     } catch (error) {
       res.status(500).json({ message: "unable to add busRoute" });
+      return;
     }
   }
 
   static async getBusRoutes(req: Request, res: Response) {
     try {
-      const Routes = await BusRoute.find();
-      res.status(201).json({ message: "Data fetched Successfully", Routes });
+      const result = await RouteServices.getBusRoutes();
+      res.status(201).json({ message: "Data fetched Successfully", Routes: result.Routes });
       return;
     } catch (error) {
       res.status(500).json({ message: "unable to fetch busRoute" });
@@ -52,20 +37,18 @@ export class routeController {
   static async getRouteById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      if(!id){
-        res.status(404).json({message:"route id not found"});
+      if (!id) {
+        res.status(404).json({ message: "route id not found" });
         return;
       }
 
-      const route = await BusRoute.findById(id)
-        .populate("assignedBus");
-
-      if (!route) {
-        res.status(404).json({ message: "Route not found" });
+      const result = await RouteServices.getRouteById(id);
+      if (!result.success) {
+        res.status(404).json({ message: result.message });
         return;
       }
 
-      res.status(200).json({ message: "Route data fetched ", route });
+      res.status(200).json({ message: "Route data fetched ", route: result.route });
       return;
     } catch (error) {
       res.status(500).json({ message: "Server error", error });
@@ -79,43 +62,18 @@ export class routeController {
       const { routeName, locationsList } = req.body;
 
       if (!routeName || !locationsList?.length) {
-        res
-          .status(400)
-          .json({ message: "Invalid input: routeName or routeList missing" });
+        res.status(400).json({ message: "Invalid input: routeName or routeList missing" });
         return;
       }
 
-      const enhancedRouteList = await Promise.all(
-        locationsList.map(async (locationName: string) => {
-          const location = await getLocationCoordinates(locationName);
-          if (!location) throw new Error(`Invalid address: ${locationName}`);
-          return {
-            locationName,
-            latitude: parseFloat(location.lat),
-            longitude: parseFloat(location.lon),
-          };
-        })
-      );
-
-      const updateRoute = await BusRoute.findByIdAndUpdate(
-        id,
-        { routeName, locationsList: enhancedRouteList },
-        { new: true }
-      );
-
-      if (!updateRoute) {
-        res.status(401).json({ message: "Route not found" });
+      const result = await RouteServices.updateRouteById(id, routeName, locationsList);
+      if (!result.success) {
+        res.status(401).json({ message: result.message });
         return;
       }
 
-      await Bus.findOneAndUpdate(
-        { assignedRoute: { _id: id } },
-        { assignedRoute: { routeName: updateRoute.routeName } }
-      );
-
-      res
-        .status(200)
-        .json({ message: "Route updated successfully", data: updateRoute });
+      res.status(200).json({ message: "Route updated successfully", data: result.updateRoute });
+      return;
     } catch (error) {
       res.status(500).json({ message: "Error in updating route" });
       return;
@@ -125,18 +83,11 @@ export class routeController {
   static async deleteRoute(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const route = await BusRoute.findById(id);
-      if (!route) {
-        res.status(500).json({ message: "route not found" });
+      const result = await RouteServices.deleteRoute(id);
+      if (!result.success) {
+        res.status(500).json({ message: result.message });
         return;
       }
-
-      await Bus.updateMany(
-        { "assignedRoute._id": id },
-        { $unset: { assignedRoute: "" } }
-      );
-
-      await BusRoute.findByIdAndDelete(id);
       res.status(200).json({ message: "Route deleted Successfully" });
       return;
     } catch (error) {

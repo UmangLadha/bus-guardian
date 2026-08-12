@@ -30,8 +30,8 @@ function SignupForm() {
         `${import.meta.env.VITE_BASE_URL}/admin/register`,
         adminCred
       );
-      toast.success(response.data.message || "Registration successful!");
-      console.log(response);
+      toast.success(response.data.message || "Registration successful");
+      // console.log(response);
       localStorage.setItem("token", response.data.token);
       resetForm();
       setTimeout(() => navigate("/"), 2000);
@@ -56,7 +56,7 @@ function SignupForm() {
       password,
     };
 
-    console.log(adminCred);
+    // console.log("Signup Details: ",adminCred); 
     toast.promise(sendingDataToServer(adminCred), {
       loading: "registering the admin...",
     });

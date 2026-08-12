@@ -25,10 +25,10 @@ function App() {
               <Route path="/" element={<Wrapper />}>
                 <Route index element={<Dashboard />} />
                 <Route path="dashboard" element={<Dashboard />} />
+                <Route path="route" element={<RoutePage />} />
                 <Route path="bus" element={<Bus />} />
                 <Route path="driver" element={<Driver />} />
                 <Route path="student" element={<Student />} />
-                <Route path="route" element={<RoutePage />} />
               </Route>
             </Route>
             <Route path="*" element={<RouteNotFoundPage />} />

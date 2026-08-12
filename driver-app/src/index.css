@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@import "./common.css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-bg-dark: var(--bg-dark);
+  --color-bg-card: var(--bg-card);
+  --color-bg-card-hover: var(--bg-card-hover);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border: var(--border);
+  --color-glow: var(--glow);
+}
+
+:root {
+  --primary: #6C3CE1;
+  --primary-light: #8B5CF6;
+  --primary-dark: #5B21B6;
+  --accent: #F59E0B;
+  --accent-light: #FBBF24;
+  --success: #10B981;
+  --danger: #EF4444;
+  --bg-dark: #0F0F1A;
+  --bg-card: #1A1A2E;
+  --bg-card-hover: #222240;
+  --text-primary: #F1F1F6;
+  --text-secondary: #9CA3AF;
+  --border: #2D2D44;
+  --glow: rgba(108, 60, 225, 0.3);
+}
+
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    @apply bg-[var(--bg-dark)] text-[var(--text-primary)] min-h-screen overflow-x-hidden;
+  }
+}
+
+@layer utilities {
+  /* Blinking Bus Icon */
+  @keyframes busGlow {
+    0%, 100% {
+      filter: drop-shadow(0 0 8px var(--primary-light)) drop-shadow(0 0 20px var(--glow));
+      transform: scale(1);
+    }
+    50% {
+      filter: drop-shadow(0 0 15px var(--primary-light)) drop-shadow(0 0 35px var(--glow));
+      transform: scale(1.15);
+    }
+  }
+
+  .bus-marker-blinking {
+    animation: busGlow 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.5);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(2.5);
+      opacity: 0;
+    }
+  }
+
+  .pulse-ring {
+    animation: pulse-ring 2s ease-out infinite;
+  }
+
+  /* Loading Spinner */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .spinner {
+    @apply w-10 h-10 border-[3px] border-[var(--border)] border-t-[var(--primary-light)] rounded-full;
+    animation: spin 0.8s linear infinite;
+  }
+
+  /* Fade In */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+}
+
+/* Leaflet overrides for dark theme */
+.leaflet-container {
+  background: var(--bg-dark) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--border) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-card) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
